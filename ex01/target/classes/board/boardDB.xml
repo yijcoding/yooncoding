@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<select id="boardList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select*from board order by board_id desc;
+		]]>
+	</select>
+	
+	<select id="getComment" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select*from boardReply where board_id = #{board_id} order by reply_num desc;
+		]]>
+	</select>
+	
+	<select id="boardView" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select*from board where board_id=#{board_id}
+		]]>
+	</select>
+	
+	<insert id="boardInsert" parameterType="hashmap">
+	<![CDATA[
+		insert into board (b_title,b_content,b_type,member_id)
+		values(#{b_title},#{b_content},#{b_type},#{member_id})
+	]]>
+	</insert>
+	
+	<insert id="replyInsert" parameterType="hashmap">
+	<![CDATA[
+		insert into boardReply(board_id,member_id,b_reply)
+		values(#{board_id},#{member_id},#{b_reply})
+	]]>
+	</insert>
+</mapper>
+
