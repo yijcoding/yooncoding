@@ -44,7 +44,10 @@
 		
 		margin:50px 0 0 0 ;
 	}
-	
+	#file{
+		margin:50px 0; border:1px solid black;padding:20px 0;
+		width:80%;
+	}
 	
 </style>
 <script type="text/javascript">
@@ -85,6 +88,8 @@ function commentInsert(){
 		},success : function(data){
 			if(data == 1){
 				alert('댓글 추가완료');
+				document.getElementById("comment").value=''
+			    commentList();
 			}
 		}
 	
@@ -120,7 +125,6 @@ function commentList(){
 }
 
 $(document).ready(function() {
-    commentList()
     $('#comment').on('keyup', function() {
         $('#comment_cnt').html("("+$('#comment').val().length+" / 200)<input type='button' name='comment-insert' id='comment-insert' onclick='commentInsert()' value='작성'>");
  
@@ -131,15 +135,20 @@ $(document).ready(function() {
         }
     });
     
+    commentList()
 });
 </script>
 </head>
 <body>
-	${boardView.b_title} ${boardView.member_id}
-	${fn:replace(boardView.postdate, 'T',' ')}
+	<div style="margin:20px 0;">
+		<p style="margin-bottom:10px;font-size:20px;"><b>${boardView.b_title}</b></p> 
+		${boardView.member_id} |
+		${fn:replace(boardView.postdate, 'T',' ')}
+	</div>
+	<hr><br>
 	<img alt="" src="${boardView.file}">
 	<br> ${boardView.b_content}
-	<div>
+	<div id="file" >
 		첨부파일 <a href="https://t1.daumcdn.net/cfile/tistory/24283C3858F778CA2E">https://t1.daumcdn.net/cfile/tistory/24283C3858F778CA2E</a>
 	</div>
 	
@@ -172,5 +181,7 @@ $(document).ready(function() {
 		<table id='table'>
 		</table>
 	</div>
+	
+	<jsp:include page="/WEB-INF/views/board/Board.jsp"/>
 </body>
 </html>

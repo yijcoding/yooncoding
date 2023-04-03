@@ -4,8 +4,24 @@
 
 	<select id="boardList" parameterType="hashmap" resultType="hashmap">
 		<![CDATA[
-			select*from board order by board_id desc;
+			select * from board where 1=1 
 		]]>
+		<if test="select == 'b_title'">
+			and b_title like CONCAT('%',#{search},'%')
+		</if>
+		
+		<if test="select == 'b_content'">
+			and b_content like CONCAT('%',#{search},'%')
+		</if>
+		
+		<if test="select == 'member_id'">
+			and member_id like CONCAT('%',#{search},'%')
+		</if>
+				
+		<![CDATA[
+			order by board_id desc;
+		]]>
+		
 	</select>
 	
 	<select id="getComment" parameterType="hashmap" resultType="hashmap">

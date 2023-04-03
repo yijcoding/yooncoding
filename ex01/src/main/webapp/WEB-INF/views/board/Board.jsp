@@ -14,6 +14,38 @@
 <link href="<c:url value="/resources/css/board.css" />" rel="stylesheet" />
 <style type="text/css">
 </style>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		boardList()
+	});
+	
+	function boardList(){
+		$.ajax({
+			type:'get',
+			url:'/board/boardList',
+			datatype:'json',
+			data:{
+				'select' : $('select[name=select]').val(),
+				'search' : $('input[name=search]').val()
+			},success : function(data){
+				console.log(data);
+				tr="";
+				for(row of data){
+					tr+="<tr>";
+					tr+="<td>"+row.board_id+"</td>";
+					tr+="<td><a href='/board/view?board_id="+row.board_id+"'>"+row.b_title+"</a></td>";
+					tr+="<td>"+row.member_id+"</td>";
+					tr+="<td>"+row.postdate+"</td>";
+					tr+="</tr>";
+				}
+				
+				$('#boardList').html(tr);
+			}
+		
+		});
+	} 
+</script>
 </head>
 <body>
 	<section class="notice">
@@ -23,21 +55,21 @@
 			</div>
 		</div>
 
-		<!-- board seach area -->
+		<!-- board search area -->
 		<div id="board-search">
 			<div class="container">
 				<div class="search-window">
-					<form action="">
 						<div class="search-wrap">
-							<select name="test" style="width:20%;height:40px;float:left;text-align:center; font-size:14px;">
-								<option value="제목">제목</option>
+							<select name="select" style="width:20%;height:40px;float:left;text-align:center; font-size:14px;">
+								<option value="b_title">제목</option>
+								<option value="b_content">내용</option>
+								<option value="member_id">작성자</option>
 							</select> 
 							<label for="search" class="blind">공지사항 내용 검색</label> <input
-								id="search" type="search" name="" placeholder="검색어를 입력해주세요."
-								value="">
-							<button type="submit" class="btn btn-dark">검색</button>
+								id="search" type="search" name="search" placeholder="검색어를 입력해주세요."
+								>
+							<button type="button" class="btn btn-dark" onclick="boardList()">검색</button>
 						</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -65,19 +97,12 @@
 						</c:when>	
 					</c:choose>
 					-->				
-					<tbody>
-							<c:forEach items="${boardList }" var="list">
-						<tr>
-								<td>${list.board_id }</td>
-								<td><a href="board/view?board_id=${list.board_id }">${list.b_title }</a></td>
-								<td>${list.member_id }</td>
-								<td>${fn:replace(list.postdate, 'T',' ')}</td>
-						</tr>
-							</c:forEach>
+					<tbody id="boardList">
+							
 					</tbody>
 				</table>
 				<!-- 글쓰기 -->
-				<form action="board/createBoard">
+				<form action="/board/createBoard">
 					<div style="float:right">
 						<button type="submit" class="btn btn-dark" style="height:40px;">글쓰기</button>
 					</div>

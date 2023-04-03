@@ -1,10 +1,8 @@
 package org.exiting.board;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import org.apache.logging.log4j.core.tools.picocli.CommandLine.Parameters;
 import org.exiting.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -28,17 +25,26 @@ public class BoardController {
 	@Autowired
 	BoardService service;
 	
-	@RequestMapping(value = "/board/koreaBoard", method = RequestMethod.GET)
-	public ModelAndView Board(@RequestParam Map<String,Object> map) {
-		ModelAndView mav = new ModelAndView();
-		System.out.println("11111");
+	@RequestMapping(value = "/board/board", method = RequestMethod.GET)
+	public String Board(Model model) {
+		
+		return "/board/Board";
+	}
+	@RequestMapping(value = "/board/boardList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Map<String,Object>> BoardList(@RequestParam Map<String,Object> map) {
+		System.out.println(map);
 		List<Map<String,Object>> boardList = service.boardList(map); 
-//		for(Map<String, Object> list : boardList) {
-//			System.out.println(list);
-//		}
-		mav.setViewName("/board/Board");
-		mav.addObject("boardList",boardList);
-		return mav;
+		for(Map<String,Object> map2:boardList) {
+			String date = map2.get("postdate").toString();
+			String ymd=date.substring(0,10);
+			String ymd2=ymd.replaceAll("-",".");
+			String hms=date.substring(11);
+			String postdate=ymd2+" "+hms;
+			map2.put("postdate", postdate);
+			
+		}
+		return boardList;
 	}
 	
 	@RequestMapping(value = "board/reply-insert", method = RequestMethod.GET)
@@ -60,7 +66,7 @@ public class BoardController {
 	public String createBoardPost(@RequestParam Map<String,Object> map,Model model) {
 		System.out.println(map);
 		service.boardInsert(map);
-		return "redirect:board/koreaBoard";
+		return "redirect:board/board";
 	}
 	
 	
@@ -86,6 +92,9 @@ public class BoardController {
 			String date = map2.get("postdate").toString();
 			String ymd=date.substring(0,10);
 			String ymd2=ymd.replaceAll("-",".");
+			String hms=date.substring(11);
+			String postdate=ymd2+" "+hms;
+			map2.put("postdate", postdate);
 			
 		}
 		System.out.println(list);
