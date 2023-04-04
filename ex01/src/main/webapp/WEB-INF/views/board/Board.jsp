@@ -27,16 +27,19 @@
 			datatype:'json',
 			data:{
 				'select' : $('select[name=select]').val(),
-				'search' : $('input[name=search]').val()
+				'search' : $('input[name=search]').val(),
+				'start' : '${startend.start}',
+				'end' : '${startend.end}'
 			},success : function(data){
 				console.log(data);
 				tr="";
 				for(row of data){
 					tr+="<tr>";
 					tr+="<td>"+row.board_id+"</td>";
-					tr+="<td><a href='/board/view?board_id="+row.board_id+"'>"+row.b_title+"</a></td>";
+					tr+="<td><a href='/board/view?board_id="+row.board_id+"&&"+${startend.pageNum}+"'>"+row.b_title+"</a></td>";
 					tr+="<td>"+row.member_id+"</td>";
 					tr+="<td>"+row.postdate+"</td>";
+					tr+="<td>"+row.visitcount+"</td>";
 					tr+="</tr>";
 				}
 				
@@ -84,6 +87,7 @@
 							<th scope="col" class="th-title"style="width:45%">제목</th>
 							<th scope="col" class="th-member"style="width:10%">작성자</th>
 							<th scope="col" class="th-date"style="width:35%">등록일</th>
+							<th scope="col" class="th-date"style="width:35%">조회수</th>
 						</tr>
 					</thead>
 					<!-- 이부분 나중에 국가별로 나눠야됨  -->
@@ -101,6 +105,10 @@
 							
 					</tbody>
 				</table>
+				
+					<div>
+						<span>${paging}</span>
+					</div>
 				<!-- 글쓰기 -->
 				<form action="/board/createBoard">
 					<div style="float:right">
@@ -109,7 +117,6 @@
 				</form>
 			</div>
 		</div>
-
 	</section>
 </body>
 </html>

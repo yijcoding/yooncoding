@@ -41,4 +41,42 @@ public class BoardServiceImpl implements BoardService {
 		return dao.getComment(map);
 	}
 
+	@Override
+	public int updateBoard(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.updateBoard(map);
+	}
+
+	@Override
+	public int deleteBoard(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.deleteBoard(map);
+	}
+
+	@Override
+	public int boardVisit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.boardVisit(map);
+	}
+
+	@Override
+	public int replyDelete(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.replyDelete(map);
+	}
+
+	@Override
+	public int replyUpdate(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.replyUpdate(map);
+	}
+
+	@Override
+	public Map<String, Object> boardCnt(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.boardCnt(map);
+	}
+
+	
+
 }

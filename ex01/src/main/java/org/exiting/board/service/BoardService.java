@@ -8,6 +8,12 @@ public interface BoardService {
 	public List<Map<String, Object>> getComment(Map<String, Object> map);
 	public int boardInsert(Map<String,Object> map);
 	public int replyInsert(Map<String,Object> map);
+	public int updateBoard(Map<String,Object> map);
+	public int deleteBoard(Map<String,Object> map);
+	public int boardVisit(Map<String,Object> map);
 	public Map<String, Object> boardView(Map<String,Object> map);
+	public Map<String, Object> boardCnt(Map<String,Object> map);
+	public int replyDelete(Map<String,Object> map);
+	public int replyUpdate(Map<String,Object> map);
 
 }
