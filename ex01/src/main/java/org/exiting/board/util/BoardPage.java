@@ -2,7 +2,7 @@ package org.exiting.board.util;
 
 public class BoardPage {
 	public static String pagingStr(int totalCount, int pageSize, int blockPage,
-			int pageNum, String reqUrl) {
+			int pageNum, String reqUrl,String search,String select) {
 		String pagingStr = "";
 
 		// �떒怨� 3 : �쟾泥� �럹�씠吏� �닔 怨꾩궛
@@ -11,10 +11,9 @@ public class BoardPage {
 		// �떒怨� 4 : '�씠�쟾 �럹�씠吏� 釉붾줉 諛붾줈媛�湲�' 異쒕젰
 		int pageTemp = (((pageNum - 1) / blockPage) * blockPage) + 1;
 		if (pageTemp != 1) {
-			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=1'>[First]</a></span>";
+			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=1&search="+search+"&select="+select+"'>[First]</a></span>";
 			pagingStr += "&nbsp;";
-			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + (pageTemp - 1)
-					+ "'>[Prev]</a></span>";
+			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + (pageTemp - 1)+ "&search="+search+"&select="+select+"'>[Prev]</a></span>";
 		}
 
 		// �떒怨� 5 : 媛� �럹�씠吏� 踰덊샇 異쒕젰 
@@ -22,10 +21,9 @@ public class BoardPage {
 		while (blockCount <= blockPage && pageTemp <= totalPages) {
 			if (pageTemp == pageNum) {
 				// �쁽�옱 �럹�씠吏��뒗 留곹겕瑜� 嫄몄� �븡�쓬
-				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "'>"+pageTemp+"</a></span>&nbsp;";
-			} else {
-				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + pageTemp
-						+ "'>" + pageTemp + "</a></span>&nbsp;";
+				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&search="+search+"&select="+select+"'>"+pageTemp+"</a></span>&nbsp;";
+			} else  {
+				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&search="+search+"&select="+select+"'>"+pageTemp+"</a></span>&nbsp;";
 			}
 			pageTemp++;
 			blockCount++;
@@ -42,4 +40,5 @@ public class BoardPage {
 
 		return pagingStr;
 	}
+
 }

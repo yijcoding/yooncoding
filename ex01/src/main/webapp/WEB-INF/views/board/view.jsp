@@ -215,12 +215,12 @@ function commentList(){
 function comment_update(num,id){
 	var id1=id;
 	if(confirm('작성하신 댓글을 수정 하시겠습니까?')){
-		tr="<table id='table' ";
+		tr="<table id='table'> ";
 		tr+="<thead>";
 			tr+="<tr>";
 			tr+="<td style='width:20%;text-align:center'>"+id1+"</td>";
 			tr+="<td style='width:40%' colspan='4'>"
-			+'<textarea name="comment-update" id="comment-update" cols="" rows="4" style="width:80%;height:300px"></textarea>'
+			+'<textarea name="comment-update" id="comment-update" cols="" rows="4" style="width:80%;height:100px;padding: 10px 0 0 10px"></textarea>'
 
 			+'<div id="emoticons" style="float:left; width:30%">'
 			+'이모티콘: <br><img onclick="emo(this);"'

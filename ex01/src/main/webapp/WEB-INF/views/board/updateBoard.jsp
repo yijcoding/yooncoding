@@ -122,11 +122,13 @@ img{
 	}
 	
 	function PreviewImage() {
+		var cnt=0;
         var preview = new FileReader();
         preview.onload = function (e) {
         document.getElementById("user_image").src = e.target.result;
     };
-    preview.readAsDataURL(document.getElementById("user_profile_img").files[0]);
+    preview.readAsDataURL(document.getElementById("user_profile_img").files[cnt]);
+    cnt++;
  };
 </script>
 </head>
@@ -161,7 +163,7 @@ img{
 						</div>
 						<h2>업로드할 이미지</h2>
 						<img id="user_image" src="#" alt="" >
-						<input accept=".jpg" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' />
+						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' multiple="multiple"/>
 						<input type="hidden" name="board_id" value="${boardView.board_id }">
 						
 				</form>

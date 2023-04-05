@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Board</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"
 	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
 	crossorigin="anonymous"></script>
@@ -15,12 +15,15 @@
 <style type="text/css">
 </style>
 <script type="text/javascript">
-
+	
 	$(document).ready(function(){
 		boardList()
 	});
 	
 	function boardList(){
+		var select=$('select[name=select]').val();
+		var search=$('input[name=search]').val();
+		
 		$.ajax({
 			type:'get',
 			url:'/board/boardList',
@@ -28,22 +31,40 @@
 			data:{
 				'select' : $('select[name=select]').val(),
 				'search' : $('input[name=search]').val(),
-				'start' : '${startend.start}',
-				'end' : '${startend.end}'
+				'start' : '${startend.start}'
 			},success : function(data){
 				console.log(data);
 				tr="";
 				for(row of data){
 					tr+="<tr>";
 					tr+="<td>"+row.board_id+"</td>";
-					tr+="<td><a href='/board/view?board_id="+row.board_id+"&&"+${startend.pageNum}+"'>"+row.b_title+"</a></td>";
+					tr+="<td><a href='/board/view?board_id="+row.board_id+"'>"+row.b_title+"</a></td>";
 					tr+="<td>"+row.member_id+"</td>";
 					tr+="<td>"+row.postdate+"</td>";
 					tr+="<td>"+row.visitcount+"</td>";
 					tr+="</tr>";
 				}
-				
+				boardPaging(data[0]["cnt"],select,search)
 				$('#boardList').html(tr);
+			}
+			
+		});
+	} 
+	
+	function boardPaging(cnt,select,search){
+		$.ajax({
+			type:'get',
+			url:'/board/boardPaging',
+			data:{
+				'select' : select,
+				'search' : search,
+				'cnt' : cnt,
+				'start' : '${startend.start}'
+			},success : function(data){
+				console.log(data);
+				tr="["+data+"]";
+				
+				$('#paging').html(tr);
 			}
 		
 		});
@@ -68,15 +89,13 @@
 								<option value="b_content">내용</option>
 								<option value="member_id">작성자</option>
 							</select> 
-							<label for="search" class="blind">공지사항 내용 검색</label> <input
-								id="search" type="search" name="search" placeholder="검색어를 입력해주세요."
-								>
+							<label for="search" class="blind">공지사항 내용 검색</label> 
+							<input id="text" type="search" name="search" value="${param.search }">
 							<button type="button" class="btn btn-dark" onclick="boardList()">검색</button>
 						</div>
 				</div>
 			</div>
 		</div>
-
 		<!-- board list area -->
 		<div id="board-list">
 			<div class="container">
@@ -106,7 +125,7 @@
 					</tbody>
 				</table>
 				
-					<div>
+					<div id="paging">
 						<span>${paging}</span>
 					</div>
 				<!-- 글쓰기 -->
