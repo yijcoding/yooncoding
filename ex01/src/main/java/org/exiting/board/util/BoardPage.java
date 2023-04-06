@@ -31,11 +31,9 @@ public class BoardPage {
 
 		// �떒怨� 6 : '�떎�쓬 �럹�씠吏� 釉붾줉 諛붾줈媛�湲�' 異쒕젰
 		if (pageTemp <= totalPages) {
-			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + pageTemp
-					+ "'>[Next]</a></span>";
+			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + pageTemp+"&search="+search+"&select="+select+"'>[Next]</a></span>";
 			pagingStr += "&nbsp;";
-			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + totalPages
-					+ "'>[Last]</a></span>";
+			pagingStr += "<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum=" + totalPages+"&search="+search+"&select="+select+"'>[Last]</a></span>";
 		}
 
 		return pagingStr;

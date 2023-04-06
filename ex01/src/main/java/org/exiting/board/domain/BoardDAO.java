@@ -52,6 +52,11 @@ public class BoardDAO {
 		return sql.selectOne("board.boardView",map);	
 	}
 	
+	public Map<String, Object> boardReplyCnt(Map<String, Object> map){
+		
+		return sql.selectOne("board.boardReplyCnt",map);	
+	}
+	
 	public Map<String, Object> boardCnt(Map<String, Object> map){
 		
 		return sql.selectOne("board.boardCnt",map);	

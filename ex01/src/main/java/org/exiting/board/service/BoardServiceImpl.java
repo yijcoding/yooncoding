@@ -77,6 +77,12 @@ public class BoardServiceImpl implements BoardService {
 		return dao.boardCnt(map);
 	}
 
+	@Override
+	public Map<String, Object> boardReplyCnt(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.boardReplyCnt(map);
+	}
+
 	
 
 }

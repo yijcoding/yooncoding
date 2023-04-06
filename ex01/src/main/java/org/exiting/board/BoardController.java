@@ -48,7 +48,7 @@ public class BoardController {
 
 		Map<String,Object> res = service.boardCnt(map);
 		int totalCount = Integer.parseInt(res.get("cnt").toString());
-		int pageSize =10;
+		int pageSize =30;
 		int blockPage = 10;
 		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
 		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
@@ -78,7 +78,7 @@ public class BoardController {
 		int totalCount = Integer.parseInt(res.get("cnt").toString());
 //		System.out.println("*******************************"+totalCount);
 //		System.out.println("*******************************"+res.get("cnt"));
-		int pageSize =10;
+		int pageSize =30;
 		int blockPage = 10;
 		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
 		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
@@ -118,7 +118,7 @@ public class BoardController {
 	@ResponseBody
 	public String reply_insert(@RequestParam Map<String,Object> map) {
 		int rs =service.replyInsert(map);
-		System.out.println(rs);
+//		System.out.println(rs);
 		return String.valueOf(rs);
 	}
 
@@ -145,8 +145,8 @@ public class BoardController {
 //            // 파일 저장
 //            Files.write(filePath, file.getBytes());
 //        }
-		System.out.println("ffffffffffffffffffffffffffffffffffffffffffffffffffff"+map.get("file"));
-		System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"+map.get("file"));
+//		System.out.println("ffffffffffffffffffffffffffffffffffffffffffffffffffff"+map.get("file"));
+//		System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"+map.get("file"));
 		String fi = String.valueOf(map.get("file"));
 		String file="/resources/upload/"+fi;
 		map.put("file", file);
@@ -180,7 +180,7 @@ public class BoardController {
 		mav.setViewName("/board/Board");
 		
 		
-		
+		Map<String,Object> boardReplyCnt = service.boardReplyCnt(map);
 		service.boardVisit(map);
 		Map<String,Object> boardView = service.boardView(map); 
 		//		for(Map<String, Object> list : boardList) {
@@ -190,6 +190,7 @@ public class BoardController {
 		mav.setViewName("/board/view");
 		mav.addObject("boardView",boardView);
 		mav.addObject("startend",map2);
+		mav.addObject("boardReplyCnt",boardReplyCnt.get("cnt"));
 		return mav;
 	}
 
@@ -215,9 +216,6 @@ public class BoardController {
 	@RequestMapping(value = "/board/updateBoard", method = RequestMethod.GET)
 	public ModelAndView updateBoard(@RequestParam Map<String,Object>map){
 		ModelAndView mav = new ModelAndView();
-		String fi = String.valueOf(map.get("file"));
-		String file="/resources/upload/"+fi;
-		map.put("file", file);
 		Map<String, Object> boardList = service.boardView(map); 
 		mav.addObject("boardView",boardList);
 		mav.setViewName("/board/updateBoard");
@@ -227,7 +225,10 @@ public class BoardController {
 	@RequestMapping(value = "/board/updateBoard", method = RequestMethod.POST)
 	public ModelAndView updateBoardpost(@RequestParam Map<String,Object>map){
 		ModelAndView mav = new ModelAndView();
-
+		String fi = String.valueOf(map.get("file"));
+		String file="/resources/upload/"+fi;
+		map.put("file", file);
+		
 		service.updateBoard(map); 
 		mav.setViewName("redirect:/board/view?board_id="+map.get("board_id"));
 		return mav;
@@ -251,7 +252,7 @@ public class BoardController {
 	@RequestMapping(value = "/board/replyUpdate", method = RequestMethod.GET)
 	@ResponseBody
 	public int replyUpdate(@RequestParam Map<String,Object>map){
-		System.out.println("111111111111111111111111111111111111"+map);
+//		System.out.println("111111111111111111111111111111111111"+map);
 		int rs = service.replyUpdate(map); 
 		return rs;
 	}

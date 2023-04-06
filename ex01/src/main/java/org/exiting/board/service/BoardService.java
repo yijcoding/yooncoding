@@ -13,6 +13,7 @@ public interface BoardService {
 	public int boardVisit(Map<String,Object> map);
 	public Map<String, Object> boardView(Map<String,Object> map);
 	public Map<String, Object> boardCnt(Map<String,Object> map);
+	public Map<String, Object> boardReplyCnt(Map<String,Object> map);
 	public int replyDelete(Map<String,Object> map);
 	public int replyUpdate(Map<String,Object> map);
 

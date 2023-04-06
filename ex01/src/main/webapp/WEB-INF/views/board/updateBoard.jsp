@@ -163,7 +163,7 @@ img{
 						</div>
 						<h2>업로드할 이미지</h2>
 						<img id="user_image" src="#" alt="" >
-						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' multiple="multiple"/>
+						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' />
 						<input type="hidden" name="board_id" value="${boardView.board_id }">
 						
 				</form>
