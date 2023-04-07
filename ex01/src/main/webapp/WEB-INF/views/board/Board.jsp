@@ -115,7 +115,11 @@ $(document).ready(function(){
 					tr+="<td>"+row.visitcount+"</td>";
 					tr+="</tr>";
 				}
-				boardPaging(data[0]["cnt"],select,search)
+				if(data.length !=0){
+					boardPaging(data[0]["cnt"],select,search)
+				}else{
+					boardPaging(0,select,search)
+				}
 				$('#boardList').html(tr);
 			}
 			

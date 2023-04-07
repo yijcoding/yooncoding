@@ -15,38 +15,6 @@
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
 <style type="text/css">
-<
-style
- 
-type
-="
-text
-/
-css
-"
->
-@media print {
-	.form-section {
-		display: inline !important
-	}
-	.form-pagebreak {
-		display: none !important
-	}
-	.form-section-closed {
-		height: auto !important
-	}
-	.page-section {
-		position: initial !important
-	}
-}
-</style>
-<link type="text/css" rel="stylesheet"
-	href="https://cdn02.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?v=3.3.40728" />
-<link type="text/css" rel="stylesheet"
-	href="https://cdn03.jotfor.ms/css/styles/payment/payment_styles.css?3.3.40728" />
-<link type="text/css" rel="stylesheet"
-	href="https://cdn01.jotfor.ms/css/styles/payment/payment_feature.css?3.3.40728" />
-<style>
 #create-board .create-window {
 	position: relative;
 	/*   padding-right: 124px; */
@@ -75,34 +43,22 @@ css
 	margin-bottom: 10px;
 }
 
-#b_title {
-	width: 70%;
-	height: 20px;
-}
 
 #insert-btn-wrap {
 	float: right;
 }
 
-.btn-dark {
-	background: #555;
-	color: #fff;
-}
 
-.btn-dark:hover, .btn-dark:focus {
-	background: #373737;
-	border-color: #373737;
+.btn-blue {
+	background: #4aa8d8;
 	color: #fff;
-}
+	height:35px;
 
-.btn-dark {
-	background: #555;
-	color: #fff;
 }
-
-.btn-dark:hover, .btn-dark:focus {
-	background: #373737;
-	border-color: #373737;
+	
+.btn-blue:hover, .btn-blue:focus {
+	background: #298cbf;
+	border-color: #298cbf;
 	color: #fff;
 }
 
@@ -111,7 +67,6 @@ css
 	padding: 0 30px;
 	font-size: 15px;
 	font-weight: 400;
-	background: transparent;
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: middle;
@@ -122,7 +77,7 @@ css
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	border: 1px solid transparent;
+	border: 2px solid black;
 	text-transform: uppercase;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
@@ -175,7 +130,7 @@ css
 	<div id="create-board">
 		<div class="container">
 			<div class="create-window">
-				<form action="/board/createBoard" id="form" method="post" onsubmit="return insert()">
+				<form action="/board/createBoard" id="form" method="post" onsubmit="return insert()" enctype="multipart/form-data">
 					<div id='top-wrap'>
 						<!-- 작성할 게시판 선택 -->
 						<select class="form-select" name="b_type"
@@ -197,14 +152,13 @@ css
 							id="exampleFormControlTextarea1" rows="3"></textarea>
 					</div>
 					<img id="user_image" src="#" alt="" >
-						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' />
+						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' multiple="multiple"/>
 					
 					
 					<input type="hidden" name="member_id" value="admin">
 					<div id="insert-btn-wrap">
-						<input type="button" id="cancle-btn" class="btn-dark"
-							onclick="cancle()" value="취소"> 
-							<input type="submit" class="btn-dark" id="submit"  value="확인">
+						<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()" value="취소"> 
+							<input type="submit" class="btn btn-blue" id="submit"  value="확인">
 					</div>
 				</form>
 			</div>

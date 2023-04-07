@@ -22,6 +22,11 @@ public class BoardDAO {
 		return sql.selectList("board.getComment",map);	
 	}
 	
+	public List<Map<String,Object>> boardImgSelect(Map<String, Object> map){
+		
+		return sql.selectList("board.boardImgSelect",map);	
+	}
+	
 	public int boardInsert(Map<String, Object> map){
 		
 		return sql.insert("board.boardInsert",map);	
@@ -69,5 +74,10 @@ public class BoardDAO {
 	public int replyUpdate(Map<String, Object> map){
 		
 		return sql.update("board.replyUpdate",map);	
+	}
+	
+	public int boardImgInsert(Map<String, Object> map){
+		
+		return sql.insert("board.boardImgInsert",map);	
 	}
 }

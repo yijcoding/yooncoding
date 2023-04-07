@@ -9,27 +9,18 @@
 <title>View</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style type="text/css">
-	
+	html,body{
+		width:100%;
+		height:100%;
+	}
 	.wrap{
-		position: sticky;
+		position: relative;
 		/*   padding-right: 124px; */
 		margin: 0 auto;
 		width:100%;
 	}
-	.aside-wrap{
-		position:sticky;
-		width:120px;
-		height:100vh;
-		float:left;
-		margin:0 50px;
-		
-	}
-	.aside-inner{
-		position:fixed;
-		width:120px;
-		height:500px;
-		margin-top:150px;
-	}
+	
+	
 	.aside-right-wrap{
 		position:sticky;
 		float:right;
@@ -37,6 +28,7 @@
 		width:200px;
 		height:600px;
 	}
+	
 	
 	#view-wrap,.comment-wrap {
 		position: relative;
@@ -139,15 +131,14 @@
 	}
 	
 	.file{
-		width:100%;
-		max-width:1100px;
+		width:1100px;
 		border:1px solid Gainsboro;
 		margin:20px 0;
 		padding: 10px 5px;
 	}
 	
 	.image-wrap,img{
-		width:700px;
+		max-width:700px;
 	}
 	
 	td{
@@ -160,9 +151,7 @@
 		width:680px;
 		margin:0 auto;
 	}
-	#advertisement1{
-		width:150px;
-	}
+	
 	#advertisement-jouen{
 		width:600px;
 		border:1px solid black;
@@ -242,10 +231,11 @@ $(document).ready(function() {
 			commentListDisplay.style.display="none";
 	    	commentHide.innerText = '댓글 펼치기';
 	    }
+	   
    
     });
-    
-    
+   
+	
     
     commentList();
 });
@@ -306,18 +296,23 @@ function commentList(){
 		},success : function(data){
 			console.log(data);
 			tr='';
-			tr+="<table id='table'>";
-			for(row of data){
-				tr+="<tr id='reply"+row.reply_num+"'>";
-				tr+="<td style='width:20%;text-align:center'>"+row.member_id+"</td>";
-				tr+="<td style='width:40%'>"+row.b_reply+"</td>";
-				tr+="<td style='width:25%;text-align:center'>"+row.postdate+"</td>";
-				tr+="<td style='width:5%;text-align:center'><button onclick='comment_update("+row.reply_num+","+'row.member_id'+")' class='btn btn-white' id='comment_update'>수정</button></td>";
-				tr+="<td style='width:5%;text-align:center'><button onclick='comment_delete("+row.reply_num+")' class='btn btn-white' id='comment_delete'>삭제</button></td>";
-				tr+="</tr>";
-				}
-			tr+="</table>";
-		$('#table').html(tr);
+			if(data.length == 0){
+				tr+="<table id='table'>";
+				for(row of data){
+					tr+="<tr id='reply"+row.reply_num+"'>";
+					tr+="<td style='width:20%;text-align:center'>"+row.member_id+"</td>";
+					tr+="<td style='width:40%'>"+row.b_reply+"</td>";
+					tr+="<td style='width:25%;text-align:center'>"+row.postdate+"</td>";
+					tr+="<td style='width:5%;text-align:center'><button onclick='comment_update("+row.reply_num+","+'row.member_id'+")' class='btn btn-white' id='comment_update'>수정</button></td>";
+					tr+="<td style='width:5%;text-align:center'><button onclick='comment_delete("+row.reply_num+")' class='btn btn-white' id='comment_delete'>삭제</button></td>";
+					tr+="</tr>";
+					}
+				tr+="</table>";
+				$('#table').html(tr);
+			}else{
+				$('#table').html(tr);
+			}
+		
 		}
 	
 	});
@@ -416,11 +411,7 @@ function update_cancle(){
 </head>
 <body>
 <div class='wrap'>
-	<div class="aside-wrap" >
-		<div class="aside-inner" >
-			<a href="http://jg.tjoeunit.co.kr/"><img id="advertisement1"alt="" src="https://tpc.googlesyndication.com/simgad/2289797006222971694?sqp=4sqPyQQ7QjkqNxABHQAAtEIgASgBMAk4A0DwkwlYAWBfcAKAAQGIAQGdAQAAgD-oAQGwAYCt4gS4AV_FAS2ynT4&rs=AOga4qnEJ0oNxtfLOFYaUuhbbHSr4SxPpw"></a>
-		</div>
-	</div>
+	<jsp:include page="/WEB-INF/views/board/advertisement_leftSide.jsp"/>
 	<div id="view-wrap">
 		<!--상단 -->
 		<div class="header">
@@ -436,14 +427,18 @@ function update_cancle(){
 		
 		<hr><br>
 		<div class="main-content">
-			<div class="image-wrap">
-				<img alt="" src="${boardView.file}" style="margin:20px 0; width:600px">
-			</div>
-			<div class="aside-right-wrap" >
+			<c:forEach var="img" items="${boardImg }" >
+				<div class="image-wrap">
+					
+					<img alt="" src="${img.boardImg }" style="margin:20px 0; max-width:600px">
+				</div>
+			</c:forEach>
+			
+			<!--  <div class="aside-right-wrap" >
 				<div class="aside-right-inner">
 				
 				</div>
-			</div>
+			</div>-->
 			<br> ${boardView.b_content}
 			<!-- 가로 광고 -->
 			<div class="advertisement1">
@@ -452,7 +447,9 @@ function update_cancle(){
 			<!-- 첨부파일 -->
 			<div class="file" >
 				<p style="margin:0 0 10px 0"><b>원본 첨부파일</b></p>
-				<a href="${boardView.file}">${fn:substringAfter(boardView.file,'/resources/upload/')}</a>
+				<c:forEach var="img" items="${boardImg }" >
+					<a href="${img.boardImg}">${fn:substringAfter(img.boardImg,'/resources/upload/')}</a><br>
+				</c:forEach>
 			</div>
 			<div class='view-btn'>
 				<input type="button" class='btn btn-dark' id="board_delete"  value='삭제'>
@@ -462,7 +459,6 @@ function update_cancle(){
 		
 		<hr style="border:0; ">
 		<!-- comment List -->
-		<div id="clear"></div>
 	
 		<div id="commentList">
 			<div style="font:bold;font-size:12px">

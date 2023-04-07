@@ -1,26 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>게시판 글쓰기</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
 <style type="text/css">
-#create-board .create-window {
-	position: relative;
+
+#create-board .create-window,#form,.container {
 	/*   padding-right: 124px; */
-	margin: 0 auto;
-	width: 80%;
-	max-width: 800px;
+	
+	width: 1100px;
+	margin:0 200px 0 100px;
 }
 
-.container {
-	margin: 0 auto;
-}
-
-#b_content {
-	width: 100%;
+#exampleFormControlTextarea1 {
+	width: 1100px;
 	height: 300px;
 	resize:none;
 }
@@ -28,46 +31,38 @@
 	width:40px;
 }
 #b_type,#option{
-	width:20%;
-	height:20px;
+	width:200px;
+	height:40px;
 	margin-bottom:10px;
 	
 }
-#b_title{
-	width:70%;
-	height:20px;
-}
 #insert-btn-wrap{
 	float:right;
+}
+
+#user_profile_img{
+	display:none;
 }
 
 img{
 	width:200px;
 }
 
-.btn-dark {
-  background: #555;
-  color: #fff;
+.btn-blue {
+	background: #4aa8d8;
+	color: #fff;
+	height:35px;
+
+}
+	
+.btn-blue:hover, .btn-blue:focus {
+	background: #298cbf;
+	border-color: #298cbf;
+	color: #fff;
 }
 
-.btn-dark:hover, .btn-dark:focus {
-  background: #373737;
-  border-color: #373737;
-  color: #fff;
-}
 
-.btn-dark {
-  background: #555;
-  color: #fff;
-}
-
-.btn-dark:hover, .btn-dark:focus {
-  background: #373737;
-  border-color: #373737;
-  color: #fff;
-}
-
-	.btn {
+.btn {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
@@ -82,7 +77,7 @@ img{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border: 1px solid transparent;
+  border: 2px solid black;
   text-transform: uppercase;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -134,39 +129,53 @@ img{
 </head>
 <body>
 	<!-- create view area -->
-	<div id="create-board">
-		<div class="container">
-			<div class="create-window">
-				<form id='form'method='post' onsubmit='return update()'>
-					<div id='top-wrap' >
-					<!-- 작성할 게시판 선택 -->
-					<select name='b_type' id='b_type'>
-						<option value='0' id='option'>선택</option>
-						<option value='korea' id='option'>국내</option>
-						<option value='global' id='option'>해외</option>
-						<option value='free' id='option'>자유</option>
-					</select><br>
-					<input type="text" name="b_title" id='b_title' value="${boardView.b_title}"><br>
-					<!-- 버튼 -->
-					</div>
-						<!-- top end -->
-						<hr>
-						<textarea name="b_content" id="b_content" >${boardView.b_content}</textarea>
-						<div id="insert-btn-wrap">
-							<input type="button" id="cancle-btn" class="btn btn-dark" onclick="cancle()"value="취소">
-							<input type="submit" class="btn btn-dark" id="submit" value="확인">
+	<div class="wrap">
+	<jsp:include page="/WEB-INF/views/board/advertisement_leftSide.jsp"/>
+		<div id="create-board">
+			<div class="container">
+				<div class="create-window">
+					<form id='form'method='post' onsubmit='return update()' enctype="multipart/form-data">
+						<div id='top-wrap' >
+						<!-- 작성할 게시판 선택 -->
+						<select class="form-select" name='b_type' id='b_type' aria-label="Default select example">
+							<option value='0' id='option'>선택</option>
+							<option value='korea' id='option'>국내</option>
+							<option value='global' id='option'>해외</option>
+							<option value='free' id='option'>자유</option>
+						</select><br>
+						<div class="form-floating mb-3">
+							<input type="text" class="form-control" name="b_title" id="floatingInput" value="${boardView.b_title}">
+							<label for="floatingInput">제목</label>
 						</div>
-						<br>
-						<div>
-							<h2>본문 이미지</h2>
-							<img alt="" src="${boardView.file }">
+						<!-- 버튼 -->
 						</div>
-						<h2>업로드할 이미지</h2>
-						<img id="user_image" src="#" alt="" >
-						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' />
-						<input type="hidden" name="board_id" value="${boardView.board_id }">
-						
-				</form>
+							<!-- top end -->
+							<hr>
+							<textarea class="form-control" name="b_content" id="exampleFormControlTextarea1" rows="3" >${boardView.b_content}</textarea>
+							<div id="insert-btn-wrap">
+								<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()"value="취소">
+								<input type="submit" class="btn btn-blue" id="submit" value="확인">
+							</div>
+							<br>
+							<div>
+								<h2>본문 이미지</h2>
+								<c:forEach var="img" items="${boardImg }" >
+									<div class="image-wrap">
+										<img alt="" src="${img.boardImg }" style="margin:20px 0; max-width:600px">
+									</div>
+								</c:forEach>
+								<img alt="" src="boardImg">
+							</div>
+							<h2>업로드할 이미지</h2>
+							<img id="user_image" src="#" alt="" >
+							<label for="user_profile_img">
+	 							<div class="btn btn-blue" style="padding : 5px 0; width:100px">파일 업로드</div>
+							</label>
+							<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' multiple="multiple"/>
+							<input type="hidden" name="board_id" value="${boardView.board_id }">
+							
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

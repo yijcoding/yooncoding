@@ -6,6 +6,7 @@ import java.util.Map;
 public interface BoardService {
 	public List<Map<String, Object>> boardList(Map<String, Object> map);
 	public List<Map<String, Object>> getComment(Map<String, Object> map);
+	public List<Map<String, Object>> boardImgSelect(Map<String, Object> map);
 	public int boardInsert(Map<String,Object> map);
 	public int replyInsert(Map<String,Object> map);
 	public int updateBoard(Map<String,Object> map);
@@ -16,5 +17,6 @@ public interface BoardService {
 	public Map<String, Object> boardReplyCnt(Map<String,Object> map);
 	public int replyDelete(Map<String,Object> map);
 	public int replyUpdate(Map<String,Object> map);
+	public int boardImgInsert(Map<String,Object> map);
 
 }
