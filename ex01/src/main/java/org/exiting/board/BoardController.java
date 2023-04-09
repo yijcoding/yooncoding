@@ -266,42 +266,20 @@ public class BoardController {
 	@RequestMapping(value = "/board/updateBoard", method = RequestMethod.POST)
 	public ModelAndView updateBoardpost(@RequestParam Map<String,Object>map,@RequestParam(value="file",required = false) List<MultipartFile> mf){
 		ModelAndView mav = new ModelAndView();
-		//String fi = String.valueOf(map.get("file"));
-		//String file="/resources/upload/"+fi;
-		//map.put("file", file);
+	
 		Map<String,Object> fi = new HashMap<>();
 
 		Map<String,Object> board_id = service.boardView(map);
 		List<Map<String,Object>> oldImgList = service.boardImgSelect(map);
-		//이미지 비교
-//		for(Map<String,Object> old : oldImgList) {
-//			Map<String,Object> file = new HashMap<>();
-//			if(mf.contains(old.get("boardImg"))) {
-//				file.put("boardImg", old.get("boardImg"));
-//				ImgList.add(file);
-//			}
-//			
-//			
-//		}
+		
+		System.out.println(mf);
+
 		
 		
 		//이미지 넣기
 		try {
-			if(mf.size()!=0) {
-				
-				for(Map<String,Object> old : oldImgList) {
-					if(!(mf.contains(old.get("boardImg")))) {
-						old.remove("boardImg");
-						service.deleteBoardImg(old);
-					}
-				}
-				
-				for(MultipartFile file : mf) {
-					if(oldImgList.contains(file)) {
-						mf.remove(file);
-					}
-				}
-				
+			if(mf.size()!=0 || mf!=null ) {
+		
 				for(MultipartFile file:mf) {
 					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
@@ -311,6 +289,7 @@ public class BoardController {
 			
 					fi.put("boardImg", originalFileName);		
 					service.boardImgInsert(fi);
+					fi.remove("boardImg");
 					file.transferTo(new File(safeFile));
 					
 				}	
@@ -330,7 +309,6 @@ public class BoardController {
 	@RequestMapping(value = "/board/boardImgShow", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Map<String,Object>> boardImgShow(@RequestParam Map<String,Object>map){
-		System.out.println(map);
 		List<Map<String,Object>> list = service.boardImgSelect(map);
 		
 		for(Map<String,Object> img : list){
@@ -340,6 +318,16 @@ public class BoardController {
 		return list;
 	}
 
+	
+	@RequestMapping(value = "/board/deleteBoardImg", method = RequestMethod.POST)
+	@ResponseBody
+	public int deleteBoardImg(@RequestParam Map<String,Object>map){
+		System.out.println(map);
+		int rs = service.deleteBoardImg(map);
+				
+		return rs;
+	}
+	
 	
 	
 	

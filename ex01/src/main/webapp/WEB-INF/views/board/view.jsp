@@ -74,28 +74,31 @@
     #clear{
     	clear:both;
     }
+    
 	#commentList,#commentform{
 		width:1100px;
 		padding:0 0 20px 0;
 	}
+	
 	#file{
 		margin:50px 0; border:1px solid black;
 		padding:20px 0;
 		width:1100px;
 	}
 	
+	
+	.btn-blue {
+		background-color:#4aa8d8;
+		color: #fff;
+		border: 2px solid black;
+		height:35px;
 
 	}
 	
-	.btn-blue {
-	  background: #4aa8d8;
-	  color: #fff;
-	}
-	
 	.btn-blue:hover, .btn-blue:focus {
-	  background: #298cbf;
-	  border-color: #298cbf;
-	  color: #fff;
+		background-color:#298cbf;
+		border: 2px solid black;
+		color: #fff;
 	}
 	
 	.btn-white {
@@ -103,11 +106,12 @@
 	  color: #555;
 	}
 	
-	.btn-white:hover, .btn-dark:focus {
+	.btn-white:hover, .btn-blue:focus {
 	  background: #white;
 	  border-color: #373737;
 	  color: #373737;
 	}
+	
 	.header-inner{
 	 	margin:20px; 
 	 	width:1100px;
@@ -185,7 +189,7 @@
 
 $(document).ready(function() {
     $('#comment').on('keyup', function() {
-        $('#comment_cnt').html("("+$('#comment').val().length+" / 200)<input type='button' class='btn btn-dark' name='comment-insert' id='comment-insert' onclick='commentInsert()' value='작성'>");
+        $('#comment_cnt').html("("+$('#comment').val().length+" / 200)<input type='button' class='btn btn-blue' name='comment-insert' id='comment-insert' onclick='commentInsert()' value='작성'>");
  
         if($('#comment').val().length > 200) {
             $('#comment').val($('#comment').val().substring(0, 200));
@@ -195,7 +199,7 @@ $(document).ready(function() {
     });
     
     $('#comment-update').on('keyup', function() {
-        $('#comment_cnt').html("("+$('#comment-update').val().length+" / 200)<input type='button' class='btn btn-dark' name='comment-insert' id='comment-insert' onclick='commentInsert()' value='작성'>");
+        $('#comment_cnt').html("("+$('#comment-update').val().length+" / 200)<input type='button' class='btn btn-blue' name='comment-insert' id='comment-insert' onclick='commentInsert()' value='작성'>");
  
         if($('#comment-update').val().length > 200) {
             $('#comment-update').val($('#comment-update').val().substring(0, 200));
@@ -212,8 +216,10 @@ $(document).ready(function() {
     
     $('#board_delete').on('click', function() {
     	
-    	
+    	if(confirm("글을 삭제하시겠습니까?")){
+    		
     	location.href='/board/deleteBoard?board_id=${boardView.board_id}';
+    	}
     });
     
     $('#commentMove-top').on('click',() => {
@@ -453,8 +459,8 @@ function update_cancle(){
 				</c:forEach>
 			</div>
 			<div class='view-btn'>
-				<input type="button" class='btn btn-dark' id="board_delete"  value='삭제'>
-				<input type="button" class='btn btn-dark' id="board_update"  value='수정'>
+				<input type="button" class='btn btn-blue' id="board_delete"  value='삭제' onclick="delteBoard()">
+				<input type="button" class='btn btn-blue' id="board_update"  value='수정'>
 			</div>
 		</div>
 		
@@ -497,7 +503,7 @@ function update_cancle(){
 					src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSjhc7gkbcSy9YJX7ZP5QiP1WBMTkc3iJF0Bu_7vNof9WauDkQo"
 					alt="&#128565" title="--;">
 				<div id="comment_cnt">(0 / 200)
-					<input type="button" class='btn btn-dark' name="comment-insert" id="comment-insert" onclick="commentInsert()" value="작성">
+					<input type="button" class='btn btn-blue' name="comment-insert" id="comment-insert" onclick="commentInsert()" value="작성">
 				</div>
 			</div>
 			

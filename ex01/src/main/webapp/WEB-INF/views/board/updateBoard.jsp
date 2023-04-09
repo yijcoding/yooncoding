@@ -49,6 +49,7 @@ img{
 }
 
 .btn-blue {
+	display: inline-block;
 	background: #4aa8d8;
 	color: #fff;
 	height:35px;
@@ -56,8 +57,9 @@ img{
 }
 	
 .btn-blue:hover, .btn-blue:focus {
+	display: inline-block;
 	background: #298cbf;
-	border-color: #298cbf;
+	border: 2px solid black;
 	color: #fff;
 }
 
@@ -98,7 +100,18 @@ input[type=file] {
 	width: 200px;
 	text-align: center;
 	padding: 10px;
-	background-color: #006BCC;
+	background-color: #4aa8d8;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+.my_button:hover,.my_button:focus {
+	display: inline-block;
+	width: 200px;
+	text-align: center;
+	padding: 10px;
+	background-color: #298cbf;
 	color: #fff;
 	text-decoration: none;
 	border-radius: 5px;
@@ -140,44 +153,23 @@ $(document).ready(function(){
 	 
 	 $("#input_imgs").on("change", handleImgFileSelect);
 	 
-	 //기존이미지
-	 $.ajax({
-		 type:'post',
-		 url:'/board/boardImgShow',
-		 datatype:'json',
-		 data:{
-			 'board_id':'${boardView.board_id}'
-		 },success: function(data){
-			 console.log(data);
-			 tr='';
-			 for(row of data){
-				 tr+="<a href=\"#\" onclick=\"deleteBoardImg("+row.board_id+","+row.boardImg_num+")\" id=\"img_id_"+row.board_id+"\"><img src=\"" + row.boardImg + "\"class='selProductFile' title='Click to remove'></a>";
-			 }
-			 
-			 $('.image_wrap').html(tr);
-		 }
-		 
-	 })
-	 
-	 //기존 이미지 삭제
-	  
+	 BoardImg();
 	 
 });
 
-function deleteBoardImg(board_id,boardImg_num){
-	if(confirm("사진을 삭제하시겠습니까?")){
+	//기존이미지
+	function BoardImg(){
 		$.ajax({
 			 type:'post',
-			 url:'/board/deleteBoardImg',
+			 url:'/board/boardImgShow',
 			 datatype:'json',
 			 data:{
-				 'board_id' : board_id,
-				 'board_num' : boardImg_num
+				 'board_id':'${boardView.board_id}'
 			 },success: function(data){
 				 console.log(data);
 				 tr='';
 				 for(row of data){
-					 tr+="<a href=\"#\" onclick=\"deleteBoardImg("+row.board_id+","+row.boardImg_num+")\" id=\"img_id_"+row.board_id+"\"><img src=\"" + row.boardImg + "\"class='selProductFile' title='Click to remove'></a>";
+					 tr+="<a href=\"#\" onclick=\"deleteBoardImg("+row.boardImg_num+")\" id=\"img_id_"+row.board_id+"\"><img src=\"" + row.boardImg + "\"class='selProductFile' title='Click to remove'></a>";
 				 }
 				 
 				 $('.image_wrap').html(tr);
@@ -185,6 +177,24 @@ function deleteBoardImg(board_id,boardImg_num){
 			 
 		 })
 	}
+
+
+	//기존 이미지 삭제
+	function deleteBoardImg(boardImg_num){
+		if(confirm("사진을 삭제하시겠습니까?")){
+			alert("1111");
+			$.ajax({
+				 type:'post',
+				 url:'/board/deleteBoardImg',
+				 datatype:'json',
+				 data:{
+					 'boardImg_num' : boardImg_num
+				 },success: function(data){
+					 BoardImg();
+				 }
+				 
+			 })
+		}
 	
 	 
 }
@@ -280,14 +290,9 @@ function deleteBoardImg(board_id,boardImg_num){
 		<div id="create-board">
 			<div class="container">
 				<div class="create-window">
+					<form action="/board/updateBoard" method="post" enctype="multipart/form-data">
 						<div id='top-wrap' >
 						<!-- 작성할 게시판 선택 -->
-						<select class="form-select" name='b_type' id='b_type' aria-label="Default select example">
-							<option value='0' id='option'>선택</option>
-							<option value='korea' id='option'>국내</option>
-							<option value='global' id='option'>해외</option>
-							<option value='free' id='option'>자유</option>
-						</select><br>
 						<div class="form-floating mb-3">
 							<input type="text" class="form-control" name="b_title" id="floatingInput" value="${boardView.b_title}">
 							<label for="floatingInput">제목</label>
@@ -301,6 +306,8 @@ function deleteBoardImg(board_id,boardImg_num){
 								<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()"value="취소">
 								<input type="submit" class="btn btn-blue" id="submit" value="확인">
 							</div>
+							<input type="hidden" name="board_id" value="${boardView.board_id }">
+					
 							<br>
 							<div id="boardImgOrigin">
 								<h2>본문 이미지</h2>
@@ -311,8 +318,8 @@ function deleteBoardImg(board_id,boardImg_num){
 							<div>
 						        <h2><b>이미지 미리보기</b></h2>
 						        <div class="input_wrap">
-						            <a href="#" onclick="fileUploadAction();" class="my_button">파일 업로드</a>
-						            <input type="file" id="input_imgs" multiple/>
+						            <button type="button" onclick="fileUploadAction();" class="my_button">파일 업로드</button>
+						            <input type="file" name="file" id="input_imgs" multiple="multiple"/>
 						        </div>
 						    </div>
 						
@@ -321,8 +328,8 @@ function deleteBoardImg(board_id,boardImg_num){
 						            <img id="img" />
 						        </div>
 						    </div>
-							
-					</div>
+						</div>
+					</form>	
 				</div>
 			</div>
 		</div>
