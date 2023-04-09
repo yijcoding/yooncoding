@@ -89,14 +89,114 @@ img{
   transition: all 0.3s;
 }
 
+input[type=file] {
+	display: none;
+}
+
+.my_button {
+	display: inline-block;
+	width: 200px;
+	text-align: center;
+	padding: 10px;
+	background-color: #006BCC;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+.imgs_wrap {
+	border: 2px solid #A8A8A8;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.imgs_wrap img {
+	max-width: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.image_wrap {
+	border: 2px solid #A8A8A8;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.image_wrap img {
+	max-width: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+
 </style>
 <script type="text/javascript">
+
+$(document).ready(function(){
+	 
+	 $("#input_imgs").on("change", handleImgFileSelect);
+	 
+	 //기존이미지
+	 $.ajax({
+		 type:'post',
+		 url:'/board/boardImgShow',
+		 datatype:'json',
+		 data:{
+			 'board_id':'${boardView.board_id}'
+		 },success: function(data){
+			 console.log(data);
+			 tr='';
+			 for(row of data){
+				 tr+="<a href=\"#\" onclick=\"deleteBoardImg("+row.board_id+","+row.boardImg_num+")\" id=\"img_id_"+row.board_id+"\"><img src=\"" + row.boardImg + "\"class='selProductFile' title='Click to remove'></a>";
+			 }
+			 
+			 $('.image_wrap').html(tr);
+		 }
+		 
+	 })
+	 
+	 //기존 이미지 삭제
+	  
+	 
+});
+
+function deleteBoardImg(board_id,boardImg_num){
+	if(confirm("사진을 삭제하시겠습니까?")){
+		$.ajax({
+			 type:'post',
+			 url:'/board/deleteBoardImg',
+			 datatype:'json',
+			 data:{
+				 'board_id' : board_id,
+				 'board_num' : boardImg_num
+			 },success: function(data){
+				 console.log(data);
+				 tr='';
+				 for(row of data){
+					 tr+="<a href=\"#\" onclick=\"deleteBoardImg("+row.board_id+","+row.boardImg_num+")\" id=\"img_id_"+row.board_id+"\"><img src=\"" + row.boardImg + "\"class='selProductFile' title='Click to remove'></a>";
+				 }
+				 
+				 $('.image_wrap').html(tr);
+			 }
+			 
+		 })
+	}
+	
+	 
+}
+
+//수정 취소
 	function cancle(){
 		if(confirm("글 작성을 취소하시겠습니까?")){
 			location.href="/board/view?board_id=${boardView.board_id}";
 		}
 	}
-	
+
+//수정 확정
 	function update(){
 		var form = document.getElementById('#form');
 		
@@ -115,16 +215,62 @@ img{
 			form.submit();
 		}
 	}
+
+// 이미지 미리보기
 	
-	function PreviewImage() {
-		var cnt=0;
-        var preview = new FileReader();
-        preview.onload = function (e) {
-        document.getElementById("user_image").src = e.target.result;
-    };
-    preview.readAsDataURL(document.getElementById("user_profile_img").files[cnt]);
-    cnt++;
- };
+ 
+ 
+	function fileUploadAction() {
+            console.log("fileUploadAction");
+            $("#input_imgs").trigger('click');
+        }
+
+        function handleImgFileSelect(e) {
+
+            // 이미지 정보들을 초기화
+            sel_files = [];
+            $(".imgs_wrap").empty();
+
+            var files = e.target.files;
+            var filesArr = Array.prototype.slice.call(files);
+
+            var index = 0;
+            filesArr.forEach(function(f) {
+                if(!f.type.match("image.*")) {
+                    alert("확장자는 이미지 확장자만 가능합니다.");
+                    return;
+                }
+
+                sel_files.push(f);
+
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var html = "<a href=\"#\" onclick=\"deleteImageAction("+index+")\" id=\"img_id_"+index+"\"><img src=\"" + e.target.result + "\" data-file='"+f.name+"' class='selProductFile' title='Click to remove'></a>";
+                    $(".imgs_wrap").append(html);
+                    index++;
+
+                }
+                reader.readAsDataURL(f);
+                
+            });
+        }
+        
+        function deleteImageAction(index) {
+            console.log("index : "+index);
+            console.log("sel length : "+sel_files.length);
+
+            sel_files.splice(index, 1);
+
+            var img_id = "#img_id_"+index;
+            $(img_id).remove(); 
+        }
+
+        function fileUploadAction() {
+            console.log("fileUploadAction");
+            $("#input_imgs").trigger('click');
+        }
+
+ 
 </script>
 </head>
 <body>
@@ -134,7 +280,6 @@ img{
 		<div id="create-board">
 			<div class="container">
 				<div class="create-window">
-					<form id='form'method='post' onsubmit='return update()' enctype="multipart/form-data">
 						<div id='top-wrap' >
 						<!-- 작성할 게시판 선택 -->
 						<select class="form-select" name='b_type' id='b_type' aria-label="Default select example">
@@ -157,24 +302,27 @@ img{
 								<input type="submit" class="btn btn-blue" id="submit" value="확인">
 							</div>
 							<br>
-							<div>
+							<div id="boardImgOrigin">
 								<h2>본문 이미지</h2>
-								<c:forEach var="img" items="${boardImg }" >
-									<div class="image-wrap">
-										<img alt="" src="${img.boardImg }" style="margin:20px 0; max-width:600px">
-									</div>
-								</c:forEach>
-								<img alt="" src="boardImg">
-							</div>
-							<h2>업로드할 이미지</h2>
-							<img id="user_image" src="#" alt="" >
-							<label for="user_profile_img">
-	 							<div class="btn btn-blue" style="padding : 5px 0; width:100px">파일 업로드</div>
-							</label>
-							<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' multiple="multiple"/>
-							<input type="hidden" name="board_id" value="${boardView.board_id }">
+								<div class="image_wrap">
+								
+								</div>
 							
-					</form>
+							<div>
+						        <h2><b>이미지 미리보기</b></h2>
+						        <div class="input_wrap">
+						            <a href="#" onclick="fileUploadAction();" class="my_button">파일 업로드</a>
+						            <input type="file" id="input_imgs" multiple/>
+						        </div>
+						    </div>
+						
+						    <div>
+						        <div class="imgs_wrap">
+						            <img id="img" />
+						        </div>
+						    </div>
+							
+					</div>
 				</div>
 			</div>
 		</div>

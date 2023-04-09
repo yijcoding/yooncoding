@@ -296,7 +296,8 @@ function commentList(){
 		},success : function(data){
 			console.log(data);
 			tr='';
-			if(data.length == 0){
+			console.log(data.length);
+			if(data.length!=0){
 				tr+="<table id='table'>";
 				for(row of data){
 					tr+="<tr id='reply"+row.reply_num+"'>";

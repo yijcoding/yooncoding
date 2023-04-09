@@ -95,6 +95,12 @@ public class BoardServiceImpl implements BoardService {
 		return dao.boardImgSelect(map);
 	}
 
+	@Override
+	public int deleteBoardImg(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.deleteBoardImg(map);
+	}
+
 	
 
 }

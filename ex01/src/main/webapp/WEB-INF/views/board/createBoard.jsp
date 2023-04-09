@@ -88,8 +88,43 @@
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
+
+input[type=file] {
+	display: none;
+}
+
+.my_button {
+	display: inline-block;
+	width: 200px;
+	text-align: center;
+	padding: 10px;
+	background-color: #006BCC;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+.imgs_wrap {
+	border: 2px solid #A8A8A8;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.imgs_wrap img {
+	max-width: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 </style>
 <script type="text/javascript">
+
+$(document).ready(function(){
+	
+	 $("#input_imgs").on("change", handleImgFileSelect);
+})
 	function cancle(){
 		if(confirm("글 작성을 취소하시겠습니까?")){
 			location.href="/board/board";
@@ -114,15 +149,57 @@
 		
 	}
 	
-	function PreviewImage() {
-		var cnt=0;
-        var preview = new FileReader();
-        preview.onload = function (e) {
-        document.getElementById("user_image").src = e.target.result;
-    };
-    preview.readAsDataURL(document.getElementById("user_profile_img").files[cnt]);
-    cnt++;
- };
+	function fileUploadAction() {
+        console.log("fileUploadAction");
+        $("#input_imgs").trigger('click');
+    }
+
+    function handleImgFileSelect(e) {
+
+        // 이미지 정보들을 초기화
+        sel_files = [];
+        $(".imgs_wrap").empty();
+
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+
+        var index = 0;
+        filesArr.forEach(function(f) {
+            if(!f.type.match("image.*")) {
+                alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }
+
+            sel_files.push(f);
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var html = "<a href=\"#\" onclick=\"deleteImageAction("+index+")\" id=\"img_id_"+index+"\"><img src=\"" + e.target.result + "\" data-file='"+f.name+"' class='selProductFile' title='Click to remove'></a>";
+                $(".imgs_wrap").append(html);
+                index++;
+
+            }
+            reader.readAsDataURL(f);
+            
+        });
+    }
+    
+    function deleteImageAction(index) {
+        console.log("index : "+index);
+        console.log("sel length : "+sel_files.length);
+
+        sel_files.splice(index, 1);
+
+        var img_id = "#img_id_"+index;
+        $(img_id).remove(); 
+    }
+
+    function fileUploadAction() {
+        console.log("fileUploadAction");
+        $("#input_imgs").trigger('click');
+    }
+	
+	
 </script>
 </head>
 <body>
@@ -151,9 +228,19 @@
 						<textarea class="form-control" name="b_content"
 							id="exampleFormControlTextarea1" rows="3"></textarea>
 					</div>
-					<img id="user_image" src="#" alt="" >
-						<input accept=".jpg,.png,.gif" onchange="PreviewImage();" type="file" id="user_profile_img" name='file' multiple="multiple"/>
-					
+					<div>
+						<h2><b>이미지 미리보기</b></h2>
+						<div class="input_wrap">
+						<a href="#" onclick="fileUploadAction();" class="my_button">파일 업로드</a>
+						<input type="file" name="file" id="input_imgs" multiple/>
+						</div>
+					</div>
+						
+					<div>
+						<div class="imgs_wrap">
+						    <img id="img" />
+						</div>
+					</div>
 					
 					<input type="hidden" name="member_id" value="admin">
 					<div id="insert-btn-wrap">

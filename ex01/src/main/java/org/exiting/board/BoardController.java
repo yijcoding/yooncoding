@@ -34,6 +34,7 @@ import lombok.extern.log4j.Log4j2;
 public class BoardController {
 
 	private static final String BOARD_SAVE_PATH ="D:\\Kdigital\\spring\\springws\\ex01\\src\\main\\webapp\\resources\\upload\\" ;
+	private static final String HOME_BOARD_SAVE_PATH ="C:\\Users\\MOON\\git\\repository2\\ex01\\src\\main\\webapp\\resources\\upload\\" ;
 	private static final String BOARD_LOAD_PATH ="/resources/upload/" ;
 	@Autowired
 	BoardService service;
@@ -154,7 +155,7 @@ public class BoardController {
 					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
 	
-					String safeFile = BOARD_SAVE_PATH +originalFileName;
+					String safeFile = HOME_BOARD_SAVE_PATH +originalFileName;
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
 					fi.put("board_id", board_id.get("board_id"));
 					fi.put("boardImg", originalFileName);		
@@ -176,25 +177,25 @@ public class BoardController {
 	public ModelAndView boardView(@RequestParam Map<String,Object> map) {
 		ModelAndView mav = new ModelAndView();
 		String path ="session.getServletContext().getRealPath(\"/\")";
-		//BoardPage boardPage = new BoardPage();
-		//paging 처리
-//		Map<String,Object> res = service.boardCnt(map);
-//		int totalCount = Integer.parseInt(res.get("cnt").toString());
-//		int pageSize =10;
-//		int blockPage = 10;
-//		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
-//		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
-//		String pageTemp = String.valueOf(map.get("pageNum"));
-//		if (pageTemp != "null" && !pageTemp.equals(""))
-//			pageNum = Integer.parseInt(pageTemp);
-//		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
-//		int end = pageNum * pageSize; // 마지막 게시물 번호
-//		int start2 = start-1;
-//		Map<String,Object> map2 = new HashMap<>();
-//		map2.put("start", start2);
-//		map2.put("end", end);
-//		map2.put("pageNum", pageNum);
-//		mav.setViewName("/board/Board");
+		BoardPage boardPage = new BoardPage();
+//		paging 처리
+		Map<String,Object> res = service.boardCnt(map);
+		int totalCount = Integer.parseInt(res.get("cnt").toString());
+		int pageSize =10;
+		int blockPage = 10;
+		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
+		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
+		String pageTemp = String.valueOf(map.get("pageNum"));
+		if (pageTemp != "null" && !pageTemp.equals(""))
+			pageNum = Integer.parseInt(pageTemp);
+		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
+		int end = pageNum * pageSize; // 마지막 게시물 번호
+		int start2 = start-1;
+		Map<String,Object> map2 = new HashMap<>();
+		map2.put("start", start2);
+		map2.put("end", end);
+		map2.put("pageNum", pageNum);
+		mav.setViewName("/board/Board");
 		
 		
 		Map<String,Object> boardReplyCnt = service.boardReplyCnt(map);
@@ -221,7 +222,7 @@ public class BoardController {
 		mav.setViewName("/board/view");
 		mav.addObject("boardImg", boardImg);
 		mav.addObject("boardView",boardView);
-		//mav.addObject("startend",map2);
+		mav.addObject("startend",map2);
 		
 		return mav;
 	}
@@ -250,11 +251,17 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView();
 		Map<String, Object> boardList = service.boardView(map); 
 		List<Map<String,Object>> list = service.boardImgSelect(map);
+		
+		for(Map<String,Object> img : list){
+			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
+		}
 		mav.addObject("boardView",boardList);
 		mav.addObject("boardImg",list);
 		mav.setViewName("/board/updateBoard");
 		return mav;
 	}
+	
+
 
 	@RequestMapping(value = "/board/updateBoard", method = RequestMethod.POST)
 	public ModelAndView updateBoardpost(@RequestParam Map<String,Object>map,@RequestParam(value="file",required = false) List<MultipartFile> mf){
@@ -266,7 +273,6 @@ public class BoardController {
 
 		Map<String,Object> board_id = service.boardView(map);
 		List<Map<String,Object>> oldImgList = service.boardImgSelect(map);
-		List<Map<String,Object>> ImgList = null;
 		//이미지 비교
 //		for(Map<String,Object> old : oldImgList) {
 //			Map<String,Object> file = new HashMap<>();
@@ -286,11 +292,12 @@ public class BoardController {
 				for(Map<String,Object> old : oldImgList) {
 					if(!(mf.contains(old.get("boardImg")))) {
 						old.remove("boardImg");
+						service.deleteBoardImg(old);
 					}
 				}
 				
 				for(MultipartFile file : mf) {
-					if(!(oldImgList.contains(file))) {
+					if(oldImgList.contains(file)) {
 						mf.remove(file);
 					}
 				}
@@ -298,18 +305,14 @@ public class BoardController {
 				for(MultipartFile file:mf) {
 					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
-					String safeFile = BOARD_SAVE_PATH +originalFileName;
+					String safeFile = HOME_BOARD_SAVE_PATH +originalFileName;
 					fi.put("board_id", board_id.get("board_id"));
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
+			
+					fi.put("boardImg", originalFileName);		
+					service.boardImgInsert(fi);
+					file.transferTo(new File(safeFile));
 					
-					//기존에 있던 이미지 비교
-					if(!(oldImgList.contains(file))) {
-						fi.put("boardImg", originalFileName);		
-						service.boardImgInsert(fi);
-						file.transferTo(new File(safeFile));
-					}else {
-						
-					}
 				}	
 			}
 			
@@ -317,12 +320,29 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+	
 		service.updateBoard(map); 
 		mav.setViewName("redirect:/board/view?board_id="+map.get("board_id"));
 		return mav;
 	}
+	
+	//ajax 이미지 수정
+	@RequestMapping(value = "/board/boardImgShow", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Map<String,Object>> boardImgShow(@RequestParam Map<String,Object>map){
+		System.out.println(map);
+		List<Map<String,Object>> list = service.boardImgSelect(map);
+		
+		for(Map<String,Object> img : list){
+			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
+		}
+		
+		return list;
+	}
 
+	
+	
+	
 	@RequestMapping(value = "/board/deleteBoard", method = RequestMethod.GET)
 	public ModelAndView deleteBoard(@RequestParam Map<String,Object>map){
 		ModelAndView mav = new ModelAndView();

@@ -27,30 +27,7 @@ public class BoardDAO {
 		return sql.selectList("board.boardImgSelect",map);	
 	}
 	
-	public int boardInsert(Map<String, Object> map){
-		
-		return sql.insert("board.boardInsert",map);	
-	}
 	
-	public int replyInsert(Map<String, Object> map){
-		
-		return sql.insert("board.replyInsert",map);	
-	}
-	
-	public int updateBoard(Map<String, Object> map){
-		
-		return sql.update("board.updateBoard",map);	
-	}
-	
-	public int deleteBoard(Map<String, Object> map){
-		
-		return sql.delete("board.deleteBoard",map);	
-	}
-	
-	public int boardVisit(Map<String, Object> map){
-		
-		return sql.update("board.boardVisit",map);	
-	}
 	
 	public Map<String, Object> boardView(Map<String, Object> map){
 		
@@ -67,6 +44,42 @@ public class BoardDAO {
 		return sql.selectOne("board.boardCnt",map);	
 	}
 	
+	
+	
+	
+	
+	public int boardImgInsert(Map<String, Object> map){
+		
+		return sql.insert("board.boardImgInsert",map);	
+	}
+
+	public int boardInsert(Map<String, Object> map){
+		
+		return sql.insert("board.boardInsert",map);	
+	}
+	
+	public int replyInsert(Map<String, Object> map){
+		
+		return sql.insert("board.replyInsert",map);	
+	}
+	
+	
+	
+	
+	
+	
+	public int updateBoard(Map<String, Object> map){
+		
+		return sql.update("board.updateBoard",map);	
+	}
+	
+	public int boardVisit(Map<String, Object> map){
+		
+		return sql.update("board.boardVisit",map);	
+	}
+	
+	
+	
 	public int replyDelete(Map<String, Object> map){
 		
 		return sql.delete("board.replyDelete",map);	
@@ -76,8 +89,17 @@ public class BoardDAO {
 		return sql.update("board.replyUpdate",map);	
 	}
 	
-	public int boardImgInsert(Map<String, Object> map){
+	
+	
+	
+	
+	public int deleteBoardImg(Map<String, Object> map){
 		
-		return sql.insert("board.boardImgInsert",map);	
+		return sql.delete("board.deleteBoardImg",map);	
+	}
+	
+	public int deleteBoard(Map<String, Object> map){
+		
+		return sql.delete("board.deleteBoard",map);	
 	}
 }

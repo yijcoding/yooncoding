@@ -18,5 +18,6 @@ public interface BoardService {
 	public int replyDelete(Map<String,Object> map);
 	public int replyUpdate(Map<String,Object> map);
 	public int boardImgInsert(Map<String,Object> map);
+	public int deleteBoardImg(Map<String,Object> map);
 
 }
