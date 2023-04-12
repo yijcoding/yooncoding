@@ -14,7 +14,9 @@
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
 <style type="text/css">
-
+.wrap{
+	margin:100px 200px;
+}
 #create-board .create-window,#form,.container {
 	/*   padding-right: 124px; */
 	
@@ -52,7 +54,7 @@ img{
 	display: inline-block;
 	background: #4aa8d8;
 	color: #fff;
-	height:35px;
+	height:40px;
 
 }
 	
@@ -182,7 +184,6 @@ $(document).ready(function(){
 	//기존 이미지 삭제
 	function deleteBoardImg(boardImg_num){
 		if(confirm("사진을 삭제하시겠습니까?")){
-			alert("1111");
 			$.ajax({
 				 type:'post',
 				 url:'/board/deleteBoardImg',
@@ -284,6 +285,8 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/menu.jsp"/>
+
 	<!-- create view area -->
 	<div class="wrap">
 	<jsp:include page="/WEB-INF/views/board/advertisement_leftSide.jsp"/>
@@ -334,5 +337,7 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
+	<jsp:include page="/WEB-INF/views/footer.jsp"/>
+	
 </body>
 </html>

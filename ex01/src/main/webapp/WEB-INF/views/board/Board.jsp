@@ -13,62 +13,36 @@
 	crossorigin="anonymous"></script>
 <link href="<c:url value="/resources/css/board.css" />" rel="stylesheet" />
 <style type="text/css">
-#bottom_form{
-	margin:30px 0; 
-}
-.page_wrap {
-	width:100%;
-	text-align:center;
-	font-size:0;
+
+ul.tabs{
 	float:left;
-	margin:30px 0;
+	list-style: none;
+}
+
+ul.tabs li{
+	display: inline-block;
+	padding: 10px 15px;
+	cursor: pointer;
 	
- }
-.page_nation {
-	display:inline-block;
-	padding:0 0 0 20%;
-}
-.page_nation .none {
-	display:none;
-}
-.page_nation a {
-	display:block;
-	margin:0 3px;
-	float:left;
-	width:28px;
-	height:28px;
-	line-height:28px;
-	text-align:center;
-	background-color:#fff;
-	font-size:13px;
-	color:#999999;
-	text-decoration:none;
+	
 }
 
-.page_nation .page-item a:hover,.page_nation .page-item a:focus {
-	text-decoration:underline;
-	color:#3333FF;
+
+
+ul.tabs li a{
+	color:#666666;
+	text-decoration: none;
 }
 
-.page_nation .page-item a{
-	border:1px solid #e6e6e6;
-	color:3399FF;
+.search-wrap .btn-search{
+	background:#555;
+	color:#fff;
+	hight:40px;
 }
-.write_form_wrap{
-  width:100%;
-  max-width:1100px;
-  margin:auto;
-  height:20px;
-}
-.write_form{
-	float:right;
-}
-.btn-board-top{
-	background:#fff;
-	border:2px solid 000099;
-	width:90px;
-	height:30px;
-	font-size:13px;
+
+#boardList td a{
+	text-decoration: none;
+	color:black;
 }
 
 
@@ -76,25 +50,58 @@
 <script type="text/javascript">
 	
 $(document).ready(function(){
-	boardList()
+	
+$('ul.tabs li').click(function(){
+
+	$('ul.tabs li').removeClass('current');
+
+		$(this).addClass('current');
+		
+		    
+	})
+
 	
 	$(function(){
 		var form = document.getElementById("#write_form");
 		$('#write-top').on('click',function(){
-			location.href="/board/createBoard";
+			if(${member_id ne null}){
+				location.href="/board/createBoard";
+			}else{
+				alert('로그인 해주세요!');
+			}
 		});
 		
 		$('#write-bottom').on('click',function(){
-			location.href="/board/createBoard";
+			if(${member_id ne null}){
+				location.href="/board/createBoard";
+			}else{
+				alert('로그인 해주세요!');
+			}
 		});
 	});
+	
+	if(${param.b_type eq 1}){
+		$('#li-1').css({"border-width":"1px 1px 0 1px","border-style":"solid","background":"#ededed","border-color":"#999999","font-weight":"bold","border-radius":"5px 5px 0 0"});
+	}else if(${param.b_type eq 2}){
+		$('#li-2').css({"border-width":"1px 1px 0 1px","border-style":"solid","background":"#ededed","border-color":"#999999","font-weight":"bold","border-radius":"5px 5px 0 0"});
+	}else if(${param.b_type eq 3}){
+		$('#li-3').css({"border-width":"1px 1px 0 1px","border-style":"solid","background":"#ededed","border-color":"#999999","font-weight":"bold","border-radius":"5px 5px 0 0"});
+	}else if(${param.b_type eq 4}){
+		$('#li-4').css({"border-width":"1px 1px 0 1px","border-style":"solid","background":"#ededed","border-color":"#999999","font-weight":"bold","border-radius":"5px 5px 0 0"});
+	}else{
+		$('#li-0').css({"border-width":"1px 1px 0 1px","border-style":"solid","background":"#ededed","border-color":"#999999","font-weight":"bold","border-radius":"5px 5px 0 0"});
+	}
+	
+	
+	
+	boardList();
 		
 });
+	
 	
 	function boardList(){
 		var select=$('select[name=select]').val();
 		var search=$('input[name=search]').val();
-		
 		$.ajax({
 			type:'get',
 			url:'/board/boardList',
@@ -102,13 +109,16 @@ $(document).ready(function(){
 			data:{
 				'select' : $('select[name=select]').val(),
 				'search' : $('input[name=search]').val(),
-				'start' : '${startend.start}'
+				'start' : '${startend.start}',
+				'end' : '${startend.end}',
+				'b_type' : '${param.b_type}'
 			},success : function(data){
 				console.log(data);
 				tr="";
 				for(row of data){
 					tr+="<tr>";
 					tr+="<td>"+row.board_id+"</td>";
+					tr+="<td>"+row.b_type+"</td>";
 					tr+="<td style='text-align:left;padding:0 0 0 10px'><a href='/board/view?board_id="+row.board_id+"'>"+row.b_title+"</a></td>";
 					tr+="<td>"+row.member_id+"</td>";
 					tr+="<td>"+row.postdate+"</td>";
@@ -134,7 +144,8 @@ $(document).ready(function(){
 				'select' : select,
 				'search' : search,
 				'cnt' : cnt,
-				'start' : '${startend.start}'
+				'start' : '${startend.start}',
+				'b_type' : '${param.b_type}'
 			},success : function(data){
 				console.log(data);
 				
@@ -150,23 +161,36 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/menu.jsp"/>
 	<section class="notice">
-		<div class="page-title">
+		<!-- board list area -->
+		<div id="board-list" style="clear:both">
+			<div class="page-title" style="text-align:center">
+		<h1>게시판</h1>
 		</div>
+			
+			
+			<div class="container">
 			<div class="write_form_wrap">
+				<div>
+					<ul class="tabs">
+						<li class="tab-link current" id="li-0"><a href="/board/board?b_type=0">전체</a></li>
+						<li class="tab-link" id="li-1"><a href="/board/board?b_type=1">국내</a></li>
+						<li class="tab-link" id="li-2"><a href="/board/board?b_type=2">해외</a></li>
+						<li class="tab-link" id="li-3"><a href="/board/board?b_type=3">질문</a></li>
+						<li class="tab-link" id="li-4"><a href="/board/board?b_type=4">잡담</a></li>
+					</ul>
+				</div>
 				<div class="write_form">
 					<button type="submit" id="write-top" class="btn-board-top" ><img src="https://cdn-icons-png.flaticon.com/512/5218/5218705.png" style="width:15px; top:5px">글쓰기</button>
 				</div>
 			</div>
-	
-		<!-- board list area -->
-		<div id="board-list">
-			<div class="container">
 				<table class="board-table">
 					<thead>
 						<tr>
 							<th scope="col" class="th-num" style="width:5%">번호</th>
-							<th scope="col" class="th-title"style="width:45%">제목</th>
+							<th scope="col" class="th-num" style="width:10%">분류</th>
+							<th scope="col" class="th-title"style="width:35%">제목</th>
 							<th scope="col" class="th-member"style="width:10%">작성자</th>
 							<th scope="col" class="th-date"style="width:35%">등록일</th>
 							<th scope="col" class="th-date"style="width:35%">조회수</th>
@@ -191,8 +215,8 @@ $(document).ready(function(){
 				<!-- board paging start-->
 				<div class="page_wrap">
 					<span class="page_nation"></span>
-					<span style="float:right">
-						<button type="submit" id="write-bottom" class="btn btn-dark top" style="height: 40px;">글쓰기</button>
+					<span class="write-bottom-wrap"style="float:right">
+						<button type="submit" id="write-bottom" class="btn btn-blue top" style="height: 40px;">글쓰기</button>
 					</span>
 				</div><!-- board paging end -->
 				
@@ -213,12 +237,12 @@ $(document).ready(function(){
 						</select> 
 						<label for="search" class="blind">공지사항 내용 검색</label> 
 						<input id="text" type="search" name="search" value="${param.search }">
-						<button type="button"  class="btn btn-dark" onclick="boardList()">검색</button>
+						<button type="button"  class="btn btn-search" onclick="boardList()">검색</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
-	
+	<jsp:include page="/WEB-INF/views/footer.jsp"/>
 </body>
 </html>

@@ -13,11 +13,13 @@
  <Root level="INFO">
  <AppenderRef ref="console"/>
  </Root>
- <Logger name="org.zerock" level="INFO" additivity="false" >
+<!--  <Logger name="org.zerock" level="INFO" additivity="false" > -->
+ <Logger name="com.exciting" level="INFO" additivity="false" >
  <AppenderRef ref="console"/>
  </Logger>
 
- <Logger name="org.springframework" level="DEBUG" additivity="false">
+<!--  <Logger name="org.springframework" level="DEBUG" additivity="false"> -->
+ <Logger name="com.springframework" level="DEBUG" additivity="false">
  <AppenderRef ref="console"/>
  </Logger>
 </Loggers>

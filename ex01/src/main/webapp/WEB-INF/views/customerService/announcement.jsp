@@ -1,0 +1,180 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>고객센터</title>
+<link href="<c:url value="/resources/css/board.css" />" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+	integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+	crossorigin="anonymous"></script>
+
+<style type="text/css">
+.notice{
+	margin: 30px 0;
+}
+ul.tabs {
+	float: left;
+	list-style: none;
+}
+
+ul.tabs li {
+	display: inline-block;
+	padding: 10px 15px;
+	cursor: pointer;
+}
+
+ul.tabs li a {
+	color: #666666;
+	text-decoration: none;
+}
+
+.search-wrap .btn-search {
+	background: #555;
+	color: #fff;
+	hight: 40px;
+}
+
+#boardList td a {
+	text-decoration: none;
+	color: black;
+}
+
+.menu_select {
+  margin:0 0 30px 100px;
+  width:150px;
+}
+
+.menu_select .text{
+  width:150px;
+  
+}
+.menu_select span{
+	float:left;
+}
+.menu_select .text img,.menu_select span img {
+	width:20px;
+	margin:0 5px;
+}
+
+.menu_select .text span {
+	position: relative;
+	top:3px;
+}
+
+.menu_select .option-list {
+  position: relative;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  max-height: 0;
+  left:5px; 
+}
+
+.menu_select .option-list a {
+  	text-decoration: none;
+	color:black;
+}
+
+.menu_select.active .option-list {
+  max-height: none;
+}
+
+.board-table tbody tr td a{
+	text-decoration: none;
+	color:black;
+}
+
+
+</style>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	$(".text").on('click',() =>{
+		let list = document.querySelector('.menu_select .option-list');
+		
+		if(list.style.overflow=="hidden" || list.style.overflow==""){
+			list.style.overflow="visible";
+		}else{
+			list.style.overflow="hidden";
+		}
+	});
+	
+	$("#write-bottom").on('click',() =>{
+		
+		location.href="/customer/insertAnnouncement";
+	});
+});
+</script>
+</head>
+<body>
+	<jsp:include page="/WEB-INF/views/menu.jsp" />
+	<div class="menu_select">
+		<span onclick="location.href='/'"><img src="https://cdn-icons-png.flaticon.com/512/20/20176.png">|</span>
+		<div class="text">
+			<span><b>공지사항</b></span>
+			<img src="https://cdn-icons-png.flaticon.com/512/3519/3519316.png">
+		</div>
+		<ul class="option-list">
+			<li><a href="#">공지사항</a></li>
+			<li><a href="#">FAQ</a></li>
+			<li><a href="#">문의하기</a></li>
+			<li><a href="#">나의 상담</a></li>
+		</ul>
+	</div>
+	<section class="notice">
+		
+		<!-- board list area -->
+		<div id="board-list" style="clear: both">
+			<div class="page-title" style="text-align: center"></div>
+
+
+			<div class="container">
+				<!-- search area -->
+				<table class="board-table">
+					<thead>
+						<tr>
+							<th scope="col" class="th-num" style="width: 15%">번호</th>
+							<th scope="col" class="th-num" style="width: 15%">분류</th>
+							<th scope="col" class="th-title" style="width: 35%">제목</th>
+							<th scope="col" class="th-date" style="width: 35%">등록일</th>
+						</tr>
+					</thead>
+					<tbody id="boardList">
+					<tbody>
+						<c:forEach var="list" items="${announcementList }">
+							<tr>
+								<td>${list.announcement_num }</td>
+								<td>${list.c_type }</td>
+								<td><a href="/customer/view?announcement_num=${list.announcement_num }">${list.c_title }</a></td>
+								<td>${list.postdate }</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+					<!-- 일반반복문으로 출력 -->
+					</tbody>
+				</table>
+
+				<div class="page_wrap">
+					<span class="page_nation">
+						<!-- 페이징 -->
+						${paging}
+					</span>
+					<span class="write-bottom-wrap"style="float:right">
+						<button type="submit" id="write-bottom" class="btn btn-blue top" style="height: 40px;">글쓰기</button>
+					</span>
+				</div><!-- board paging end -->
+				<span style="float:right;">이거 관리자아이디 만들어지면 그 사람만 보이게 해야됨</span>
+				<div style="clear:both"></div>
+			</div>
+		</div>
+	</section>
+	<jsp:include page="/WEB-INF/views/footer.jsp" />
+</body>
+</html>

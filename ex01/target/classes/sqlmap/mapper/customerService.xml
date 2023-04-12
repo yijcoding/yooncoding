@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="customer">
+	
+	<select id="selectAnnouncement" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select announcement_num,c_type,c_title,postdate,c_content from announcement 
+		]]>
+		
+		<if test="announcement_num !=null">
+			where announcement_num = #{announcement_num}
+		</if>
+		
+		order by announcement_num desc
+		
+		<if test="announcement_num ==null">
+			limit 1
+		</if>
+	</select>
+	
+	<select id="selectAnnouncementList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select announcement_num,c_type,c_title,postdate from announcement order by announcement_num desc limit ${start},${end}
+		]]>
+	</select>
+	
+	<select id="customerImgSelect" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select boardImg,announcement_num from boardImg where announcement_num = #{announcement_num}
+		]]>
+	</select>
+	
+	<select id="selectAnnouncementCnt" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select count(announcement_num) as cnt from announcement
+		]]>
+	</select>
+	
+	<insert id="insertAnnouncement" parameterType="hashmap">
+		<![CDATA[
+			insert into announcement(c_title,c_content) values(#{c_title},#{c_content})
+		]]>
+	</insert>
+	
+	
+	<insert id="customerImg" parameterType="hashmap">
+		<![CDATA[
+			insert into boardImg(announcement_num,boardImg) values(#{announcement_num},#{boardImg})
+		]]>
+		
+	</insert>
+	
+	<delete id="customerImgDelete" parameterType="hashmap">
+		<![CDATA[
+			delete from boardImg where announcement_num= #{announcement_num}
+		]]>
+	</delete>
+	
+	<update id="updateannouncement" parameterType="hashmap">
+		<![CDATA[
+			update announcement set c_title=#{c_title},c_content=#{c_content} where announcement_num= #{announcement_num}
+		]]>
+	</update>
+	
+	
+</mapper>
+

@@ -15,6 +15,9 @@
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
 <style type="text/css">
+#create-board{
+	margin: 100px 0 ;
+}
 #create-board .create-window {
 	position: relative;
 	/*   padding-right: 124px; */
@@ -46,23 +49,29 @@
 
 #insert-btn-wrap {
 	float: right;
+	
+}
+
+.imgs_file{
+	margin:100px 0 0 0;
 }
 
 
-.btn-blue {
+#insert-btn-wrap .btn-blue {
 	background: #4aa8d8;
 	color: #fff;
 	height:35px;
-
+	b
 }
 	
-.btn-blue:hover, .btn-blue:focus {
+#insert-btn-wrap .btn-blue:hover, .btn-blue:focus {
 	background: #298cbf;
 	border-color: #298cbf;
 	color: #fff;
+	border: 2px solid black;
 }
 
-.btn {
+#insert-btn-wrap .btn {
 	display: inline-block;
 	padding: 0 30px;
 	font-size: 15px;
@@ -87,6 +96,7 @@
 	-ms-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
+	border-radius: 5px;
 }
 
 input[type=file] {
@@ -98,18 +108,25 @@ input[type=file] {
 	width: 200px;
 	text-align: center;
 	padding: 10px;
-	background-color: #006BCC;
+	background-color: #4aa8d8;
 	color: #fff;
 	text-decoration: none;
 	border-radius: 5px;
+	border: 2px solid black;
+}
+
+.my_button:hover, .my_button:focus, .my_button a {
+	background-color:#298cbf;
+	color: #fff;
 }
 
 .imgs_wrap {
-	border: 2px solid #A8A8A8;
+	border: 2px solid #d6d6d6;
 	margin-top: 30px;
 	margin-bottom: 30px;
 	padding-top: 10px;
 	padding-bottom: 10px;
+	border-radius: 5px;
 }
 
 .imgs_wrap img {
@@ -203,6 +220,7 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/menu.jsp"/>
 	<!-- create view area -->
 	<div id="create-board">
 		<div class="container">
@@ -213,9 +231,10 @@ $(document).ready(function(){
 						<select class="form-select" name="b_type"
 							aria-label="Default select example" style="width: 100px">
 							<option value='0' id='option'>선택</option>
-							<option value='korea' id='option'>국내</option>
-							<option value='global' id='option'>해외</option>
-							<option value='free' id='option'>자유</option>
+							<option value='국내' id='option'>국내</option>
+							<option value='해외' id='option'>해외</option>
+							<option value='질문' id='qna'>질문</option>
+							<option value='자유' id='option'>자유</option>
 						</select><br>
 						<div class="form-floating mb-3">
 							<input type="text" class="form-control" id="floatingInput" name="b_title">
@@ -228,7 +247,11 @@ $(document).ready(function(){
 						<textarea class="form-control" name="b_content"
 							id="exampleFormControlTextarea1" rows="3"></textarea>
 					</div>
-					<div>
+					<div id="insert-btn-wrap">
+						<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()" value="취소"> 
+							<input type="submit" class="btn btn-blue" id="submit"  value="확인">
+					</div>
+					<div class="imgs_file">
 						<h2><b>이미지 미리보기</b></h2>
 						<div class="input_wrap">
 						<a href="#" onclick="fileUploadAction();" class="my_button">파일 업로드</a>
@@ -242,15 +265,12 @@ $(document).ready(function(){
 						</div>
 					</div>
 					
-					<input type="hidden" name="member_id" value="admin">
-					<div id="insert-btn-wrap">
-						<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()" value="취소"> 
-							<input type="submit" class="btn btn-blue" id="submit"  value="확인">
-					</div>
+					<input type="hidden" name="member_id" value="${member_id}">
+					
 				</form>
 			</div>
 		</div>
 	</div>
-
+<jsp:include page="/WEB-INF/views/footer.jsp"/>
 </body>
 </html>

@@ -35,6 +35,7 @@ public class BoardController {
 	private static final String BOARD_SAVE_PATH ="D:\\Kdigital\\spring\\springws\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\amusement\\resources\\upload\\" ;
 	private static final String HOME_BOARD_SAVE_PATH ="C:\\Users\\MOON\\git\\repository2\\ex01\\src\\main\\webapp\\resources\\upload\\" ;
 	private static final String BOARD_LOAD_PATH ="/resources/upload/" ;
+	
 	ChangeJava changeJava = new ChangeJava();
 	ChangeHtml changeHtml = new ChangeHtml();
 	ChangeJavanontextarea changeJavanontextarea = new ChangeJavanontextarea();
@@ -43,14 +44,14 @@ public class BoardController {
 	@Autowired
 	private ServletContext servletContext;
 
+	
 	@RequestMapping(value = "/board/board", method = RequestMethod.GET)
 	public ModelAndView Board(@RequestParam Map<String,Object> map) {
 		ModelAndView mav =new ModelAndView();
 
 		BoardPage boardPage = new BoardPage();
-		//paging 처리
-		System.out.println("================================================================="+map.get("search"));
 		
+		//paging 처리
 		Map<String,Object> res = service.boardCnt(map);
 		int totalCount = Integer.parseInt(res.get("cnt").toString());
 		int pageSize =10;
@@ -78,13 +79,20 @@ public class BoardController {
 	public String BoardPaging(@RequestParam Map<String,Object> map) {
 		
 		BoardPage boardPage = new BoardPage();
+		
+		//검색페이징을 위한 데이터
 		String select = String.valueOf(map.get("select"));
 		String search = String.valueOf(map.get("search"));
 		String b_type = String.valueOf(map.get("b_type"));
+		
+		
 		//paging 처리
 		Map<String,Object> res = service.boardCnt(map);
 		
+		//게시글 갯수
 		int boardListCnt = res.size();
+		
+		//검색결과가 0이면 차단 아니면 페이징계산
 		if(boardListCnt !=0) {
 			int totalCount = Integer.parseInt(res.get("cnt").toString());
 //			System.out.println("*******************************"+totalCount);
@@ -109,10 +117,15 @@ public class BoardController {
 		
 	}
 
+	
+	
+	//게시글 목록 ajax를 통해 출력
 	@RequestMapping(value = "/board/boardList", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String,Object>> BoardList(@RequestParam Map<String,Object> map) {
 		List<Map<String,Object>> boardList = service.boardList(map);
+		
+		//sql시간값 json으로 변환하기 위한 작업
 		for(Map<String,Object> map2:boardList) {
 			String date = map2.get("postdate").toString();
 			String ymd=date.substring(0,10);
@@ -122,6 +135,8 @@ public class BoardController {
 			//System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+map);
 			String b_content = ChangeJava.change(String.valueOf(map2.get("b_content")));
 			map2.put("b_content", b_content);
+			
+			//
 			if(boardList.size()!=0) {
 				map2.put("postdate", postdate);
 				map2.put("cnt", boardList.size());
@@ -348,7 +363,8 @@ public class BoardController {
 	public int deleteBoardImg(@RequestParam Map<String,Object>map){
 		System.out.println(map);
 		List<Map<String, Object>> img = service.boardImgSelect(map);
-		System.out.println("11111111111111111111111111111111111111111"+img);
+		
+		
 		for(Map<String,Object> rs : img) {
 			System.out.println("11111111111111111111111111111111111111111"+rs.get("boardImg"));
 			File file =  new File(BOARD_SAVE_PATH+rs.get("boardImg"));
