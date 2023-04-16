@@ -37,12 +37,16 @@ ul.tabs li a{
 .search-wrap .btn-search{
 	background:#555;
 	color:#fff;
-	hight:40px;
+	height:40px;
 }
 
 #boardList td a{
 	text-decoration: none;
 	color:black;
+}
+
+.board-table{
+	font-size:15px;
 }
 
 
@@ -51,14 +55,6 @@ ul.tabs li a{
 	
 $(document).ready(function(){
 	
-$('ul.tabs li').click(function(){
-
-	$('ul.tabs li').removeClass('current');
-
-		$(this).addClass('current');
-		
-		    
-	})
 
 	
 	$(function(){
@@ -68,6 +64,7 @@ $('ul.tabs li').click(function(){
 				location.href="/board/createBoard";
 			}else{
 				alert('로그인 해주세요!');
+				location.href="/login";
 			}
 		});
 		
@@ -76,6 +73,7 @@ $('ul.tabs li').click(function(){
 				location.href="/board/createBoard";
 			}else{
 				alert('로그인 해주세요!');
+				location.href="/login";
 			}
 		});
 	});
@@ -145,7 +143,8 @@ $('ul.tabs li').click(function(){
 				'search' : search,
 				'cnt' : cnt,
 				'start' : '${startend.start}',
-				'b_type' : '${param.b_type}'
+				'b_type' : '${param.b_type}',
+				'pageNum' : '${param.pageNum}'
 			},success : function(data){
 				console.log(data);
 				

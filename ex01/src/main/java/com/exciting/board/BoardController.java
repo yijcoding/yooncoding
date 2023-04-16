@@ -36,9 +36,6 @@ public class BoardController {
 	private static final String HOME_BOARD_SAVE_PATH ="C:\\Users\\MOON\\git\\repository2\\ex01\\src\\main\\webapp\\resources\\upload\\" ;
 	private static final String BOARD_LOAD_PATH ="/resources/upload/" ;
 	
-	ChangeJava changeJava = new ChangeJava();
-	ChangeHtml changeHtml = new ChangeHtml();
-	ChangeJavanontextarea changeJavanontextarea = new ChangeJavanontextarea();
 	@Autowired
 	BoardService service;
 	@Autowired
@@ -133,10 +130,6 @@ public class BoardController {
 			String hms=date.substring(11);
 			String postdate=ymd2+" "+hms;
 			//System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+map);
-			String b_content = ChangeJavanontextarea.change(String.valueOf(map2.get("b_content")));
-			map2.put("b_content", b_content);
-			String b_title = ChangeJavanontextarea.change(String.valueOf(map2.get("b_title")));
-			map2.put("b_title", b_title);
 			
 			//
 			if(boardList.size()!=0) {
@@ -153,7 +146,6 @@ public class BoardController {
 	@RequestMapping(value = "board/reply-insert", method = RequestMethod.GET)
 	@ResponseBody
 	public String reply_insert(@RequestParam Map<String,Object> map) {
-		
 		String b_reply = ChangeHtml.change(String.valueOf(map.get("b_reply")));
 		map.put("b_reply", b_reply);
 		int rs =service.replyInsert(map);
@@ -173,8 +165,6 @@ public class BoardController {
 		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+mf);
 		
 		//특수문자 치환
-		String b_content = ChangeHtml.change(String.valueOf(map.get("b_content")));
-		map.put("b_content", b_content);
 		
 		
 		service.boardInsert(map);
@@ -185,7 +175,7 @@ public class BoardController {
 				for(MultipartFile file:mf) {
 					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
 	
-					String safeFile = BOARD_SAVE_PATH +originalFileName;
+					String safeFile = HOME_BOARD_SAVE_PATH +originalFileName;
 					
 					
 					fi.put("board_id", board_id.get("board_id"));
@@ -236,10 +226,6 @@ public class BoardController {
 		Map<String,Object> boardView = service.boardView(map);
 		List<Map<String,Object>> boardImg = service.boardImgSelect(map);
 		
-		String b_content = ChangeJavanontextarea.change(String.valueOf(boardView.get("b_content")));
-		boardView.put("b_content", b_content);
-		String b_title = ChangeJavanontextarea.change(String.valueOf(boardView.get("b_title")));
-		boardView.put("b_title", b_title);
 		
 		
 		for(Map<String, Object> img : boardImg) {
@@ -358,8 +344,6 @@ public class BoardController {
 		for(Map<String,Object> img : list){
 			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
 		}
-		String b_content = ChangeJava.change(String.valueOf(boardList.get("b_content")));
-		boardList.put("b_content", b_content);
 		mav.addObject("boardView",boardList);
 		mav.addObject("boardImg",list);
 		mav.setViewName("/board/updateBoard");
@@ -387,7 +371,7 @@ public class BoardController {
 				for(MultipartFile file:mf) {
 					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
-					String safeFile = BOARD_SAVE_PATH +originalFileName;
+					String safeFile = HOME_BOARD_SAVE_PATH +originalFileName;
 					fi.put("board_id", board_id.get("board_id"));
 					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
 			
@@ -405,8 +389,6 @@ public class BoardController {
 		}
 	
 		
-		String b_content = ChangeHtml.change(String.valueOf(map.get("b_content")));
-		map.put("b_content", b_content);
 		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+map);
 		service.updateBoard(map); 
 		mav.setViewName("redirect:/board/view?board_id="+map.get("board_id"));
@@ -438,7 +420,7 @@ public class BoardController {
 		
 		for(Map<String,Object> rs : img) {
 			//System.out.println("11111111111111111111111111111111111111111"+rs.get("boardImg"));
-			File file =  new File(BOARD_SAVE_PATH+rs.get("boardImg"));
+			File file =  new File(HOME_BOARD_SAVE_PATH+rs.get("boardImg"));
 			if(file.exists()) { // 파일이 존재하면
 				file.delete(); // 파일 삭제	
 			}

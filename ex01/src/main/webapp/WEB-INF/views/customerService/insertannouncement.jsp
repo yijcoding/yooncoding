@@ -148,20 +148,26 @@ $(document).ready(function(){
 		}
 	}
 	
-	function insert(){
-		var form = document.getElementById('form');
-		
-		if($('input[name="b_title"]').val().length === 0){
-			alert("제목을 입력해주세요");
-			return false;
-		}else if($('textarea[name="b_content"]').val().length === 0){
-			alert("내용을 입력해주세요");
-			return false;
-		}else{
-			form.submit();
-		}
-		
+function insert(){
+	
+	var form = document.getElementById('form');
+	if(${member_id eq null}){
+		swal('세션이 만료되었습니다.','다시 로그인 해주세요','error');
+		return false;
+	}else if($('input[name="c_title"]').val().length === 0){
+		swal("제목을 입력해주세요",'','warning');
+		return false;
+	}else if($('textarea[name="c_content"]').val().length === 0){
+		swal("내용을 입력해주세요",'','warning');
+		return false;
+	}if($('select[name="f_type"]').val()=='0'){
+		swal("말머리를 선택해주세요",'','warning');
+		return false;
+	}else{
+		form.submit();
 	}
+	
+}
 	
 	function fileUploadAction() {
         console.log("fileUploadAction");
@@ -223,6 +229,7 @@ $(document).ready(function(){
 		<div class="container">
 			<div class="create-window">
 				<form action="/customer/insertAnnouncement" id="form" method="post" onsubmit="return insert()" enctype="multipart/form-data">
+					<input type="hidden" name="c_type" value="공지">
 					<div id='top-wrap'>
 						<div class="form-floating mb-3">
 							<input type="text" class="form-control" id="floatingInput" name="c_title">

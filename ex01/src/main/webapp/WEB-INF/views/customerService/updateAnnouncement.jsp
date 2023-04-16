@@ -209,23 +209,22 @@ $(document).ready(function(){
 
 //수정 확정
 	function update(){
-		var form = document.getElementById('#form');
-		
-		if($('#c_title').val().length === 0){
-			alert("제목을 입력해주세요");
-			return false;
-		}else if($('#c_content').val().length === 0){
-			alert("내용을 입력해주세요");
-			return false;
-		}if($('select[name="c_type"]').val()=='0'){
-			alert("말머리를 입력해주세요");
-			return false;
-		}else{
-			form.action('/board/updateBoard');
-			form.method = 'post';
-			form.submit();
-		}
+	
+	var form = document.getElementById('form');
+	if(${member_id eq null}){
+		swal('세션이 만료되었습니다.','다시 로그인 해주세요','error');
+		return false;
+	}else if($('input[name="c_title"]').val().length === 0){
+		swal("제목을 입력해주세요",'','warning');
+		return false;
+	}else if($('textarea[name="c_content"]').val().length === 0){
+		swal("내용을 입력해주세요",'','warning');
+		return false;
+	}else{
+		form.submit();
 	}
+	
+}
 
 // 이미지 미리보기
 	
@@ -286,8 +285,10 @@ $(document).ready(function(){
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/menu.jsp"/>
-
 	<!-- create view area -->
+	<div style="margin:0 200px">
+		<jsp:include page="/WEB-INF/views/customerService/customerMove.jsp"/>
+	</div>
 	<div class="wrap">
 	<jsp:include page="/WEB-INF/views/board/advertisement_leftSide.jsp"/>
 		<div id="create-board">

@@ -37,7 +37,7 @@
 		
 		width:100%;
 		max-width:1100px;
-		margin: 0 250px;
+		margin: 0 375px;
 		
 	}
 	#emoticons img{
@@ -323,6 +323,7 @@ $(document).ready(function() {
     				location.href="/board/createBoard";
     			}else{
     				alert('로그인 해주세요!');
+    				location.href="/login";
     			}
     		});
     		
@@ -331,6 +332,7 @@ $(document).ready(function() {
     				location.href="/board/createBoard";
     			}else{
     				alert('로그인 해주세요!');
+    				location.href="/login";
     			}
     		});
 		});
@@ -426,8 +428,10 @@ function commentList(){
 					tr+="<td style='width:20%;text-align:center'>"+row.member_id+"</td>";
 					tr+="<td style='width:40%'>"+row.b_reply+"</td>";
 					tr+="<td style='width:25%;text-align:center'>"+row.postdate+"</td>";
-					tr+="<td style='width:5%;text-align:center'><button onclick='comment_update("+row.reply_num+","+'row.member_id'+")' class='btn btn-white' id='comment_update'>수정</button></td>";
-					tr+="<td style='width:5%;text-align:center'><button onclick='comment_delete("+row.reply_num+")' class='btn btn-white' id='comment_delete'>삭제</button></td>";
+					if(${member_id ne null and member_id eq boardView.member_id }){
+						tr+="<td style='width:5%;text-align:center'><button onclick='comment_update("+row.reply_num+","+'row.member_id'+")' class='btn btn-white' id='comment_update'>수정</button></td>";
+						tr+="<td style='width:5%;text-align:center'><button onclick='comment_delete("+row.reply_num+")' class='btn btn-white' id='comment_delete'>삭제</button></td>";
+					}
 					tr+="</tr>";
 					}
 				tr+="</table>";
@@ -688,8 +692,11 @@ function favoriteEvent(rs){
 				</c:forEach>
 			</div>
 			<div class='view-btn'>
+			<c:if test="${member_id ne null and member_id eq boardView.member_id  }">
 				<input type="button" class='btn btn-blue' id="board_delete"  value='삭제' onclick="delteBoard()">
 				<input type="button" class='btn btn-blue' id="board_update"  value='수정'>
+			
+			</c:if>
 			</div>
 		</div>
 		

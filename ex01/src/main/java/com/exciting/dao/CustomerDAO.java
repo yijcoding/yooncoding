@@ -30,6 +30,35 @@ public class CustomerDAO {
 		return sql.update("customer.updateannouncement",map);
 	}
 	
+	public int faqWrite(Map<String,Object> map) {
+		return sql.insert("customer.faqWrite",map);
+	}
+	
+	public int faqupdate(Map<String,Object> map) {
+		return sql.update("customer.faqupdate",map);
+	}
+	
+	public int faqDelete(Map<String,Object> map) {
+		return sql.delete("customer.faqDelete",map);
+	}
+	
+	public int insertAnnouncementInquiry(Map<String,Object> map) {
+		return sql.insert("customer.insertAnnouncementInquiry",map);
+	}
+	
+	public int insertConsultation(Map<String,Object> map) {
+		return sql.insert("customer.insertConsultation",map);
+	}
+	
+	public int updateRefInquiry(Map<String,Object> map) {
+		return sql.update("customer.updateRefInquiry",map);
+	}
+	
+	public int updateTitleInquiry(Map<String,Object> map) {
+		return sql.update("customer.updateTitleInquiry",map);
+	}
+	
+	
 	public Map<String, Object> selectAnnouncementCnt(Map<String,Object> map) {
 		return sql.selectOne("customer.selectAnnouncementCnt",map);
 	}
@@ -38,12 +67,27 @@ public class CustomerDAO {
 		return sql.selectOne("customer.selectAnnouncement",map);
 	}
 	
+	public Map<String,Object> selectconsultationDetailsCnt(Map<String,Object> map) {
+		return sql.selectOne("customer.selectconsultationDetailsCnt",map);
+	}
+	
+	public Map<String,Object> consultationView(Map<String,Object> map) {
+		return sql.selectOne("customer.consultationView",map);
+	}
+	
 	public List<Map<String,Object>> selectAnnouncementList(Map<String,Object> map) {
 		return sql.selectList("customer.selectAnnouncementList",map);
 	}
 	
 	public List<Map<String,Object>> customerImgSelect(Map<String,Object> map) {
-		System.out.println("나는 DAO Image Select++++++++++++++++++++++++++++++++++++++++++"+map);
 		return sql.selectList("customer.customerImgSelect",map);
+	}
+	
+	public List<Map<String,Object>> getFaqList(Map<String,Object> map) {
+		return sql.selectList("customer.getFaqList",map);
+	}
+	
+	public List<Map<String,Object>> consultationDetails(Map<String,Object> map) {
+		return sql.selectList("customer.consultationDetails",map);
 	}
 }

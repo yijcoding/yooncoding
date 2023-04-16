@@ -123,7 +123,7 @@ $(document).ready(function(){
 
 	<section class="notice">
 		<div class="banner" style="margin:30px 0">
-			<h1>공지 사항</h1>
+			<h1>상담내역</h1>
 		</div>
 		
 		<!-- board list area -->
@@ -144,11 +144,11 @@ $(document).ready(function(){
 					</thead>
 					<tbody id="boardList">
 					<tbody>
-						<c:forEach var="list" items="${announcementList }">
+						<c:forEach var="list" items="${list }">
 							<tr>
-								<td>${list.announcement_num }</td>
-								<td>${list.c_type }</td>
-								<td class="title"><a href="/customer/view?announcement_num=${list.announcement_num }" >${list.c_title }</a></td>
+								<td>${list.inquiry_num }</td>
+								<td>${list.b_type }</td>
+								<td class="title"><a href="/customer/consultationView?inquiry_num=${list.inquiry_num }">${list.b_title }</a></td>
 								<td>${list.postdate }</td>
 							</tr>
 						</c:forEach>
@@ -162,12 +162,7 @@ $(document).ready(function(){
 						<!-- 페이징 -->
 						${paging}
 					</span>
-					<span class="write-bottom-wrap"style="float:right">
-						<button type="submit" id="write-bottom" class="btn btn-blue top" style="height: 40px;">글쓰기</button>
-					</span>
 				</div><!-- board paging end -->
-				<span style="float:right;">이거 관리자아이디 만들어지면 그 사람만 보이게 해야됨</span>
-				<div style="clear:both"></div>
 			</div>
 		</div>
 	</section>

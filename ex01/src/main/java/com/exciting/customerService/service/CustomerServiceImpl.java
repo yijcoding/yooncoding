@@ -22,10 +22,20 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("나는야 서비스++++++++++++++++++++++++++++++++++++++++"+map);
 		return dao.insertAnnouncement(map);
 	}
-	
+	@Override
 	public int customerImg(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return dao.customerImg(map);
+	}
+	@Override
+	public int faqupdate(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.faqupdate(map);
+	}
+	@Override
+	public int updateRefInquiry(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.updateRefInquiry(map);
 	}
 
 
@@ -52,6 +62,12 @@ public class CustomerServiceImpl implements CustomerService {
 		// TODO Auto-generated method stub
 		return dao.customerImgSelect(map);
 	}
+	
+	@Override
+	public List<Map<String, Object>> consultationDetails(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.consultationDetails(map);
+	}
 
 	@Override
 	public int customerImgDelete(Map<String, Object> map) {
@@ -63,6 +79,52 @@ public class CustomerServiceImpl implements CustomerService {
 	public int updateannouncement(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return dao.updateannouncement(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getFaqList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.getFaqList(map);
+	}
+
+	@Override
+	public int faqWrite(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.faqWrite(map);
+	}
+
+	@Override
+	public int faqDelete(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.faqDelete(map);
+	}
+
+	@Override
+	public int insertAnnouncementInquiry(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.insertAnnouncementInquiry(map);
+	}
+
+	@Override
+	public Map<String, Object> selectconsultationDetailsCnt(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.selectconsultationDetailsCnt(map);
+	}
+
+	@Override
+	public Map<String, Object> consultationView(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.consultationView(map);
+	}
+	@Override
+	public int insertConsultation(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.insertConsultation(map);
+	}
+	@Override
+	public int updateTitleInquiry(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.updateTitleInquiry(map);
 	}
 
 	

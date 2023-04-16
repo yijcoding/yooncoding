@@ -25,9 +25,9 @@
 		<property name="driverClassName"
 			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl"
-			value="jdbc:log4jdbc:mysql://192.168.0.9:3306/amusement?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
-		<property name="username" value="myuser" />
-		<property name="password" value="tmvmfld1234!@#$" />
+			value="jdbc:log4jdbc:mysql://localhost:3306/amusment?serverTimezone=UTC" />
+		<property name="username" value="root" />
+		<property name="password" value="rpass" />
 	</bean>
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"

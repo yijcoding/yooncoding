@@ -11,6 +11,8 @@ public class ChangeHtml {
 	    returnStr = returnStr.replaceAll("<", "&lt;");
 	    
 	    returnStr = returnStr.replaceAll("\r\n", "<br>");
+	    
+	    returnStr = returnStr.replaceAll("\n", "<br>");
 	 
 	    //returnStr = returnStr.replaceAll("", "&quot;");
 	    

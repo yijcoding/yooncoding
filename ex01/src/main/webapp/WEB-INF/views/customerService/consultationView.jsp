@@ -21,8 +21,10 @@
 		width:100%;
 	}
 	
-	
-	
+	.customerMove{
+		position:relative;
+		width:100%;
+	}
 	.aside-right-wrap{
 		position:sticky;
 		float:right;
@@ -146,37 +148,38 @@
 		float:left;
 	}
 		
-	
+	.content{
+		height:100%;
+		width:100%;
+	}
+	.content-inner{
+		height:100%;
+		width:100%;
+	}
 </style>
 <script type="text/javascript">
 
 $(document).ready(function() {
-    
-    $('#board_update').on('click', function() {
-    	
-    	
-    	location.href='/customer/updateAnnouncement?announcement_num=${view.announcement_num}';
-    });
+	
     
     $('#board_delete').on('click', function() {
     	
     	if(confirm("글을 삭제하시겠습니까?")){
     		
-    	location.href='/customer/deleteAnnouncement?announcement_num=${view.announcement_num}';
     	}
     });
-
-	
-	$("#write-bottom").on('click',() =>{
-		
-		location.href="/customer/insertAnnouncement";
-	});
+    
     
 	
 });
 
 
-
+function answer(){
+	if($('#adminAnswerContent').val()==''){
+		alert('답변내용이 비어있습니다!!!!!');
+		return false;
+	}
+}
 
 
 </script>
@@ -189,12 +192,11 @@ $(document).ready(function() {
 	<div class="customerMove">
 		<jsp:include page="/WEB-INF/views/customerService/customerMove.jsp"/>
 	</div>
-	<div style="clear:both"></div>
 		<!--상단 -->
 		<div class="header">
 			<div class="header-inner" >
-				<p style="margin-bottom:10px;font-size:20px;"><b>${view.c_title}</b></p> 
-				<span>${fn:replace(view.postdate, 'T',' ')}</span>
+				<p style="margin-bottom:10px;font-size:20px;float:left;"><b>${view[0].b_title}</b></p> 
+				<span style="float:right">${view[0].postdate}</span>
 			</div>
 		</div>
 		
@@ -206,15 +208,36 @@ $(document).ready(function() {
 				</div>
 			</c:forEach>
 
-
 			<br> 	
 			
-			<div>${view.c_content }</div>
+			<div class="content">
+				<div class="content-inner">
+					<c:forEach var="list" items="${view}">
+						<div style="height:100%; min-height:400px; background:#eeeeee; padding:10px">
+							${list.b_content }
+						</div>
+						<hr style="margin:50px 0; border:1px solid grey">
+					</c:forEach>
+				</div>
+				
+				<!-- 답변일 없을시  -->
+				<c:if test="${view[0].cnt eq 1 }">
+					<div>
+						<form action="/customer/consultationView" method="post" id="adminAnswer" onsubmit="return answer()">
+							<p>관리자 답변</p>
+							<textarea rows="10" name="b_content" id="adminAnswerContent"style="width:100%"></textarea>
+							<input type="submit" value="관리자 답변">
+							<input type="hidden" name="inquiry_num" value="${view[0].inquiry_num }">
+							<input type="hidden" name="b_title" value="${view[0].b_title }">
+						</form> 
+					</div>
+				</c:if>
+			</div>
 			
+			<!-- 답글 -->
 			
 			<div class='view-btn'>
 				<input type="button" class='btn btn-blue' id="board_delete"  value='삭제'>
-				<input type="button" class='btn btn-blue' id="board_update"  value='수정'>
 				<div>이거 관리자만 사용가능하게 바꿔야됨</div>
 			</div>
 		</div>

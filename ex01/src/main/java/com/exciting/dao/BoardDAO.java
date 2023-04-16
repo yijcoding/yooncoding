@@ -88,6 +88,7 @@ public class BoardDAO {
 		return sql.update("board.boardVisit",map);	
 	}
 	
+
 	
 	
 	

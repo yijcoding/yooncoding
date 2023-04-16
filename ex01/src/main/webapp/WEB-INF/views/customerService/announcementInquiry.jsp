@@ -15,8 +15,13 @@
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 <style type="text/css">
+
+
+
+.select_wrap{
+	display:inline-block;
+}
 #create-board{
 	margin: 100px 0 ;
 }
@@ -137,8 +142,19 @@ input[type=file] {
 	margin-right: 10px;
 }
 
- .ck-editor__editable { height: 400px; }
 
+table, td, th {
+  border-top : 1px solid #666666;
+  border-bottom: 1px solid #666666;
+  border-collapse : collapse;
+  width:100%;
+  margin: 15px 0;
+}
+
+td, th {
+  text-align : center;
+  vertical-align : middle;
+}
 </style>
 <script type="text/javascript">
 
@@ -152,24 +168,30 @@ $(document).ready(function(){
 		}
 	}
 	
-function insert(){
+	function insert(){
 	
-	var form = document.getElementById('form');
-	if(${member_id eq null}){
-		swal('세션이 만료되었습니다.','다시 로그인 해주세요','error');
-		return false;
-	}else if($('input[name="b_title"]').val().length === 0){
-		swal("제목을 입력해주세요",'','warning');
-		return false;
-	}if($('select[name="b_type"]').val()=='0'){
-		swal("말머리를 선택해주세요",'','warning');
-		return false;
-	}else{
-		form.submit();
+		var form = document.getElementById('form');
+		console.log($('input:checkbox[name="check1"]').prop('checked')==false)
+		if(${member_id eq null}){
+			swal('세션이 만료되었습니다.','다시 로그인 해주세요','error');
+			return false;
+		}else if($('input[name="b_title"]').val().length === 0){
+			swal("제목을 입력해주세요",'','warning');
+			return false;
+		}else if($('textarea[name="b_content"]').val().length === 0){
+			swal("내용을 입력해주세요",'','warning');
+			return false;
+		}if($('select[name="b_type"]').val()=='0'){
+			swal("말머리를 선택해주세요",'','warning');
+			return false;
+		}else if($('input:checkbox[name="check1"]').prop('checked')==false){
+			swal("개인정보 동의에 체크해주세요",'','warning');
+			return false;
+		}else{
+			form.submit();
+		}
+		
 	}
-	
-}
-	
 	
 	function fileUploadAction() {
         console.log("fileUploadAction");
@@ -226,21 +248,30 @@ function insert(){
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/menu.jsp"/>
+	<div style="margin:0 150px">
+		<jsp:include page="/WEB-INF/views/customerService/customerMove.jsp"/>
+	</div>
 	<!-- create view area -->
 	<div id="create-board">
 		<div class="container">
 			<div class="create-window">
-				<form action="/board/createBoard" id="form" method="post" onsubmit="return insert()" enctype="multipart/form-data">
-					<div id='top-wrap'>
+			<div style="text-align:center;margin:0 0 50px 0">
+				<h1>이용문의</h1>
+			</div>
+				<form action="/customer/announcementInquiry" id="form" method="post" onsubmit="return insert()" enctype="multipart/form-data">
+					<div class='top-wrap'>
+					
 						<!-- 작성할 게시판 선택 -->
-						<select class="form-select" name="b_type"
-							aria-label="Default select example" style="width: 100%">
-							<option value='0' id='option'>선택</option>
-							<option value='국내' id='option'>국내</option>
-							<option value='해외' id='option'>해외</option>
-							<option value='질문' id='qna'>질문</option>
-							<option value='자유' id='option'>자유</option>
-						</select><br>
+						<div class="select_wrap" style="width:100%">
+							<select class="form-select" name="b_type"
+								aria-label="Default select example" style="width: 100%">
+								<option value='0' id='option'>전체</option>
+								<option value='예매문의' id='option'>예매문의</option>
+								<option value='요금문의' id='option'>요금문의</option>
+								<option value='제휴할인' id='qna'>제휴할인</option>
+								<option value='기타문의' id='option'>기타문의</option>
+							</select><br>
+						</div>
 						<div class="form-floating mb-3">
 							<input type="text" class="form-control" id="floatingInput" name="b_title">
 							 <label for="floatingInput">제목</label>
@@ -250,14 +281,7 @@ function insert(){
 					<hr>
 					<div class="mb-3">
 						<textarea class="form-control" name="b_content"
-							id="exampleFormControlTextarea1" rows="3"></textarea>
-							<script>
-							   var ckeditor_config = {
-							     resize_enaleb : false,
-							     filebrowserUploadUrl : "/board/createBoard"
-							   };
-							   
-							</script>
+							id="exampleFormControlTextarea1" rows="3"  placeholder=''></textarea>
 					</div>
 					
 					<div class="imgs_file">
@@ -273,21 +297,49 @@ function insert(){
 						    <img id="img" />
 						</div>
 					</div>
+					
+					<input type="hidden" name="member_id" value="${member_id}">
+					<table>
+						<tr style="height:100px;">
+							<td style="width:20%">개인정보 수집,<br>이용동의서</td>
+							<td><textarea rows="10"name="b_content" readonly style="width:100%; resize: none;">개인 정보 수집, 이용 동의서
+
+본인은 방문 전 이용문의 작성과 관련하여 귀사가 아래와 같이 본인의 개인정보를 수집, 이용하는데 동의합니다.
+
+개인정보 수집, 이용에 관한 사항
+
+
+1.개인정보의 수집, 이용 목적
+   고객의 요청ㆍ문의사항 확인, 사실조사를 위한 연락ㆍ통지, 처리결과 통보 등의 목적
+
+
+2.수집하는 개인정보의 항목
+   ㆍ필수입력사항
+
+   이름, E-mail
+   ㆍ서비스 이용과정이나 사업처리 과정에서 아래와 같은 정보들이 생성되어 수집될 수 있습니다.
+
+   접속로그, 쿠키, 접속IP정보
+
+3.개인정보의 보유, 이용기간
+   수집, 이용에 관한 동의일로부터 1년(이후에는 작성내용만 보관됩니다.)
+※ 귀하는 개인정보 수집, 이용에 대한 동의를 거부하실 권리가 있으며, 동의를 거부하실 경우 서비스 이용이 제한됩니다.</textarea></td>
+						</tr>
+					</table>
+					<div style="float:right; margin:0 0 15px 0">
+					<input type="checkbox" name="check1">&nbsp;개인정보 수집 및 이용에 동의합니다.
+					</div>
+					
+					<div style="clear:both"></div>
+					
 					<div id="insert-btn-wrap">
 						<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()" value="취소"> 
-						<input type="submit" class="btn btn-blue" id="submit"  value="확인">
+							<input type="submit" class="btn btn-blue" id="submit"  value="확인">
 					</div>
-					<input type="hidden" name="member_id" value="${member_id}">
-					
 				</form>
 			</div>
 		</div>
 	</div>
 <jsp:include page="/WEB-INF/views/footer.jsp"/>
-<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
-    <script>
-      ClassicEditor.create( document.querySelector( '#exampleFormControlTextarea1' ),{language: "ko"} );
-    </script>
 </body>
 </html>

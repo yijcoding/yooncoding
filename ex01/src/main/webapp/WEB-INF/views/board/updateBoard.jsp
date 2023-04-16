@@ -13,6 +13,7 @@
 	rel="stylesheet"
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <style type="text/css">
 .wrap{
 	margin:100px 200px;
@@ -38,7 +39,7 @@
 	margin-bottom:10px;
 	
 }
-#insert-btn-wrap{
+.insert-btn-wrap{
 	float:right;
 }
 
@@ -50,7 +51,7 @@ img{
 	width:200px;
 }
 
-.btn-blue {
+.insert-btn-wrap .btn-blue {
 	display: inline-block;
 	background: #4aa8d8;
 	color: #fff;
@@ -58,7 +59,7 @@ img{
 
 }
 	
-.btn-blue:hover, .btn-blue:focus {
+.insert-btn-wrap .btn-blue:hover, .insert-btn-wrap .btn-blue:focus {
 	display: inline-block;
 	background: #298cbf;
 	border: 2px solid black;
@@ -66,7 +67,7 @@ img{
 }
 
 
-.btn {
+.insert-btn-wrap .btn {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
@@ -147,7 +148,7 @@ input[type=file] {
 	margin-right: 10px;
 }
 
-
+.ck-editor__editable { height: 400px; }
 </style>
 <script type="text/javascript">
 
@@ -158,6 +159,7 @@ $(document).ready(function(){
 	 BoardImg();
 	 
 });
+
 
 	//기존이미지
 	function BoardImg(){
@@ -209,22 +211,27 @@ $(document).ready(function(){
 
 //수정 확정
 	function update(){
-		var form = document.getElementById('#form');
 		
-		if($('#b_title').val().length === 0){
-			alert("제목을 입력해주세요");
+		var form = document.getElementById('form');
+		console.log($('input:checkbox[name="check1"]').prop('checked')==false)
+		if(${member_id eq null}){
+			swal('세션이 만료되었습니다.','다시 로그인 해주세요','error');
 			return false;
-		}else if($('#b_content').val().length === 0){
-			alert("내용을 입력해주세요");
+		}else if($('input[name="b_title"]').val().length === 0){
+			swal("제목을 입력해주세요",'','warning');
+			return false;
+		}else if($('textarea[name="b_content"]').val().length === 0){
+			swal("내용을 입력해주세요",'','warning');
 			return false;
 		}if($('select[name="b_type"]').val()=='0'){
-			alert("말머리를 입력해주세요");
+			swal("말머리를 선택해주세요",'','warning');
 			return false;
 		}else{
 			form.action('/board/updateBoard');
 			form.method = 'post';
 			form.submit();
 		}
+		
 	}
 
 // 이미지 미리보기
@@ -280,6 +287,31 @@ $(document).ready(function(){
             console.log("fileUploadAction");
             $("#input_imgs").trigger('click');
         }
+        
+        function update(){
+        	
+        	var form = document.getElementById('form');
+        	console.log($('input:checkbox[name="check1"]').prop('checked')==false)
+        	if(${member_id eq null}){
+        		swal('세션이 만료되었습니다.','다시 로그인 해주세요','error');
+        		return false;
+        	}else if($('input[name="b_title"]').val().length === 0){
+        		swal("제목을 입력해주세요",'','warning');
+        		return false;
+        	}else if($('textarea[name="b_content"]').val().length === 0){
+        		swal("내용을 입력해주세요",'','warning');
+        		return false;
+        	}if($('select[name="b_type"]').val()=='0'){
+        		swal("말머리를 선택해주세요",'','warning');
+        		return false;
+        	}else if($('input:checkbox[name="check1"]').prop('checked')==false){
+        		swal("개인정보 동의에 체크해주세요",'','warning');
+        		return false;
+        	}else{
+        		form.submit();
+        	}
+        	
+        }
 
  
 </script>
@@ -288,6 +320,7 @@ $(document).ready(function(){
 <jsp:include page="/WEB-INF/views/menu.jsp"/>
 
 	<!-- create view area -->
+	
 	<div class="wrap">
 	<jsp:include page="/WEB-INF/views/board/advertisement_leftSide.jsp"/>
 		<div id="create-board">
@@ -305,10 +338,7 @@ $(document).ready(function(){
 							<!-- top end -->
 							<hr>
 							<textarea class="form-control" name="b_content" id="exampleFormControlTextarea1" rows="3" >${boardView.b_content}</textarea>
-							<div id="insert-btn-wrap">
-								<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()"value="취소">
-								<input type="submit" class="btn btn-blue" id="submit" value="확인">
-							</div>
+							
 							<input type="hidden" name="board_id" value="${boardView.board_id }">
 					
 							<br>
@@ -331,6 +361,10 @@ $(document).ready(function(){
 						            <img id="img" />
 						        </div>
 						    </div>
+						    <div class="insert-btn-wrap">
+								<input type="button" id="cancle-btn" class="btn btn-blue" onclick="cancle()"value="취소">
+								<input type="submit" class="btn btn-blue" id="submit" value="확인" onclick="update()">
+							</div>
 						</div>
 					</form>	
 				</div>
@@ -338,6 +372,16 @@ $(document).ready(function(){
 		</div>
 	</div>
 	<jsp:include page="/WEB-INF/views/footer.jsp"/>
-	
+	<script>
+								var ckeditor_config = {
+								resize_enaleb : false,
+								filebrowserUploadUrl : "/board/updateBoard"
+								};
+							</script>
+	<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
+    <script>
+      ClassicEditor.create( document.querySelector( '#exampleFormControlTextarea1' ),{language: "ko"} );
+    </script>
 </body>
 </html>
