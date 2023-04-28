@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginMapper">
+
+<select id="insertMember" parameterType="memberDTO">
+	<![CDATA[
+	INSERT MEMBER(member_id,m_name,m_birth,m_pass,m_email,m_address,m_gender,m_phone,m_enc,m_kakaoId)
+	VALUE (#{member_id},#{m_name},#{m_birth},#{m_pass},#{m_email},#{m_address},#{m_gender},#{m_phone},#{m_enc},#{m_kakaoId});
+	]]>
+</select>
+
+<select id="updateMember" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+	update member 
+	set member_id = #{member_id},m_birth = #{m_birth},m_pass = #{m_pass},m_email = #{m_email},m_address = #{m_address},m_gender = #{m_gender},m_phone = #{m_phone}
+	where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="selectMember" parameterType="memberDTO" resultType="memberDTO">
+	<![CDATA[
+	select * from member where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="idCheck" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		SELECT count(*) FROM MEMBER WHERE member_id = #{member_id};
+	]]>
+</select>
+
+<select id="loginCheck" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		SELECT count(*) FROM MEMBER WHERE member_id = #{member_id} and m_pass = #{m_pass};
+	]]>
+</select>
+
+<select id="deleteMember" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		update member set m_name='탈퇴', m_birth='탈퇴', m_pass='탈퇴', 
+		m_email='탈퇴', m_address='탈퇴', m_regidate=null, 
+		m_sha256='탈퇴', m_phone='탈퇴', m_gender='탈퇴', m_enc='탈퇴',
+		 m_image='탈퇴', m_kakaoId='탈퇴' where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="updateSha" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		update member set m_sha256 = #{m_sha256}, m_enc = #{m_enc} where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="shaCheck" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		SELECT count(*) FROM MEMBER WHERE m_sha256 = #{m_sha256};
+	]]>
+</select>
+
+<select id="updatePass" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		update member set m_pass = #{m_pass} where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="adminCheck" parameterType="memberDTO" resultType="memberDTO">
+	<![CDATA[
+		SELECT m_admin FROM MEMBER WHERE member_id = #{member_id};
+	]]>
+</select>
+
+<select id="updateMemberImage" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		update member set m_image = #{m_image} where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="selectMemberImage" parameterType="memberDTO" resultType="memberDTO">
+	<![CDATA[
+		select m_image from member where member_id = #{member_id};
+	]]>
+</select>
+
+<select id="kakaoIdCheck" parameterType="memberDTO" resultType="String">
+	<![CDATA[
+		SELECT member_id FROM MEMBER WHERE m_kakaoId = #{m_kakaoId};
+	]]>
+</select>
+
+</mapper>

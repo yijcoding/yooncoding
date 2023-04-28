@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="customer">
+	
+	<select id="selectAnnouncement" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select announcement_num,c_type,c_title,postdate,c_content from announcement 
+		]]>
+		
+		<if test="announcement_num !=null">
+			where announcement_num = #{announcement_num}
+		</if>
+		
+		order by announcement_num desc
+		
+		<if test="announcement_num ==null">
+			limit 1
+		</if>
+	</select>
+	
+	<select id="selectAnnouncementList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select announcement_num,c_type,c_title,postdate from announcement order by announcement_num desc limit ${start},${end}
+		]]>
+	</select>
+	
+	<select id="customerImgSelect" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select boardImg,announcement_num from boardImg where announcement_num = #{announcement_num}
+		]]>
+	</select>
+	
+	<select id="selectAnnouncementCnt" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select count(announcement_num) as cnt from announcement
+		]]>
+	</select>
+	
+	<select id="consultationView" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select inquiry_num,b_type,b_title,postdate,member_id,ref from inquiry where 1=1 
+		]]>
+		
+		<if test="inquiry_num!=null">
+			and ref=#{inquiry_num} order by desc
+		</if>
+		
+		<if test="inquiry_num==null">
+			order by inquiry_num desc limit 1
+		</if>
+	</select>
+	
+	
+	<select id="consultationDetails" parameterType="hashmap" resultType="hashmap">
+		
+		<if test="m_admin == 0">
+			<![CDATA[
+				select inquiry_num,b_type,b_title,postdate,b_content,member_id from inquiry where 1=1 
+			]]>
+			
+			<if test="inquiry_num !=null">
+				and ref = #{inquiry_num}
+			</if>
+			
+			<if test="inquiry_num ==null">
+				and member_id=#{member_id} order by inquiry_num desc limit #{start},#{end}
+			</if>
+			
+		</if>
+		
+		<if test="m_admin == 1">
+			<![CDATA[
+				select inquiry_num,b_type,b_title,postdate,b_content,member_id from inquiry where 1=1 
+			]]>
+			
+			<if test="inquiry_num !=null">
+				and ref = #{inquiry_num}
+			</if>
+			
+			<if test="inquiry_num ==null">
+				and NOT b_title IS NULL order by inquiry_num desc limit #{start},#{end}
+			</if>
+		</if>
+	
+	</select>
+	
+	
+	<select id="selectconsultationDetailsCnt" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select count(inquiry_num) as cnt from inquiry where member_id=#{member_id}
+		]]>
+	</select>
+	
+	
+	<select id="getFaqList" parameterType="hashmap" resultType="hashmap">
+		
+		<if test="start!=null">
+			<![CDATA[
+				select * from faq where 1=1
+			]]>
+			
+			<choose>
+				<when test="f_type==1">
+					<![CDATA[and f_type='이용정보']]>
+				</when>
+				
+				<when test="f_type==2">
+					<![CDATA[and f_type='우대정보/이벤트']]>
+				</when>
+				
+				<when test="f_type==3">
+					<![CDATA[and f_type='예매']]>
+				</when>
+				
+				<when test="f_type==4">
+					<![CDATA[and f_type='기타']]>
+				</when>
+			</choose>
+			limit ${start},5
+		</if>
+		
+		<if test="start==null">
+			<![CDATA[
+				select count(faq_num) as cnt from faq where 1=1
+			]]>
+			
+			<choose>
+				<when test="f_type==1">
+					<![CDATA[and f_type='이용정보']]>
+				</when>
+				
+				<when test="f_type==2">
+					<![CDATA[and f_type='우대정보/이벤트']]>
+				</when>
+				
+				<when test="f_type==3">
+					<![CDATA[and f_type='예매']]>
+				</when>
+				
+				<when test="f_type==4">
+					<![CDATA[and f_type='기타']]>
+				</when>
+			</choose>
+		
+		</if>
+		
+	</select>
+	
+	<select id="selectCustomImg" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select boardImg from boardImg where inquiry_num=#{inquiry_num}
+		]]>
+		
+	</select>
+	
+	
+	<insert id="insertAnnouncement" parameterType="hashmap">
+		<![CDATA[
+			insert into announcement(c_type,c_title,c_content) values(#{c_type},#{c_title},#{c_content})
+		]]>
+	</insert>
+	
+	
+	<insert id="customerImg" parameterType="hashmap">
+		
+			<if test="announcement_num !=null">
+				
+				insert into boardImg(announcement_num,boardImg) values(#{announcement_num},#{boardImg})
+				
+			</if>
+			
+			<if test="inquiry_num !=null">
+				insert into boardImg(inquiry_num,boardImg) values(#{inquiry_num},#{boardImg})
+
+			</if>
+		
+	</insert>
+	
+	
+	<insert id="faqWrite" parameterType="hashmap">
+		<![CDATA[
+			insert into faq(title,content,f_type) values(#{title},#{content},#{f_type})
+		]]>
+		
+	</insert>
+	
+	<insert id="insertAnnouncementInquiry" parameterType="hashmap" useGeneratedKeys="true" keyProperty="inquiry_num">
+		<![CDATA[
+			insert into inquiry(b_title,b_content,b_type,member_id) values(#{b_title},#{b_content},#{b_type},#{member_id})
+		]]>
+		
+	</insert>
+	
+	<insert id="insertConsultation" parameterType="hashmap">
+		<![CDATA[
+			insert into inquiry(b_content,ref,lev,member_id) values(#{b_content},#{inquiry_num},1,'admin')
+		]]>
+		
+	</insert>
+	
+	
+	
+	<delete id="customerImgDelete" parameterType="hashmap">
+		<![CDATA[
+			delete from boardImg where announcement_num= #{announcement_num}
+		]]>
+	</delete>
+	
+	<delete id="faqDelete" parameterType="hashmap">
+		<![CDATA[
+			delete from faq where faq_num= #{faq_num}
+		]]>
+	</delete>
+	
+	<delete id="deleteconsultationView" parameterType="hashmap">
+		<![CDATA[
+			delete from inquiry where ref = #{inquiry_num}
+		]]>
+	</delete>
+	
+	<delete id="deleteAnnouncement" parameterType="hashmap">
+		<![CDATA[
+			delete from announcement where announcement_num = #{announcement_num}
+		]]>
+	</delete>
+	
+	
+	
+	
+	<update id="updateannouncement" parameterType="hashmap">
+		<![CDATA[
+			update announcement set c_title=#{c_title},c_content=#{c_content} where announcement_num= #{announcement_num}
+		]]>
+	</update>
+	
+	<update id="faqupdate" parameterType="hashmap">
+		<![CDATA[
+			update faq set title=#{title},content=#{content} where faq_num= #{faq_num}
+		]]>
+	</update>
+	
+	<update id="updateRefInquiry" parameterType="hashmap">
+		<![CDATA[
+			update inquiry set ref=#{inquiry_num} where inquiry_num= #{inquiry_num}
+		]]>
+	</update>
+	
+	<update id="updateTitleInquiry" parameterType="hashmap">
+		<![CDATA[
+			update inquiry set b_title=#{b_title} where inquiry_num= #{inquiry_num}
+		]]>
+	</update>
+	
+	
+	
+</mapper>
+

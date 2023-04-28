@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mypageMapper">
+
+<select id="selectBoard" parameterType="criteria" resultType="mypageDTO">
+	<![CDATA[
+	select * from board where member_id = #{member_id} limit #{pageNum},#{amount};  
+	]]>
+</select>
+
+<select id="selectMember" resultType="hashmap">
+	<![CDATA[
+	select * from member where member_id = #{member_id}
+	]]>
+</select>
+
+<select id="countBoard" parameterType="criteria" resultType="int">
+	<![CDATA[
+	select count(*) from board where member_id = #{member_id};   
+	]]>
+</select>
+
+<select id="selectUnionAll" parameterType="pagingDTO" resultType="mypageDTO">
+	<![CDATA[
+	SELECT * FROM(
+	SELECT member_id,inquiry_num as view_id,b_title,b_content,postdate,'문의게시판' as category FROM inquiry a 
+	UNION ALL 
+	SELECT member_id,board_id as view_id,b_title,b_content,postdate,'자유게시판' as category FROM board b
+	UNION ALL
+	SELECT member_id,board_id as view_id,'' as b_title,b_reply as b_content,postdate,'게시판 댓글' as category FROM boardreply c) d 
+	WHERE member_id = #{member_id} ORDER BY postdate DESC limit #{limitNum},#{amount};  
+	]]>
+</select>
+
+<select id="countUnionAll" parameterType="criteria" resultType="int">
+	<![CDATA[
+	SELECT COUNT(*) FROM(
+	SELECT member_id,b_title,b_content,postdate FROM inquiry a 
+	UNION ALL 
+	SELECT member_id,b_title,b_content,postdate FROM board b
+	UNION ALL
+	SELECT member_id,'' as b_title,b_reply as b_content,postdate FROM boardreply c) d 
+	WHERE member_id = #{member_id};  
+	]]>
+</select>
+
+<select id="selectUnionAllAsc" parameterType="pagingDTO" resultType="mypageDTO">
+	<![CDATA[
+	SELECT * FROM (
+	SELECT member_id,inquiry_num as view_id,b_title,b_content,postdate,'문의게시판' as category FROM inquiry a 
+	UNION ALL 
+	SELECT member_id,board_id as view_id,b_title,b_content,postdate,'자유게시판' as category FROM board b
+	UNION ALL
+	SELECT member_id,board_id as view_id,'' as b_title,b_reply as b_content,postdate,'게시판 댓글' as category FROM boardreply c) d  
+	WHERE member_id = #{member_id} ORDER BY postdate ASC limit #{limitNum},#{amount};  
+	]]>
+</select>
+
+
+</mapper>

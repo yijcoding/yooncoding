@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="promotionTemp">
+	<select id="select_promotion" resultType="promotionDTO">
+		<![CDATA[
+		select promotion_id,promotion_content, promotion_name, promotion_img
+		from promotion
+		]]>
+	</select>
+	
+	<select id="select_promotionprice" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT a.promotion_id, a.promotion_content,a.promotion_name,a.promotion_img,a.discount,
+			b.ticket_id ,b.ticket_name,b.ticket_price
+			FROM promotion a
+			JOIN ticket b
+			ON a.promotion_id = b.promotion_id
+			WHERE a.promotion_id = #{promotion_id};
+		]]>
+	</select>
+	
+	<insert id="insert_order" parameterType="hashmap" useGeneratedKeys="true" keyProperty="order_id">
+		INSERT INTO orders(member_id) VALUES(#{member_id})
+	</insert>
+	
+	<insert id="insert_order_detail" parameterType="java.util.List">
+		INSERT INTO orders_detail(order_id,ticket_id,quantity) 
+		VALUES
+		<foreach collection="list" item="orderDetail" separator=",">
+			(#{orderDetail.order_id},#{orderDetail.ticket_id},#{orderDetail.quantity})
+		</foreach>
+	</insert>
+	
+	<select id="select_orderlist" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT a.order_id,a.member_id,a.order_date,a.checkorder,a.checkrefund,b.quantity,c.ticket_name,c.ticket_price,
+			d.promotion_content,d.promotion_name,d.promotion_img,d.discount,e.a_name
+			FROM orders a
+			JOIN orders_detail b
+			ON a.order_id = b.order_id
+			JOIN ticket c
+			ON b.ticket_id = c.ticket_id
+			JOIN promotion d
+			ON c.promotion_id = d.promotion_id
+			JOIN amusement e
+			ON e.amuse_id = d.amuse_id
+			WHERE member_id=#{member_id} AND b.quantity <> 0
+			ORDER BY a.order_id desc;
+		]]>
+	</select>
+	<select id="select_mypoint" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT a.order_id,a.member_id,a.order_date,a.checkorder,a.checkrefund,b.quantity,c.ticket_name,c.ticket_price,
+			d.promotion_content,d.promotion_name,d.promotion_img,d.discount,e.a_name
+			FROM orders a
+			JOIN orders_detail b
+			ON a.order_id = b.order_id
+			JOIN ticket c
+			ON b.ticket_id = c.ticket_id
+			JOIN promotion d
+			ON c.promotion_id = d.promotion_id
+			JOIN amusement e
+			ON e.amuse_id = d.amuse_id
+			WHERE member_id=#{member_id} AND b.quantity <> 0
+			ORDER BY a.order_id desc;
+		]]>
+	</select>
+	<select id="select_confirm" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT a.order_id,a.member_id,a.order_date,a.checkorder,a.checkrefund,b.quantity,c.ticket_name,c.ticket_price,
+			d.promotion_content,d.promotion_name,d.promotion_img,d.discount,e.a_name
+			FROM orders a
+			JOIN orders_detail b
+			ON a.order_id = b.order_id
+			JOIN ticket c
+			ON b.ticket_id = c.ticket_id
+			JOIN promotion d
+			ON c.promotion_id = d.promotion_id
+			JOIN amusement e
+			ON e.amuse_id = d.amuse_id
+			WHERE member_id=#{member_id}
+			and a.order_id=#{order_id}
+			ORDER BY a.order_id;
+		]]>
+	</select>
+	<select id="select_mypoint1" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT SUM(m_point) AS sum_point,m_point,order_id,member_id
+			FROM mypoint
+			WHERE member_id = #{member_id};
+		]]>
+	</select>
+		
+	<update id="refundOrder" parameterType="hashmap">
+		UPDATE orders
+		SET checkrefund = TRUE
+		WHERE order_id =#{order_id};
+	</update>
+	
+	<update id="checkOrder" parameterType="hashmap">
+		UPDATE orders
+		SET checkorder = TRUE
+		WHERE order_id =#{order_id};
+	</update>
+	
+	<insert id="insert_mypoint" parameterType="hashmap" useGeneratedKeys="true" keyProperty="point_id">
+		INSERT INTO mypoint(m_point,order_id,member_id) VALUES(#{m_point},#{order_id},#{member_id})
+	</insert>
+	
+</mapper>
