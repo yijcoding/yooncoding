@@ -467,10 +467,10 @@ function commentList(e){
 			console.log(data);
 			tr='';
 			paging = '';
-			console.log(data.length);
-			console.log(data[0]["paging"]);
+			console.log(data[0]['cnt']);
+			console.log('으아아아아아아아아아아아아');
 			var member_id ='${member_id}';
-			if(data.length!=0){
+			if(data[0]['cnt']!=0){
 				tr+="<table id='table'>";
 				paging = data[0]["paging"];
 				for(row of data){
@@ -528,7 +528,7 @@ function comment_update(num,id,ref,seq){
 			tr+="<tr>";
 			tr+="<td style='width:20%;text-align:center'>"+id1+"</td>";
 			tr+="<td style='width:40%' colspan='4'>"
-			+'<textarea name="comment-update" class="comment-update" cols="" rows="4" style="width:80%;height:100px;padding: 10px 0 0 10px"></textarea>'
+			+'<textarea name="comment-update" class="comment-update" cols="" rows="4" style="width:80%;height:100px;padding: 10px 0 0 10px;resize:none"></textarea>'
 
 			+'<div id="emoticons" style="float:left; width:30%">'
 			+'이모티콘: <br><img onclick="emo(this);"'
@@ -552,6 +552,9 @@ function comment_update(num,id,ref,seq){
 			+'</div>'
 			+'<div style="clear:both;margin:0 0 30px 0">'
 			+'</div>'
+			tr+="</td>";
+			tr+="<td style='width:5%'></td>";
+			tr+="<td style='width:5%'></td>";
 			tr+="</tr>";
 		tr+="</thead>";
 		tr+="</table>";
@@ -714,12 +717,17 @@ function favoriteEvent(rs){
 }
 
 function re_reply(e,ref,seq){
+	
+	if(${member_id eq null}){
+		alert('로그인해주세요!');
+		location.href="/login";
+	}else{
 		const re_reply_append = e.parentNode.parentNode.parentNode;
 		console.log(re_reply_append);
 		tr="<tr style='background:#eee;width:1100px;' >";
 		tr+="<td style='width:20%;text-align:center'>${member_id}</td>";
 		tr+="<td style='width:40%' colspan='4'>"
-		+'<textarea name="comment-update" class="re_comment" cols="" rows="4" style="width:80%;height:100px;padding: 10px 0 0 10px"></textarea>'
+		+'<textarea name="comment-update" class="re_comment" cols="" rows="4" style="width:80%;height:100px;padding: 10px 0 0 10px;resize:none"></textarea>'
 
 		+'<div id="emoticons" style="float:left; width:30%">'
 		+'이모티콘: <br><img onclick="emo(this);"'
@@ -743,9 +751,13 @@ function re_reply(e,ref,seq){
 		+'</div>'
 		+'<div style="clear:both;margin:0 0 30px 0">'
 		+'</div>'
+		+'</td>';
+		tr+="<td style='width:5%'></td>";
+		tr+="<td style='width:5%'></td>";
 		tr+="</tr>";
 	
-$(re_reply_append).append(tr);
+		$(re_reply_append).append(tr);
+	}
 	
 }
 

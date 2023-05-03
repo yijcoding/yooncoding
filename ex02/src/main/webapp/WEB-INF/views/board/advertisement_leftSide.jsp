@@ -14,7 +14,7 @@
 		bottom:0px;
 		height:100%;
 		float:left;
-		margin-
+		
 		
 	}
 	.aside-inner{

@@ -19,15 +19,26 @@
 		<constructor-arg ref="hikariConfig" /> </bean> -->
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
-			<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE" /> -->
+	<!-- <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
+			<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE" />
 		<property name="driverClassName"
 			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl"
 			value="jdbc:log4jdbc:mysql://192.168.0.9:3306/amusement?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="myuser" />
 		<property name="password" value="tmvmfld1234!@#$" />
+	</bean> -->
+	
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
+			<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE" /> -->
+		<property name="driverClassName"
+			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+		<property name="jdbcUrl"
+			value="jdbc:log4jdbc:mysql://localhost:3306/amusement?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="rpass" />
 	</bean>
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"

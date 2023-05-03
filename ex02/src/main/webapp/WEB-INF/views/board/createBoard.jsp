@@ -183,6 +183,7 @@ function insert(){
         $(".imgs_wrap").empty();
 
         var files = e.target.files;
+        //유사배뎔을 실제 배열객체로 변환
         var filesArr = Array.prototype.slice.call(files);
 
         var index = 0;
@@ -209,9 +210,12 @@ function insert(){
     function deleteImageAction(index) {
         console.log("index : "+index);
         console.log("sel length : "+sel_files.length);
-
+		
+        
+        //index부터 1개의 기록을 배열에서 삭제
         sel_files.splice(index, 1);
 
+        //이거 뭐임
         var img_id = "#img_id_"+index;
         $(img_id).remove(); 
     }

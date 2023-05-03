@@ -111,9 +111,10 @@ function originImgView(){
 			console.log(data)
 			tr='';
 			for(row of data){
-				tr='<img src='+row.url+'name="a_img" id="origin-img"alt="'+row.aimg_id+'"onclick="imgDelete(this)">';
+				console.log(row.url);
+				tr='<img src="'+row.url+'"name="a_img" id="origin-img"alt="'+row.aimg_id+'"onclick="imgDelete(this)">';
+				$('.origin-imgs').append(tr);
 			}
-			$('.origin-imgs').html(tr);
 		}
 	})
 }

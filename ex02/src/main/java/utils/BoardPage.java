@@ -60,7 +60,7 @@ public class BoardPage {
 		while (blockCount <= blockPage && pageTemp <= totalPages) {
 			if (pageTemp == pageNum) {
 				// �쁽�옱 �럹�씠吏��뒗 留곹겕瑜� 嫄몄� �븡�쓬
-				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"'>><b style='color:black'>"+pageTemp+"</b></a></span>&nbsp;";
+				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"'><b style='color:black'>"+pageTemp+"</b></a></span>&nbsp;";
 			} else  {
 				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"'>"+pageTemp+"</a></span>&nbsp;";
 			}
@@ -99,7 +99,7 @@ public class BoardPage {
 		while (blockCount <= blockPage && pageTemp <= totalPages) {
 			if (pageTemp == pageNum) {
 				// �쁽�옱 �럹�씠吏��뒗 留곹겕瑜� 嫄몄� �븡�쓬
-				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&f_type="+f_type+"'>><b style='color:black'>"+pageTemp+"</b></a></span>&nbsp;";
+				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&f_type="+f_type+"'><b style='color:black'>"+pageTemp+"</b></a></span>&nbsp;";
 			} else  {
 				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&f_type="+f_type+"'>"+pageTemp+"</a></span>&nbsp;";
 			}
@@ -138,7 +138,7 @@ public class BoardPage {
 		while (blockCount <= blockPage && pageTemp <= totalPages) {
 			if (pageTemp == pageNum) {
 				// �쁽�옱 �럹�씠吏��뒗 留곹겕瑜� 嫄몄� �븡�쓬
-				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&search="+search+"'>><b style='color:black'>"+pageTemp+"</b></a></span>&nbsp;";
+				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&search="+search+"'><b style='color:black'>"+pageTemp+"</b></a></span>&nbsp;";
 			} else  {
 				pagingStr += "&nbsp;<span class=page-item><a class=page-link href='" + reqUrl + "?pageNum="+pageTemp+"&search="+search+"'>"+pageTemp+"</a></span>&nbsp;";
 			}

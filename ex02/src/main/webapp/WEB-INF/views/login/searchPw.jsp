@@ -65,7 +65,10 @@ button {
 			<div class="row mt-5">
 				<div class="col-1"></div>
 				<div class="col-3" style="font-size: 15; font-weight: 600">아이디</div>
-				<input type="text" class="col-3" name="member_id"
+				<input type="text" class="col-3" name="memb
+				
+				
+				er_id"
 					style="height: 27px;"></input>
 			</div>
 			<div class="row">

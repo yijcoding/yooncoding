@@ -223,6 +223,7 @@ input[type="checkbox"]:checked {
 			</div>
 		</div>
 		<form action="/login" method="post" id="form">
+		<!-- 로그인화면으로 들어올때의 전 페이지 주소 -->
 			<input id="URI" name="URI" type="hidden" value="${URI}"/>
 			<div class="int-area">
 				<input type="text" name="member_id" id="id" value="${cookie.long_login.value}" required /> <label
@@ -246,8 +247,8 @@ input[type="checkbox"]:checked {
 				</label>
 			</div>
 			<div class="col">
-				<a href="/signUp" id="signup">회원가입</a> <a href="/searchPw" id="pwsearch">비밀번호
-					찾기</a>
+				<a href="/signUp" id="signup">회원가입</a> 
+				<a href="/searchPw" id="pwsearch">비밀번호 찾기</a>
 			</div>
 		</div>
 		<div class="text-center" id="icon" style="font-size: 30px">
@@ -289,6 +290,7 @@ $('#clicker').on('click',function(e){
 });
 
 $('#kakaologin').on('click',function(e){
+	console.log(e);
 	e.preventDefault();
 	kakaoLogin();
 })
@@ -406,9 +408,7 @@ function kakaoLogout() {
 				m_enc = "off";
 			}
 			
-			$
-					.post(
-							"/loginCheck",
+			$.post("/loginCheck",
 							{
 								member_id : member_id,
 								m_pass : m_pass,
