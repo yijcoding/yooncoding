@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="exciting">
+
+	<!-- Amusement -->
+	<select id="getOneAmusementDTO" parameterType="map" resultType="amusementDTO"> 
+		<![CDATA[
+			select * from amusement where amuse_id = #{amuse_id}
+		]]>
+	</select>
+	
+	<!-- 놀이공원 상세보기 눌렀을 때마다 조회수 증가 -->
+	<update id="updateAmuseView" parameterType="map">
+		<![CDATA[
+			update amusement set a_view = a_view + 1 where amuse_id = #{amuse_id}
+		]]>
+	</update>
+	
+	<!-- 국내전체 -->
+	<select id="inAmusementList" resultType="amusementDTO"> 
+		<![CDATA[
+			select * from amusement where a_country = "대한민국" limit 5;
+		]]>
+	</select>
+	<!-- 해외전체 -->
+	<select id="outAmusementList" resultType="amusementDTO"> 
+		<![CDATA[
+			select * from amusement where a_country != "대한민국" limit 5;
+		]]>
+	</select>
+	
+	<!-- 해외 이색 놀이공원 목록 -->
+	<select id="outSpecialAmuseList" resultType="amusementDTO"> 
+		<![CDATA[
+			select * from amusement where a_note = "이색" and a_country != "대한민국" limit 5;
+		]]>
+	</select>
+	
+	
+	<!-- 국내 평점 높은 순서 -->
+	<select id="inAmusementListAvg" resultType="amusementDTO"> 
+		<![CDATA[
+			select a.a_name as a_name, a.amuse_id as amuse_id, a.a_img as a_img, a.a_country, b.avg as avg_grade, b.review_cnt as review_cnt
+			from amusement a, 
+			(select amuse_id, round((sum(r_grade) / count(amuse_id)), 1) as avg, count(amuse_id) as review_cnt from amuse_review group by amuse_id) b 
+			where a.amuse_id = b.amuse_id and a.a_country = "대한민국" order by avg desc;
+		]]>
+	</select>
+	<!-- 국내 리뷰 많은 순서 -->
+	<select id="inAmusementListReview" resultType="amusementDTO"> 
+		<![CDATA[
+			select a.a_name as a_name, a.amuse_id as amuse_id, a.a_img as a_img, a.a_country, b.avg as avg_grade, b.review_cnt as review_cnt 
+			from amusement a, 
+			(select amuse_id, round((sum(r_grade) / count(amuse_id)), 1) as avg, count(amuse_id) as review_cnt from amuse_review group by amuse_id) b 
+			where a.amuse_id = b.amuse_id and a.a_country = "대한민국" order by review_cnt desc;
+		]]>
+	</select>
+	<!-- 해외 평점 높은 순서 -->
+	<select id="outAmusementListAvg" resultType="amusementDTO"> 
+		<![CDATA[
+			select a.a_name, a.amuse_id, a.a_country, b.avg, b.review_cnt 
+			from amusement a, 
+			(select amuse_id, round((sum(r_grade) / count(amuse_id)), 1) as avg, count(amuse_id) as review_cnt from amuse_review group by amuse_id) b 
+			where a.amuse_id = b.amuse_id and a.a_country != "대한민국" order by avg desc;
+		]]>
+	</select>
+	<!-- 해외 리뷰 많은 순서 -->
+	<select id="outAmusementListReview" resultType="amusementDTO"> 
+		<![CDATA[
+			select a.a_name, a.amuse_id, a.a_country, b.avg, b.review_cnt 
+			from amusement a, 
+			(select amuse_id, round((sum(r_grade) / count(amuse_id)), 1) as avg, count(amuse_id) as review_cnt from amuse_review group by amuse_id) b 
+			where a.amuse_id = b.amuse_id and a.a_country != "대한민국" order by review_cnt desc;
+		]]>
+	</select>
+	
+
+	
+	<!-- rides -->
+	<select id="selectRidesListMap" parameterType="map" resultType="ridesDTO"> 
+		<![CDATA[
+			select * from rides where 1 = 1
+		]]>
+	</select>
+	
+	<select id="selectRidesList" resultType="ridesDTO"> 
+		<![CDATA[
+			select * from rides where 1 = 1
+		]]>
+	</select>
+	
+	<select id="ridesTotalCount" parameterType="map" resultType="int"> 
+		<![CDATA[
+			select count(*) as cnt from rides
+		]]>
+	</select>
+	
+	<select id="selectRidesList2" parameterType="map" resultType="ridesDTO"> 
+		<![CDATA[
+			select * from rides where amuse_id = #{amuse_id}
+		]]>
+	</select>
+	
+	<select id="getOneRidesDTO" parameterType="map" resultType="ridesDTO"> 
+		<![CDATA[
+			select * from rides where rides_id = #{rides_id}
+		]]>
+	</select>
+	<select id="ridesList" parameterType="map" resultType="ridesDTO"> 
+		<![CDATA[
+			select * from rides where amuse_id = #{amuse_id}
+		]]>
+	</select>
+	
+	<select id="amuseImgList" parameterType="map" resultType="aimageDTO"> 
+		<![CDATA[
+			select a2.aimg_id as aimg_id, a1.amuse_id as amuse_id, a2.url as url from amusement a1, aimage a2 
+			where a1.amuse_id = a2.amuse_id and a1.amuse_id = #{amuse_id}
+		]]>
+	</select>
+	
+	
+	<!-- facility -->
+	<select id="facilityListMap" parameterType="map" resultType="facilityDTO"> 
+		<![CDATA[
+			select * from facility where amuse_id = #{amuse_id}
+		]]>
+	</select>
+	<select id="facilityList" parameterType="int" resultType="facilityDTO"> 
+		<![CDATA[
+			select * from facility where amuse_id = #{amuse_id}
+		]]>
+	</select>
+	<select id="facilityDetail" parameterType="map" resultType="facilityDTO"> 
+		<![CDATA[
+			select * from facility where facility_id = #{facility_id}
+		]]>
+	</select>
+	
+	
+	<!-- Amusement Review -->
+	<insert id="insertAmuseReview" parameterType="map">
+		<![CDATA[
+			insert into amuse_review (amuse_id, member_id, r_content, r_grade)
+			values(#{amuse_id}, #{member_id}, #{r_content}, #{r_grade})
+		]]>
+	</insert>
+	
+	<!-- 전체 리뷰 목록 -->
+	<select id="amuseReviewList" resultType="amuseReviewDTO"> 
+		<![CDATA[
+			select * from amuse_review order by r_regidate desc limit 10;
+		]]>
+	</select>
+	<!-- 특정 놀이공원에 해당하는 리뷰 목록 -->
+	<select id="amuseReviewListInt" parameterType="int" resultType="amuseReviewDTO"> 
+		<![CDATA[
+			select review_id, amuse_id, member_id, r_content, r_grade, DATE_FORMAT(r_regidate, '%Y/%m/%d') as r_regidate 
+			from amuse_review where amuse_id = #{amuse_id} order by review_id desc limit 5;
+		]]>
+	</select>
+	<select id="amuseReviewListMap" parameterType="map" resultType="amuseReviewDTO"> 
+		<![CDATA[
+			select review_id, amuse_id, member_id, r_content, r_grade, DATE_FORMAT(r_regidate, '%Y/%m/%d') as r_regidate 
+			from amuse_review where amuse_id = #{amuse_id} order by review_id desc limit 5;
+		]]>
+	</select>
+	
+	<select id="getOneAmuseReviewDTO" parameterType="map" resultType="amuseReviewDTO"> 
+		<![CDATA[
+			select * from amuse_review 
+			where amuse_id = #{amuse_id} and member_id = #{member_id} and r_content = #{r_content} and r_grade = #{r_grade}
+			order by r_regidate desc limit 1
+		]]>
+	</select>
+	<select id="getOneAmuseReviewDTO2" parameterType="map" resultType="amuseReviewDTO"> 
+		<![CDATA[
+			select * from amuse_review where review_id = #{review_id}
+		]]>
+	</select>
+	
+	<!-- review 총 개수 -->
+	<select id="amuseReviewListCount" parameterType="int" resultType="int"> 
+		<![CDATA[
+			select count(*) as cnt from amuse_review where amuse_id = #{amuse_id}
+		]]>
+	</select>
+	
+	<!-- review 총 개수 => searchItem, searchWord -->
+	<select id="reviewSearchCount" parameterType="map" resultType="int"> 
+		<![CDATA[
+			select count(*) as cnt from amuse_review where 1 = 1
+		]]>
+		<if test="searchItem != null and searchItem.equals('id')">
+			and member_id like CONCAT('%', #{serachWord}, '%')
+		</if>
+		<if test="searchItem != null and searchItem.equals('content')">
+			and r_content like CONCAT('%', #{serachWord}, '%')
+		</if>
+		<if test="searchItem != null and searchItem.equals('grade')">
+			and r_grade like CONCAT('%', #{serachWord}, '%')
+		</if>
+		<![CDATA[
+			and amuse_id = #{amuse_id}
+		]]>
+	</select>
+	
+	<!-- 특정 놀이공원에 대한 review 전체 목록 => searchItem, searchWord -->
+	<select id="reviewSearchTotalList" parameterType="map" resultType="amuseReviewDTO"> 
+		<![CDATA[
+			select @rownum:=@rownum+1 as rownum, ar.* 
+			from (select * from amuse_review order by r_regidate desc) ar, 
+			(select @rownum:= #{pagingNum}) tmp 
+			where 1 = 1
+		]]>
+		<if test="searchItem != null and searchItem.equals('id')">
+			and member_id like CONCAT('%', #{serachWord}, '%')
+		</if>
+		<if test="searchItem != null and searchItem.equals('content')">
+			and r_content like CONCAT('%', #{serachWord}, '%')
+		</if>
+		<if test="searchItem != null and searchItem.equals('grade')">
+			and r_grade like CONCAT('%', #{serachWord}, '%')
+		</if>
+		<![CDATA[
+			and amuse_id = #{amuse_id} 
+			order by ref DESC, seq asc 
+			limit #{pagingNum}, #{countPerPage} 
+		]]>
+	</select>
+	
+	<!-- 평균 점수 -->
+	<select id="amuseReviewGradeAvg" parameterType="map" resultType="float"> 
+		<![CDATA[
+			select format((sum(r_grade) / count(review_id)), 1) as avg 
+			from amuse_review where amuse_id = #{amuse_id};
+		]]>
+	</select>
+	
+	<!-- 리뷰 삭제 -->
+	<select id="deleteReview" parameterType="map"> 
+		<![CDATA[
+			delete from amuse_review where review_id = #{review_id}
+		]]>
+	</select>
+	
+	<!-- ========== 리뷰에 대한 답글 ========== -->
+	<!-- 1) max review_id -->
+	<select id="maxReviewId" resultType="int"> 
+		<![CDATA[
+			select max(review_id) from amuse_review
+		]]>
+	</select>
+	
+	<!-- 2) 리뷰 작성할 때 review_id 값과 ref 값 일치하게 하기 -->
+	<!-- map으로 max(review_id)를 받아오기 -->
+	<update id="updateRef" parameterType="map">
+		<![CDATA[
+			update amuse_review set ref = review_id where review_id = #{review_id}
+		]]>
+	</update>
+	
+	<!-- 3) seq 처리 -->
+	<update id="updateSeq" parameterType="map">
+		<![CDATA[
+			update amuse_review set seq = seq + 1 where ref = #{ref} and seq > #{seq}
+		]]>
+	</update>
+	
+	<!-- 4) 답글 insert -->
+	<insert id="insertReviewAnswer" parameterType="map">
+		<![CDATA[
+			insert into amuse_review (review_id, amuse_id, member_id, r_content, ref, seq, level)
+			values(#{review_id}, #{amuse_id}, #{member_id}, #{r_content}, #{ref}, #{seq}, #{level})
+		]]>
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
