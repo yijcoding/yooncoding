@@ -21,6 +21,9 @@
 		<async-supported>true</async-supported>
 	</filter>
 
+
+
+
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener
@@ -45,6 +48,16 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+	<filter>
+		<filter-name>corsFilter</filter-name>
+		<filter-class>com.exciting.utils.CORSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>corsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>

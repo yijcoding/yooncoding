@@ -247,6 +247,8 @@ function insert(){
 						</div>
 					</div>
 					<!-- top end -->
+					
+					
 					<hr>
 					<div class="mb-3">
 						<textarea class="form-control" name="b_content"

@@ -14,10 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,8 +33,7 @@ import utils.ChangeJava;
 import utils.ChangeJavanontextarea;
 import utils.ChangeHtml;
 
-@Controller
-@Data
+@RestController
 @Log4j2
 public class BoardController {
 	
@@ -45,8 +47,9 @@ public class BoardController {
 	private static final String BOARD_LOAD_PATH ="/resources/upload/" ;
 	
 	@RequestMapping(value = "/board/board", method = RequestMethod.GET)
-	public ModelAndView Board(@RequestParam Map<String,Object> map) {
-		ModelAndView mav =new ModelAndView();
+	@ResponseBody
+	public Map<String,Object> Board(Model mav, @RequestParam Map<String,Object> map) {
+	
 
 		BoardPage boardPage = new BoardPage();
 		//board.jsp에서 설정한 보이는 글 갯수가 없을시 기본적으로 10개가 보임
@@ -55,6 +58,8 @@ public class BoardController {
 		//내가 한번에 볼 글갯수 받아옴
 		String cntCheck = String.valueOf(map.get("viewCnt"));
 		
+		System.out.println("11111111111111111111111111111111111111111111111"+map);
+		System.out.println(cntCheck);
 		//viewCnt가 null일시 viewCnt 초기값은 10
 		if(!(cntCheck.equals("null"))) {
 			if(Integer.parseInt(cntCheck)!=10) {
@@ -79,12 +84,11 @@ public class BoardController {
 		Map<String,Object> map2 = new HashMap<>();
 		map2.put("start", start2);
 		map2.put("end", end);
-		mav.setViewName("/board/Board");
-		mav.addObject("startend",map2);
-		
-
-
-		return mav;
+		//mav.setViewName("/board/Board");
+		mav.addAttribute("startend",map2);
+		System.out.println(start2);
+		System.out.println(end);
+		return map2;
 	}
 	
 	@RequestMapping(value = "/board/boardPaging", method = RequestMethod.GET)
@@ -155,13 +159,54 @@ public class BoardController {
 	@RequestMapping(value = "/board/boardList", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String,Object>> BoardList(@RequestParam Map<String,Object> map) {
+		
+		int viewCnt=10;
+		
+		//내가 한번에 볼 글갯수 받아옴
+		String cntCheck = String.valueOf(map.get("viewCnt"));
+		
+		System.out.println("11111111111111111111111111111111111111111111111"+map);
+		System.out.println(cntCheck);
+		//viewCnt가 null일시 viewCnt 초기값은 10
+		if(!(cntCheck.equals("null"))) {
+			if(Integer.parseInt(cntCheck)!=10) {
+				viewCnt= Integer.parseInt(String.valueOf(map.get("viewCnt")));
+			
+			}
+		}
+		
+		//paging 처리
+		Map<String,Object> res = service.boardCnt(map);
+		int totalCount = Integer.parseInt(res.get("cnt").toString());
+		int pageSize =viewCnt;
+		int blockPage = 10;
+		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
+		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
+		String pageTemp = String.valueOf(map.get("pageNum"));
+		if (pageTemp != "null" && !pageTemp.equals(""))
+			pageNum = Integer.parseInt(pageTemp);
+		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
+		int start2 = start-1;
+		int end =viewCnt;
+		map.put("start", start2);
+		map.put("end", end);
+		//mav.setViewName("/board/Board");
+		System.out.println(start2);
+		System.out.println(end);
+		
+		
+		
+		
+		
+		
+		
 		List<Map<String,Object>> boardList = service.boardList(map);
 //		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+map.get("start"));
 //		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+map.get("end"));
 //		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+ boardList.size());
 		
 		
-		
+		System.out.println("11111111111111111111111111111111111111111111111"+map);
 		//sql시간값 json으로 변환하기 위한 작업
 		for(Map<String,Object> map2:boardList) {
 			String date = map2.get("postdate").toString();
@@ -208,32 +253,35 @@ public class BoardController {
 	public String createBoardPost(@RequestParam Map<String,Object> map,Model model,@RequestParam(value="file",required = false) List<MultipartFile> mf
 			,HttpServletRequest request) throws IOException {
 		
+		map.put("member_id","hong1");
 		//이미지 처리를 위한 map
 		Map<String,Object> fi = new HashMap<>();
-		
+		System.out.println(map);
+		System.out.println(mf);
 		
 		
 		//insert하고 추가한 튜플의 board_id가져옴
 		service.boardInsert(map);
 		
 		try {
-			if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals(""))) {
+			if(mf != null) {
+				if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals(""))) {
+					
+					for(MultipartFile file:mf) {
+						String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
+		
+						String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
+						String safeFile = uploadDir+"/"+originalFileName;
+						
+						
+						fi.put("board_id", map.get("board_id"));
+						fi.put("boardImg", originalFileName);		
+						service.boardImgInsert(fi);
+						file.transferTo(new File(safeFile));
+					}	
+				}
 				
-				for(MultipartFile file:mf) {
-					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-	
-					String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-					String safeFile = uploadDir+"/"+originalFileName;
-					
-					
-					fi.put("board_id", map.get("board_id"));
-					fi.put("boardImg", originalFileName);		
-					service.boardImgInsert(fi);
-					file.transferTo(new File(safeFile));
-				}	
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,7 +291,8 @@ public class BoardController {
 
 
 	@RequestMapping(value = "/board/view", method = RequestMethod.GET)
-	public ModelAndView boardView(@RequestParam Map<String,Object> map) {
+	@ResponseBody
+	public Map<String,Object> boardView(@RequestParam Map<String,Object> map) {
 		ModelAndView mav = new ModelAndView();
 		//String path ="session.getServletContext().getRealPath(\"/\")";
 		BoardPage boardPage = new BoardPage();
@@ -251,24 +300,24 @@ public class BoardController {
 		Map<String,Object> res = service.boardCnt(map);
 		
 		
-		int totalCount = Integer.parseInt(res.get("cnt").toString());
-		int pageSize =10;
-		int blockPage = 10;
-		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
-		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
-		String pageTemp = String.valueOf(map.get("pageNum"));
-		if (pageTemp != "null" && !pageTemp.equals(""))
-			pageNum = Integer.parseInt(pageTemp);
-		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
-		int end = 10; // 마지막 게시물 번호
-		int start2 = start-1;
+//		int totalCount = Integer.parseInt(res.get("cnt").toString());
+//		int pageSize =10;
+//		int blockPage = 10;
+//		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
+//		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
+//		String pageTemp = String.valueOf(map.get("pageNum"));
+//		if (pageTemp != "null" && !pageTemp.equals(""))
+//			pageNum = Integer.parseInt(pageTemp);
+//		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
+//		int end = 10; // 마지막 게시물 번호
+//		int start2 = start-1;
 		
 		
-		Map<String,Object> map2 = new HashMap<>();
-		map2.put("start", start2);
-		map2.put("end", end);
-		map2.put("pageNum", pageNum);
-		mav.setViewName("/board/Board");
+//		Map<String,Object> map2 = new HashMap<>();
+//		map2.put("start", start2);
+//		map2.put("end", end);
+//		map2.put("pageNum", pageNum);
+//		mav.setViewName("/board/Board");
 		
 		
 		
@@ -288,18 +337,18 @@ public class BoardController {
 		
 		int cntSize = Integer.parseInt(String.valueOf(boardReplyCnt.get("cnt"))); 
 		if( cntSize != 0){
-			mav.addObject("boardReplyCnt",boardReplyCnt.get("cnt"));
+			boardView.put("boardReplyCnt",boardReplyCnt.get("cnt"));
 		}else {
-			mav.addObject("boardReplyCnt","0");
+			boardView.put("boardReplyCnt","0");
 		}
+		boardView.put("boardImg",boardImg);
+		//boardView.put("b_content",ChangeHtml.change(boardView.get("b_content").toString()));
+//		mav.setViewName("/board/view");
+//		mav.addObject("boardImg", boardImg);
+//		mav.addObject("boardView",boardView);
+		//mav.addObject("startend",map2);
 		
-		
-		mav.setViewName("/board/view");
-		mav.addObject("boardImg", boardImg);
-		mav.addObject("boardView",boardView);
-		mav.addObject("startend",map2);
-		
-		return mav;
+		return boardView;
 	}
 	
 	@RequestMapping(value = "/board/favoriteBoard", method = RequestMethod.GET)
@@ -542,4 +591,13 @@ public class BoardController {
 		return rs;
 	}
 
+	
+	@PostMapping("/board/test")
+	@ResponseBody
+	public void test(@RequestParam Map<String,Object>map, List<MultipartFile> mf) {
+		System.out.println(map);
+		System.out.println(mf);
+		
+		//return "나는 계속 갱신되는데? ㅋ";
+	}
 }

@@ -59,6 +59,14 @@
 		
 	}
 
+	.notice{
+		text-align:center;
+	}
+	
+	.container,.notice{
+		max-width:1500px;
+		margin:auto;
+	}
 </style>
 <script type="text/javascript">
 	
