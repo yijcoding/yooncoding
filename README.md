@@ -1,3 +1,3 @@
 # Middle-Spring-Project
 
-www.exctingamusement.com
+http://www.excitingamusement.com/
