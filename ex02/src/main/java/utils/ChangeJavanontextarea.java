@@ -5,6 +5,7 @@ public class ChangeJavanontextarea {
 		
 		String returnStr = str;
 		
+		returnStr = returnStr.replaceAll("&amp;", "&");
 		 
 	    returnStr = returnStr.replaceAll("&gt;", ">");
 	 
@@ -12,10 +13,11 @@ public class ChangeJavanontextarea {
 	 
 //	    returnStr = returnStr.replaceAll("&quot;", "");
 	    
-	    returnStr = returnStr.replaceAll("&nbsp;", " ");
+	    
+	    returnStr = returnStr.replaceAll("&nbsp;"," ");
 	 
-	    returnStr = returnStr.replaceAll("&amp;", "&");
-		
+	    returnStr = returnStr.replaceAll("<br>","\r\n");
+	    
 		
 	    
 	    return returnStr;

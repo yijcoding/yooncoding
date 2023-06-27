@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,7 +59,7 @@ public class BoardController {
 		//내가 한번에 볼 글갯수 받아옴
 		String cntCheck = String.valueOf(map.get("viewCnt"));
 		
-		System.out.println("11111111111111111111111111111111111111111111111"+map);
+		//System.out.println("11111111111111111111111111111111111111111111111"+map);
 		System.out.println(cntCheck);
 		//viewCnt가 null일시 viewCnt 초기값은 10
 		if(!(cntCheck.equals("null"))) {
@@ -116,7 +117,7 @@ public class BoardController {
 			}
 		}
 		
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+viewCnt);
+		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+viewCnt);
 		
 		
 		//paging 처리
@@ -165,7 +166,7 @@ public class BoardController {
 		//내가 한번에 볼 글갯수 받아옴
 		String cntCheck = String.valueOf(map.get("viewCnt"));
 		
-		System.out.println("11111111111111111111111111111111111111111111111"+map);
+		//System.out.println("11111111111111111111111111111111111111111111111"+map);
 		System.out.println(cntCheck);
 		//viewCnt가 null일시 viewCnt 초기값은 10
 		if(!(cntCheck.equals("null"))) {
@@ -206,7 +207,7 @@ public class BoardController {
 //		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+ boardList.size());
 		
 		
-		System.out.println("11111111111111111111111111111111111111111111111"+map);
+		//System.out.println("11111111111111111111111111111111111111111111111"+map);
 		//sql시간값 json으로 변환하기 위한 작업
 		for(Map<String,Object> map2:boardList) {
 			String date = map2.get("postdate").toString();
@@ -227,9 +228,11 @@ public class BoardController {
 		return boardList;
 	}
 
-	@RequestMapping(value = "board/reply-insert", method = RequestMethod.GET)
+	@RequestMapping(value = "board/reply-insert", method = RequestMethod.POST)
 	@ResponseBody
-	public String reply_insert(@RequestParam Map<String,Object> map) {
+	public void reply_insert(@RequestBody Map<String,Object> map) {
+		
+		//System.out.println("11111111111111111111111111111"+map);
 		String b_reply = ChangeHtml.change(String.valueOf(map.get("b_reply")));
 		map.put("b_reply", b_reply);
 		//mapper에서 if문으로 거르기 위한 임시 데이터
@@ -240,7 +243,7 @@ public class BoardController {
 		//System.out.println("---------------------------------------------------------"+map);
 		service.replyUpdate(map);
 //		System.out.println(rs);
-		return String.valueOf(rs);
+		//return String.valueOf(rs);
 	}
 
 	@RequestMapping(value = "/board/createBoard", method = RequestMethod.GET)
@@ -322,10 +325,13 @@ public class BoardController {
 		
 		
 		
-		Map<String,Object> boardReplyCnt = service.boardReplyCnt(map);
 		//조회수 업데이트
-		service.boardVisit(map);
+		
+		System.out.println("board_id========================="+map);
 		Map<String,Object> boardView = service.boardView(map);
+		System.out.println("boardView========================="+boardView);
+		Map<String,Object> boardReplyCnt = service.boardReplyCnt(boardView);
+		service.boardVisit(boardView);
 		List<Map<String,Object>> boardImg = service.boardImgSelect(map);
 		
 		
@@ -363,7 +369,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/board/favoriteBoard", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> favoriteBoardPost(@RequestParam Map<String,Object>map){
+	public Map<String,Object> favoriteBoardPost(@RequestBody Map<String,Object>map){
 		//member_id ,board_id 필요
 		//추천을 이미 햇는지 검사하는 코드
 		Map<String,Object> data = service.favoriteBoard(map);
@@ -420,6 +426,8 @@ public class BoardController {
 	@ResponseBody
 	public List<Map<String,Object>> replyList(@RequestParam Map<String,Object> map) {
 
+		
+		System.out.println("22222222222222222222222222"+map);
 		List<Map<String,Object>> list= service.getComment(map);
 		
 		if(list.size()!=0) {
@@ -441,65 +449,68 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "/board/updateBoard", method = RequestMethod.GET)
-	public ModelAndView updateBoard(@RequestParam Map<String,Object>map){
-		ModelAndView mav = new ModelAndView();
+	@ResponseBody
+	public Map<String,Object> updateBoard(@RequestParam Map<String,Object>map){
+		
 		Map<String, Object> boardList = service.boardView(map); 
 		List<Map<String,Object>> list = service.boardImgSelect(map);
 		
 		for(Map<String,Object> img : list){
 			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
 		}
-		mav.addObject("boardView",boardList);
-		mav.addObject("boardImg",list);
-		mav.setViewName("/board/updateBoard");
-		return mav;
+		boardList.put("boardImg", list);
+		
+		return boardList;
 	}
 	
 
 
 	@RequestMapping(value = "/board/updateBoard", method = RequestMethod.POST)
-	public ModelAndView updateBoardpost(@RequestParam Map<String,Object>map,@RequestParam(value="file",required = false) List<MultipartFile> mf
+	public int updateBoardpost(@RequestBody Map<String,Object>map,@RequestParam(value="file",required = false) List<MultipartFile> mf
 			,HttpServletRequest request){
-		ModelAndView mav = new ModelAndView();
+		
 	
 		Map<String,Object> fi = new HashMap<>();
 
 		Map<String,Object> board_id = service.boardView(map);
 		
-		//System.out.println("mf+++++++++++++++++++++++++++++++++++++++"+mf.get(0).getOriginalFilename());
+		System.out.println("mf+++++++++++++++++++++++++++++++++++++++"+mf);
+		System.out.println("mf+++++++++++++++++++++++++++++++++++++++"+map);
 
 		
 		
 		//이미지 넣기
 		try {
-			if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals("")) ) {
-		
-				for(MultipartFile file:mf) {
-					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
-					String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-					String safeFile = uploadDir+"/"+originalFileName;
-					fi.put("board_id", board_id.get("board_id"));
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
+			if(mf !=null) {
+				if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals("")) ) {
 			
-					fi.put("boardImg", originalFileName);		
-					service.boardImgInsert(fi);
-					fi.remove("boardImg");
-					file.transferTo(new File(safeFile));
-					
-				}	
+					for(MultipartFile file:mf) {
+						String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
+						//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
+						String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
+						String safeFile = uploadDir+"/"+originalFileName;
+						fi.put("board_id", board_id.get("board_id"));
+						//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
+				
+						fi.put("boardImg", originalFileName);		
+						service.boardImgInsert(fi);
+						fi.remove("boardImg");
+						file.transferTo(new File(safeFile));
+						
+					}	
+				}
 			}
 			
-			
+			int rs = service.updateBoard(map); 
+			return rs;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 3;
 		}
 	
 		
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+map);
-		service.updateBoard(map); 
-		mav.setViewName("redirect:/board/view?board_id="+map.get("board_id"));
-		return mav;
+		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+map);
+		
 	}
 	
 	
@@ -521,7 +532,7 @@ public class BoardController {
 	@RequestMapping(value = "/board/deleteBoardImg", method = RequestMethod.POST)
 	@ResponseBody
 	public int deleteBoardImg(@RequestParam Map<String,Object>map,HttpServletRequest request){
-		System.out.println(map);
+		//System.out.println(map);
 		List<Map<String, Object>> img = service.boardImgSelect(map);
 		System.out.println(img);
 		
@@ -547,7 +558,7 @@ public class BoardController {
 		
 		List<Map<String, Object>> img = service.boardImgSelect(map);
 		service.replyDelete(map);
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++"+map);
+		//System.out.println("+++++++++++++++++++++++++++++++++++++++++"+map);
 		for(Map<String,Object> rs : img) {
 			//System.out.println("11111111111111111111111111111111111111111"+rs.get("boardImg"));
 			String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
@@ -564,17 +575,19 @@ public class BoardController {
 		return mav;
 	}
 
-	@RequestMapping(value = "/board/replyDelete", method = RequestMethod.GET)
+	@RequestMapping(value = "/board/replyDelete", method = RequestMethod.DELETE)
 	@ResponseBody
 	public int replyDelete(@RequestParam Map<String,Object>map){
+		//System.out.println("reply_delete+++++++"+map);
 		int rs = service.replyDelete(map); 
 		return rs;
 	}
 
 	@RequestMapping(value = "/board/replyUpdate", method = RequestMethod.POST)
 	@ResponseBody
-	public int replyUpdate(@RequestParam Map<String,Object>map){
-		//System.out.println("reply_update++++++++++++++++++++++++++++++++++++++"+map);
+	public int replyUpdate(@RequestBody Map<String,Object>map){
+		
+		System.out.println("reply_update++++++++++++++++++++++++++++++++++++++"+map);
 		String b_reply = ChangeHtml.change(String.valueOf(map.get("b_reply")));
 		map.put("b_reply", b_reply);
 		int rs = service.replyUpdate(map); 
@@ -583,8 +596,8 @@ public class BoardController {
 	
 	@RequestMapping(value = "/board/insertReReply", method = RequestMethod.POST)
 	@ResponseBody
-	public int reReplyUpdate(@RequestParam Map<String,Object>map){
-		System.out.println("reply_update++++++++++++++++++++++++++++++++++++++"+map.get("reply_num"));
+	public int reReplyUpdate(@RequestBody Map<String,Object>map){
+		System.out.println("reply_insert++++++++++++++++++++++++++++++++++++++"+map);
 		String b_reply = ChangeHtml.change(String.valueOf(map.get("b_reply")));
 		map.put("b_reply", b_reply);
 		int rs = service.re_replyInsert(map); 
