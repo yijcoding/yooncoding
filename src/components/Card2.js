@@ -1,78 +1,82 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './card2.scss';  
-import { useNavigate } from 'react-router-dom';
-import { Card } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Card, CardBody, CardFooter, Col } from 'reactstrap';
 
-export const Card2 = ({path, name, country, img, id, location, detail, backPage, info}) => {
+export const Card2 = ({path, name, country, img, id, location, detail, info}) => {
   const navigate = useNavigate();
+  const {amuse_id} = useParams();
 
   return (
     path !== undefined
     ?
-    <div className="col mb-5 card-wrapper" onClick={e => {
+    <Col className="mb-5 main-wrapper-1" onClick={e => {
       e.preventDefault();
       navigate(`/${path}/${id}`);
     }}>
-      <div className="card h-100 card-wrapper-2">
-        <img className="card-img-top" src={img} alt="fac_img" />
-        <div class="card-body p-4">
-            <div class="text-center">
-                <h5 class="fw-bolder">{name}</h5>
+      <Card className="card-wrapper">
+          <img className='card-main-img' src={img} alt="fac_img"/>
+        <CardBody className="card-body p-4">
+            <div className="text-center">
+                <h5 className="fw-bolder">{name}</h5>
+            </div><hr/>
+        </CardBody>
+        <CardFooter className="p-4 pt-0 border-top-0 bg-transparent">
+            <div className="text-center">
+              <h6 className="fw-bolder">{location}</h6>
+              <p className="fw-bolder">{info}</p>
             </div>
-        </div>
-        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <h6 class="fw-bolder">{location}</h6>
-              <p class="fw-bolder">{info}</p>
-            </div>
-        </div>
-      </div>
-    </div>
+        </CardFooter>
+      </Card>
+    </Col>
     : (
       detail !== undefined
       ? 
-      <div className="col mb-5">
-        <div class="card h-100">
-          <img class="card-img-top" src={img} alt="fac_img" />
-          <div class="card-body p-4">
-              <div class="text-center">
-                  <h5 class="fw-bolder">{name}</h5>
-                  <h6 class="fw-bolder">{location}</h6>
+      <Col className="main-wrapper-2">
+        <Card className="card-wrapper h-100">
+          <img className="card-main-img" src={img} alt="fac_img" />
+          <CardBody className="card-body p-4">
+              <div className="text-center">
+                  <h5 className="fw-bolder">{name}</h5>
+              </div><hr/>
+              <div className="text-center">
+                  <h6 className="fw-bolder">{location}</h6>
               </div>
-          </div>
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center">
-                <button type='button' class="btn btn-outline-dark mt-auto" onClick={e => {
-                  e.preventDefault();
-                  detail(id);
-                }}>Detail</button>
-              </div>
-          </div>
-        </div>
-      </div>
+          </CardBody>
+          <CardFooter className="p-4 pt-0 border-top-0 bg-transparent">
+            <div className="btn-wrapper">
+              <Button type='button' className='btn' onClick={e => {
+                e.preventDefault();
+                detail(id);
+              }}>Detail</Button>
+            </div>
+          </CardFooter>
+        </Card>
+      </Col>
       :
-      <div className="card-detail-wrapper col mb-5">
-        <Card className='card-detail-wrapper'>
-          <img className="card-img-top" src={img} alt="fac_img" />
-          <div class="card-body p-4">
-              <div class="text-center">
-                  <h3 class="fw-bolder">{name}</h3>
+      <Col className="card-detail-wrapper mb-5">
+        <Card className="card-wrapper h-100">
+          <img className="card-main-img" src={img} alt="fac_img" />
+          <CardBody className="p-4">
+              <div className="text-center">
+                  <h3 className="fw-bolder">{name}</h3>
               </div>
-          </div>
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <div class="text-center">
-                <p>{location}</p>
+          </CardBody>
+          <CardFooter className="p-4 pt-0 border-top-0 bg-transparent">
+              <div className="text-center">
+                <p>위치: {location}</p>
                 <p>{info}</p>
               </div>
-              <div class="text-center">
-                <button type='button' class="btn btn-outline-dark mt-auto" onClick={e => {
-                  e.preventDefault();
-                  backPage(id)
-                }}>Back</button>
+              <div className="text-center">
+                <Button type='button' className="mt-auto" 
+                  onClick={e => {
+                    e.preventDefault();
+                    window.location.replace(`/amusement/${amuse_id}`);
+                }}>Back</Button>
               </div>
-          </div>
+          </CardFooter>
         </Card>
-      </div>
+      </Col>
     )
   );
 };

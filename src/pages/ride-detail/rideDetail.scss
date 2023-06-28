@@ -1,0 +1,36 @@
+.ride-detail-wrapper{
+    margin: 30px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 22px 70px 4px;
+    display: flex;
+
+    .ride-tot-img{
+        margin-right: 30px;
+        border-radius: 10px;
+        width: 100%;
+        height: 75lvh;
+        opacity: 0.5;
+    }
+    .ride-main-img{
+        width: 100%;
+        height: 50lvh;
+        border-radius: 20px 0px 0px 20px;
+        margin-right: 10px;
+    }
+
+    .ride-list-wrapper{
+        position: absolute;
+        display: flex;
+        width: 1100px;
+        height: 50lvh;
+        top: 140px;
+        left: 430px;
+        border-radius: 20px;
+        background-color: whitesmoke;
+
+        .ride-second-wrapper{
+            margin-right: 10px;
+        }
+    }
+}

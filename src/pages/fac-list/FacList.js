@@ -15,10 +15,6 @@ const FacList = () => {
         setFacId(id);
     }
 
-    const facBackPage = id => {
-        console.log("back", id);
-    }
-
     useEffect(() => {
         axios.get(`http://localhost:8080/test/facilityList/${amuse_id}`)
             .then(response => setFacList(response.data));
@@ -29,40 +25,36 @@ const FacList = () => {
     
     if(facId === null){
         return (
-            <Container class="px-4 px-lg-5 mt-5">
-                <section class="py-5">
-                    <header class='header-title'>편의시설</header>
-                    <div class="container px-4 px-lg-5 mt-5">
-                        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 
+            <Container className="mt-5">
+                <section className="py-5">
+                    <header className='header-title'>편의시설</header>
+                        <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 
                                     row-cols-xl-4 justify-content-center">
                             {facList?.map(fac => (
                                 <Card2 key={fac.facility_id} id={fac.facility_id} location={fac.f_location} 
                                     name={fac.f_name} img={fac.f_img} detail={facDetail}/>
                             ))}
                         </div>
-                    </div>
                 </section>
             </Container>
         );
     }
     else{
         return (
-            <Container class="px-4 px-lg-5 mt-5">
-                <section class="py-5">
-                    <header class='header-title'>편의시설</header>
-                    <div class="container px-4 px-lg-5 mt-5">
-                        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 
+            <Container className="mt-5">
+                <section className="py-5">
+                    <header className='header-title'>편의시설</header>
+                        <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 
                                     row-cols-xl-4 justify-content-center">
                             {facList?.map(fac => {
                                 if(facId === fac.facility_id){
                                     return(
-                                        <Card2 key={fac.facility_id} info={fac.f_info}
-                                            name={fac.f_name} img={fac.f_img} backPage={facBackPage}/>
+                                        <Card2 key={fac.facility_id} info={fac.f_info} location={fac.f_location}
+                                            name={fac.f_name} img={fac.f_img}/>
                                     );
                                 }
                             })}
                         </div>
-                    </div>
                 </section>
             </Container>
         );

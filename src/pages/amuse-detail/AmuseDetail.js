@@ -14,42 +14,53 @@ const AmuseDetail = (props) => {
     const [amuseDetail, setAmuseDatail] = useState();
     const [amuseImage, setAmuseImage] = useState();
 
+    const [imgUrl, setImgUrl] = useState("");
+
     useEffect(() => {
         axios.get(`http://localhost:8080/test/amuseDetail/${amuse_id}`)
             .then(response => setAmuseDatail(response.data))
-    },[]);
+    },[amuse_id]);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/test/amuseImage/${amuse_id}`)
             .then(response => setAmuseImage(response.data))
-    },[]);
+    },[amuse_id]);
 
+    const handleMouseImage = (url) => {
+        setImgUrl(url);
+    }
+    
     return (
         <Container className='d-flex'>
-            <div className='main-wrapper col-8'> 
-                <Container className="px-4 px-lg-5 mt-5">
-                    <header className='header-title'>{amuseDetail?.a_name}</header>
-                    <figure>운영시간: {amuseDetail?.a_time}</figure>
-                    <article>
-                        {/* main image */}
-                        <div className='main-image-wrapper'>
-                            <img src={amuseDetail?.a_img} className='main-image rounded' alt='main-image'/>
-                        </div>
-                        {/* ===여기는 왜 col-8 영역 적용이 안되는걸까요!?!?=== */}
-                        {/* width: 100%를 하면 두번째 사진만 크기가 달라짐.. */}
-                        <div className='side-image-wrapper d-flex'>
-                            {/* side image */}
-                            {amuseImage?.map(img => (
-                                <div key={img.aimg_id}>
-                                <img className='side-image rounded' src={img.url} alt='side-image'/>
-                                </div>
-                            ))}
-                        </div>
-                    </article>
-                    <article>
-                        <br/><br/>
-                        {amuseDetail?.a_info}
-                    </article>
+            <div className='main-wrapper col-md-8'> 
+                <Container className="mt-5">
+                    <section class="py-5">
+                        <header className='header-title'>{amuseDetail?.a_name}</header>
+                        <figure>운영시간: {amuseDetail?.a_time}</figure>
+                        <article>
+                            {/* main image */}
+                            <div className='main-image-wrapper'>
+                                <img src={imgUrl === "" ? amuseDetail?.a_img : imgUrl} className='main-image rounded' alt='main-image'/>
+                            </div>
+                            {/* ===여기는 왜 col-8 영역 적용이 안되는걸까요!?!?=== */}
+                            {/* width: 100%를 하면 두번째 사진만 크기가 달라짐.. */}
+                            <div className='side-image-wrapper d-flex'>
+                                {/* side image */}
+                                {amuseImage?.map(img => (
+                                    <div key={img.aimg_id}>
+                                        <img className='side-image rounded' src={img.url} onMouseMove={e => {
+                                            e.preventDefault();
+                                            handleMouseImage(img.url);
+                                        }}/>
+                                    </div>
+                                ))}
+                            </div>
+                        </article>
+                        <article>
+                            <br/><br/>
+                            {amuseDetail?.a_info}
+                        </article>
+                    </section>
                 </Container>
                 <div>
                     <RidesList/>
@@ -61,8 +72,8 @@ const AmuseDetail = (props) => {
                     <ReviewList/>
                 </div>
             </div>
-            <div className='aside-wrapper col-4'>
-                <Container className="px-4 px-lg-5 mt-5">
+            <div className='side-wrapper col-md-4'>
+                <Container className="mt-5">
                     <header className='header-title'>Category</header>
                     <article></article>
                 </Container>

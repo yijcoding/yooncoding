@@ -5,6 +5,7 @@ import {Card} from "../../components/Card";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
+import { Container } from 'reactstrap';
 
 const AmuseList = () => {
 
@@ -28,7 +29,7 @@ const AmuseList = () => {
     }
 
     return (
-    <div className='amuseList-wrapper'>
+    <Container className='amuseList-wrapper'>
         <div className='amuseList-header'>
             Amusement List
         </div>
@@ -40,7 +41,7 @@ const AmuseList = () => {
             ))}
         </Slider>
         </div>
-    </div>
+    </Container>
     );
 };
 

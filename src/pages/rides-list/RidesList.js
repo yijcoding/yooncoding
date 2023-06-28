@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card2 } from '../../components/Card2';
+import './ridesList.scss';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -31,9 +32,9 @@ const RidesList = (props) => {
       }
 
     return (
-        <Container class="px-4 px-lg-5 mt-5">
-            <section class="py-5">
-            <header class='header-title'>놀이기구</header>
+        <Container className="rides-wrapper mt-5">
+            <section className="py-5">
+                <header className='header-title'>놀이기구</header>
                 <Slider {...settings}>
                     {ridesList?.map(rList => (
                         <Card2 key={rList.rides_id} id={rList.rides_id} path="rideDetail"

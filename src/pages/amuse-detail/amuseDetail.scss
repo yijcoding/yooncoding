@@ -1,9 +1,16 @@
+.main-wrapper{
+    margin-top: 10px;
+    border: 1px solid white;
+    border-radius: 15px;
+    background-color: whitesmoke;
+    margin-bottom: 10px;
+}
 .header-title{
     font-size: 2.2rem;
     font-family: 'Pacifico', fantasy;
 }
 .main-wrapper{
-    margin-right: 30px;
+    margin-right: 40px;
 }
 .main-image{
     width: 100%;
@@ -17,3 +24,19 @@
     object-fit: cover;
 }
 
+.side-wrapper{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    background-color: whitesmoke;
+}
+
+.side-image-wrapper{
+    .side-image{
+        &:hover {
+            border: 2px solid white;
+            box-shadow: lightskyblue 0px 30px 70px 20px;
+            transition: width 1s, height 1s, box-shadow 0.5s;
+        }
+    }
+}
