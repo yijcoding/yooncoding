@@ -113,9 +113,6 @@ function Detail() {
 
 
 
-                        {/* 이거 컴포넌트 */}
-
-
                         {/*좋아요 싫어요*/}
                         <div className='favorite-wrap'>
 

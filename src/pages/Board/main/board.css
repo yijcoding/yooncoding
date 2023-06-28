@@ -314,6 +314,14 @@ ul.tabs li a{
   font-size: 14px;
 }
 
+.selectField{
+  width: 20%; 
+  height: 40px; 
+  float: left; 
+  text-align: center; 
+  font-size: 14px;
+}
+
 #write-bottom{
   height: 40px;
 }
@@ -330,4 +338,5 @@ ul.tabs li a{
   font-weight:bold;
   border-radius:5px 5px 0 0;
   color:black;
+
 }
