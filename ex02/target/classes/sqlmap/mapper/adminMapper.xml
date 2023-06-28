@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+	<select id="getMemberList" parameterType="hashmap" resultType="memberDTO">
+		<if test="start == null">
+			<![CDATA[
+				select member_id,m_name,m_birth,m_email,m_regidate,m_phone,m_gender,m_admin 
+				from member 
+			]]>
+			where member_id like CONCAT('%',#{search},'%')
+		</if>
+		
+		<if test="start!=null">
+			<![CDATA[
+				select member_id,m_name,m_birth,m_email,m_regidate,m_phone,m_gender,m_admin 
+				from member 
+			]]>
+			where member_id like CONCAT('%',#{search},'%')
+			
+				limit ${start},#{end}
+		</if>
+	</select>
+	
+	<select id="amusementList" parameterType="hashmap" resultType="amusementDTO">
+		<if test="start == null">
+			<if test="amuse_id == null">
+				<![CDATA[
+					select amuse_id,a_name,a_country,a_time,a_info,a_lat,a_lng,a_img
+					from amusement 
+				]]>
+				where a_name like CONCAT('%',#{search},'%')
+			</if>
+			
+			<if test="amuse_id != null">
+				<![CDATA[
+					select amuse_id,a_name,a_country,a_time,a_info,a_lat,a_lng,a_img
+					from amusement 
+				]]>
+				where amuse_id=#{amuse_id}
+			</if>
+		</if>
+		
+		<if test="start!=null">
+			<![CDATA[
+				select amuse_id,a_name,a_country,a_time,a_info,a_lat,a_lng,a_img
+				from amusement
+			]]>
+			where a_name like CONCAT('%',#{search},'%')
+			
+				limit ${start},#{end}
+		</if>
+	</select>
+	
+	<select id="selectPromotionId" parameterType="hashmap" resultType="hashmap">
+		select promotion_id from promotion where amuse_id = #{amuse_id}
+	</select>
+	
+	<select id="ridesList" parameterType="int" resultType="hashmap">
+		select rides_id,r_name,r_location,r_info,r_min_height,r_max_height,r_img,r_video from rides where amuse_id = #{amuse_id}
+	</select>
+	
+	
+	<select id="selectRide" parameterType="hashmap" resultType="hashmap">
+		select rides_id,amuse_id,r_name,r_location,r_info,r_min_height,r_max_height,r_img,r_video from rides where rides_id = #{rides_id}
+	</select>
+	
+	<insert id="insertAdminAmusement" parameterType="hashmap" useGeneratedKeys="true" keyProperty="amuse_id">
+			insert into amusement(a_name,a_country,a_time,a_img,a_opening,a_info,a_lat,a_lng)
+			values(#{a_name},
+			 #{a_country},
+			 #{a_time},
+			 #{a_img},
+			 #{a_opening},
+			 #{a_info},
+			 #{a_lat},
+			 #{a_lng}
+			)
+	</insert>
+	
+	<insert id="insertAImg" parameterType="hashmap">
+			insert into aimage(amuse_id,url)
+			values(#{amuse_id},#{url})
+	</insert>
+	
+	<insert id="insertRide" parameterType="hashmap">
+			insert into rides(amuse_id,r_name,r_location,r_info
+				<if test="r_min_height != ''">
+					,r_min_height
+				</if>
+				<if test="r_max_height != ''">
+					,r_max_height
+				</if>
+				<if test="r_video != ''">
+					,r_video
+				</if>
+				<if test="r_img != ''">
+					,r_img
+				</if>
+			)
+			values(#{amuse_id},#{r_name},#{r_location},#{r_info}
+				<if test="r_min_height != ''">
+					,#{r_min_height}
+				</if>
+				<if test="r_max_height != ''">
+					,#{r_max_height}
+				</if>
+				<if test="r_video != ''">
+					,#{r_video}
+				</if>
+				<if test="r_img != ''">
+					,#{r_img}
+				</if>
+			)
+	</insert>
+	
+	
+	<update id="memberPowerChange" parameterType="memberDTO">
+		<if test="m_admin == 1">
+			update member set m_admin = 0 where member_id =#{member_id}
+		</if>
+		
+		<if test="m_admin == 0">
+			update member set m_admin = 1 where member_id =#{member_id}
+		</if>
+
+	</update>
+	
+	<update id="updateRide" parameterType="hashmap">
+		
+		update rides set r_info = #{r_info},r_name=#{r_name},r_location=#{r_location}
+		,r_min_height=#{r_min_height},r_max_height=#{r_max_height},r_img=#{r_img},r_video=#{r_video}
+		where rides_id =#{rides_id}
+	
+	</update>
+	
+	<update id="updateAdminAmusementDetail" parameterType="hashmap">
+		<![CDATA[
+			update amusement set a_name=#{a_name},a_time=#{a_time},a_lat=#{a_lat},
+			a_lng=#{a_lng},a_info=#{a_info},a_img=#{a_img} where amuse_id = #{amuse_id}
+		]]>
+		
+	</update>
+	
+	<delete id="deleteRide" parameterType="hashmap">
+		delete from rides where rides_id = #{rides_id} 
+	</delete>
+	
+	
+	<delete id="adminMemberDelete" parameterType="memberDTO">
+		delete from member where member_id = #{member_id} 
+	</delete>
+	
+	<delete id="adminUpdateImgDelete" parameterType="hashmap">
+		delete from aimage where aimg_id = #{aimg_id} 
+	</delete>
+	
+	<delete id="deleteTicket" parameterType="hashmap">
+			delete from ticket where promotion_id=#{promotion_id}	
+	</delete>
+	
+	<delete id="deletePromotion" parameterType="hashmap">
+			delete from promotion where amuse_id=#{amuse_id}	
+	</delete>
+	
+	<delete id="deleteFacility" parameterType="amusementDTO">
+		delete from facility where amuse_id = #{amuse_id} 
+	</delete>
+	
+	<delete id="deleteAimage" parameterType="amusementDTO">
+		delete from aimage where amuse_id = #{amuse_id} 
+	</delete>
+	
+	<delete id="deleteSelected" parameterType="amusementDTO">
+		delete from selected where amuse_id = #{amuse_id} 
+	</delete>
+	
+	<delete id="deleteRides" parameterType="amusementDTO">
+		delete from rides where amuse_id = #{amuse_id} 
+	</delete>
+	
+	<delete id="deleteAmuseReview" parameterType="amusementDTO">
+		delete from amuse_review where amuse_id = #{amuse_id} 
+	</delete>
+	
+	<delete id="deleteAmusement" parameterType="amusementDTO">
+		delete from amusement where amuse_id = #{amuse_id} 
+	</delete>
+	
+</mapper>
