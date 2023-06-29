@@ -783,7 +783,6 @@ function comment_re_reply_commit(ref,seq){
 				</div>
 			</div>
 			
-		
 			<!-- 가로 광고 -->
 			<div class="advertisement1">
 				<a href="http://jg.tjoeunit.co.kr/"><img id="advertisement-jouen"src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSr3FexjnmdRQNt-FcxByAuOozrhtelzrwG5eysWz1Ue5-3shjJ9-ok5Cvor9IryklNA&usqp=CAU"></a>

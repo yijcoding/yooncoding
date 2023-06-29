@@ -136,9 +136,6 @@
 			insert into board (b_title,b_content,b_type,member_id)
 			values(#{b_title},#{b_content},#{b_type},#{member_id})
 		]]>
-		<selectKey resultType="int" keyProperty="board_id" keyColumn="board_id" order="AFTER">
-    		SELECT LAST_INSERT_ID()
-    	</selectKey>
 	</insert>
 	
 	
@@ -189,7 +186,7 @@
 			update board set 
 		]]>
 		<if test="b_title != null">
-			b_title=#{b_title},b_content=#{b_content},b_type=#{b_type}
+			b_title=#{b_title},b_content=#{b_content}
 		</if>
 		
 		<if test="data!=null">
@@ -225,17 +222,16 @@
 	<update id="replyUpdate">
 	
 		<selectKey resultType="hashmap" keyProperty="reply_num,board_id,seq,ref" order="BEFORE">
-		
 		<if test="refcheck!=null">
 	       	SELECT board_id,reply_num,seq,ref from boardreply  where reply_num = #{reply_num}
 		</if>
 		<if test="refcheck==null">
-	       	SELECT board_id,ref,seq,reply_num from boardreply  where reply_num = #{reply_num}
+	       	SELECT board_id,ref,seq from boardreply  where ref=#{ref} and seq=#{seq}
 		</if>
 	    </selectKey>  
 	    
 		<if test="refcheck==null">
-			update boardreply  set b_reply=#{b_reply} where reply_num = #{reply_num}
+			update boardreply  set b_reply=#{b_reply} where ref=#{ref} and seq=#{seq}
 		</if>
 		
 		<if test="refcheck!=null">
