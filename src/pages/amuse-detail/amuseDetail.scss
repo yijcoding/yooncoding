@@ -1,42 +1,73 @@
-.main-wrapper{
-    margin-top: 10px;
-    border: 1px solid white;
-    border-radius: 15px;
-    background-color: whitesmoke;
-    margin-bottom: 10px;
-}
-.header-title{
-    font-size: 2.2rem;
-    font-family: 'Pacifico', fantasy;
-}
-.main-wrapper{
-    margin-right: 40px;
-}
-.main-image{
-    width: 100%;
-    height: 600px;
-    margin-bottom: 5px;
-}
-.side-image{
-    width: 95%;
-    height: 150px;
-    margin-right: 5px;
-    object-fit: cover;
-}
+.tot-wrapper{
+    height: auto;
 
-.side-wrapper{
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-radius: 15px;
-    background-color: whitesmoke;
-}
-
-.side-image-wrapper{
+    .main-wrapper{
+        margin-top: 10px;
+        border: 1px solid white;
+        border-radius: 15px;
+        background-color: whitesmoke;
+        margin-bottom: 10px;
+    }
+    .header-title{
+        font-size: 2.2rem;
+        font-family: 'GowunDodum-Regular', fantasy;
+    }
+    .main-wrapper{
+        margin-right: 40px;
+    }
+    .main-image{
+        width: 100%;
+        height: 600px;
+        margin-bottom: 5px;
+    }
     .side-image{
-        &:hover {
-            border: 2px solid white;
-            box-shadow: lightskyblue 0px 30px 70px 20px;
-            transition: width 1s, height 1s, box-shadow 0.5s;
+        width: 95%;
+        height: 150px;
+        margin-right: 5px;
+        object-fit: cover;
+    }
+    
+    .side-image-wrapper{
+        .side-image{
+            &:hover {
+                border: 2px solid white;
+                box-shadow: lightskyblue 0px 30px 70px 20px;
+                transition: width 1s, height 1s, box-shadow 0.5s;
+            }
+        }
+    }
+    .side-wrapper{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 15px;
+    
+        height: 3500px;
+
+        .side-box{
+            top: 0px;
+            border-radius: 15px;
+            position: sticky;
+            margin-top: 100px;
+            height: auto;
+            background-color: whitesmoke;
+
+            .side-ul{
+                margin-left: 5%;
+                li{
+                    padding: 5px;
+                    a{
+                        text-decoration: none;
+                        color: black;
+                        font-size: 1.5rem;
+                        &:hover{
+                            color: red;
+                        }
+                    }
+                } 
+            }
         }
     }
 }
+
+
+

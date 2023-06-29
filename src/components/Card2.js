@@ -3,7 +3,7 @@ import './card2.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, CardBody, CardFooter, Col } from 'reactstrap';
 
-export const Card2 = ({path, name, country, img, id, location, detail, info}) => {
+export const Card2 = ({path, name, country, img, id, location, btnDetail, btnBack, info}) => {
   const navigate = useNavigate();
   const {amuse_id} = useParams();
 
@@ -30,7 +30,7 @@ export const Card2 = ({path, name, country, img, id, location, detail, info}) =>
       </Card>
     </Col>
     : (
-      detail !== undefined
+      btnDetail !== undefined
       ? 
       <Col className="main-wrapper-2">
         <Card className="card-wrapper h-100">
@@ -47,7 +47,7 @@ export const Card2 = ({path, name, country, img, id, location, detail, info}) =>
             <div className="btn-wrapper">
               <Button type='button' className='btn' onClick={e => {
                 e.preventDefault();
-                detail(id);
+                btnDetail(id);
               }}>Detail</Button>
             </div>
           </CardFooter>
@@ -58,22 +58,23 @@ export const Card2 = ({path, name, country, img, id, location, detail, info}) =>
         <Card className="card-wrapper h-100">
           <img className="card-main-img" src={img} alt="fac_img" />
           <CardBody className="p-4">
-              <div className="text-center">
-                  <h3 className="fw-bolder">{name}</h3>
-              </div>
+            <div className="text-center"><br/>
+                <h3 className="fw-bolder">{name}</h3>
+            </div><br/>
+            <div className="text-center">
+              <p>위치: {location}</p>
+              <p>{info}</p>
+            </div>
           </CardBody>
           <CardFooter className="p-4 pt-0 border-top-0 bg-transparent">
-              <div className="text-center">
-                <p>위치: {location}</p>
-                <p>{info}</p>
-              </div>
-              <div className="text-center">
-                <Button type='button' className="mt-auto" 
-                  onClick={e => {
-                    e.preventDefault();
-                    window.location.replace(`/amusement/${amuse_id}`);
-                }}>Back</Button>
-              </div>
+            <div className="btn-wrapper">
+              <Button type='button' className="btn" 
+                onClick={e => {
+                  e.preventDefault();
+                  // window.location.replace(`/amusement/${amuse_id}`);
+                  btnBack();
+              }}>Back</Button>
+            </div>
           </CardFooter>
         </Card>
       </Col>

@@ -26,27 +26,31 @@ const StarRating = ({starRatingFunc}) => {
     // starRatingFunc(selectedRating);
 
     return (
-        <div className='star-rating'>
-            {ratings.map((rating, index) => (
-                <React.Fragment key={rating}>
-                <Input
-                    type="radio"
-                    name="rating"
-                    value={rating}
-                    id={`rate${rating}`}
-                    checked={selectedRating === rating}
-                    onChange={() => {
-                        handleRatingChange(rating)}
-                    }
-                />
-                <Label htmlFor={`rate${rating}`}
-                    style={
-                        selectedRating !== null && index <= ratings.indexOf(selectedRating) 
-                        ? styles.checkedLabel : null}>
-                    ⭐
-                </Label>
-                </React.Fragment>
-            ))}
+        <div style={{display:'flex'}}>
+            <div className='star-rating'>
+                {ratings.map((rating, index) => (
+                    <React.Fragment key={rating}>
+                    <Input
+                        type="radio"
+                        name="rating"
+                        value={rating}
+                        id={`rate${rating}`}
+                        checked={selectedRating === rating}
+                        onChange={() => {
+                            handleRatingChange(rating)}
+                        }
+                    />
+                    <Label htmlFor={`rate${rating}`}
+                        style={
+                            selectedRating !== null && index <= ratings.indexOf(selectedRating) 
+                            ? styles.checkedLabel : null}>
+                        ⭐
+                    </Label>
+                    </React.Fragment>
+                ))}
+            </div>
+            <div style={{marginLeft:'10%', fontSize:'1.8rem', fontWeight:'bold'}}>
+                점수: {selectedRating}</div>
         </div>
     );
 };
