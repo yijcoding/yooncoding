@@ -36,7 +36,7 @@ function Detail() {
                     board_id: board_id
                 }
             });
-
+            console.log(response.data)
             setViewData(response.data);
         } catch (error) {
             console.log(error);

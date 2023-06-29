@@ -10,39 +10,39 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 function ElasticBoard() {
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [usepageSize,setUsepageSize] = useState(10);
-    const [tabsCss,setTabsCss] = useState("11")
+    const [usepageSize, setUsepageSize] = useState(10);
+    const [tabsCss, setTabsCss] = useState("11")
     const [pagevalue, setPagevalue] = useState(100);
     const [elasticResults, setElasticResults] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [selectTabs, setSelectTabs] = useState("전체");
     const [pageCount, setPageCount] = useState(10);
-    const [pagingSize,setPagingSize] = useState(10);
+    const [pagingSize, setPagingSize] = useState(10);
 
 
     const history = useNavigate();
     const location = useLocation();
-    const addressParams=new URLSearchParams(location.search);
+    const addressParams = new URLSearchParams(location.search);
 
 
     // 페이지 사이즈 업데이트 함수
-    
-    
-      useEffect(() => {
-        
+
+
+    useEffect(() => {
+
         elastick(currentPage);
 
-      }, [location]); 
-  
+    }, [location]);
 
-    
+
+
 
     // $(document).on('click', '.pagination-button', function() {
     //     setCurrentPage(parseInt($(this).val()));
     //     elastick(currentPage);
     //     console.log('클릭');
     //   });
-  
+
 
     const elastick = (currentPage) => {
         let searchValue = document.getElementById("text").value;
@@ -51,22 +51,22 @@ function ElasticBoard() {
         let b_type = addressParams.get("b_type");
 
         setUsepageSize(pageSize);
-        
+
         //setCurrentPage(currentPage)
-        
-        
+
+
         console.log("selectField: " + selectField);
         console.log("searchValue: " + searchValue);
         console.log("currentPage: " + currentPage);
         console.log("pageSize: " + pageSize);
         console.log("b_type: " + b_type);
-    
+
 
         //pageSize가 null일땐 10
         if (pageSize === null) {
             pageSize = 10;
         }
-    
+
 
         //기본적으로 틀만 만들어놓고 값이 있는것만 push
         const query = {
@@ -85,7 +85,7 @@ function ElasticBoard() {
                 },
             },
         };
-    
+
         if (searchValue) {
             query.query.bool.must.push({
                 wildcard: {
@@ -95,7 +95,7 @@ function ElasticBoard() {
                 },
             });
         }
-    
+
         if (b_type) {
             query.query.bool.must.push({
                 term: {
@@ -108,22 +108,22 @@ function ElasticBoard() {
             query.query.match_all = {};
             delete query.query.bool;
         }
-    
+
         getElasticBoardList(query, pageSize);
     };
-        // const query1 = {
-        //     "query": {
-        //         "wildcard": {
-        //             [selectField]: {
-        //                 "value": `*${'${searchValue}'}*`
-        //             }
-        //         }
-        //     }
-        // };
-    
+    // const query1 = {
+    //     "query": {
+    //         "wildcard": {
+    //             [selectField]: {
+    //                 "value": `*${'${searchValue}'}*`
+    //             }
+    //         }
+    //     }
+    // };
 
 
-    const getElasticBoardList = (query,pageSize) => {
+
+    const getElasticBoardList = (query, pageSize) => {
 
         const sel = [query];
 
@@ -144,11 +144,11 @@ function ElasticBoard() {
         axios(requestOption).then(response => {
             let pagevalue = response.data.hits.total.value;
             let countpages = Math.ceil(pagevalue / pageSize);
-           
+
             setPagevalue(pagevalue);
-            
+
             const data = response.data.hits.hits;
-            
+
             setElasticResults(data);
             paging(pagevalue, currentPage, pageSize)
         }).catch(error => {
@@ -156,7 +156,7 @@ function ElasticBoard() {
         });
     }
 
-    function paging(pagevalue, currentPage , pageSize) {
+    function paging(pagevalue, currentPage, pageSize) {
         const buttons = [];
         $('.page_test').html("");
         let lowpage = 1;
@@ -177,17 +177,17 @@ function ElasticBoard() {
         if (lowpage < 1) {
             first = last;
         }
-        
-        
+
+
 
         if (first > 10) {
-            
+
             buttons.push(
                 <button className='pagination-button' value='1' key='1' >Top</button>
             );
             buttons.push(
                 // <Link to={`/board?b_type=${selectTabs}&viewCnt=${pageSize}&search=${currentPage}`}>
-                    <button className='pagination-button' value={prev} key={prev}>Prev</button>
+                <button className='pagination-button' value={prev} key={prev}>Prev</button>
                 //</Link>
             );
         }
@@ -210,7 +210,7 @@ function ElasticBoard() {
             buttons.push(
                 <button className='pagination-button' value={lowpage} key={lowpage}>End</button>
             );
-            
+
         }
         console.log(buttons)
 
@@ -236,7 +236,7 @@ function ElasticBoard() {
 
     const handleSearchChange = (event) => {
         setSearchValue(event.target.value);
-        
+
     }
 
     const moveWriteForm = () => {
@@ -244,7 +244,7 @@ function ElasticBoard() {
         //console.log('11')
     }
 
-    const selectMenuHandler = (index,tabsValue) => {
+    const selectMenuHandler = (index, tabsValue) => {
         // parameter로 현재 선택한 인덱스 값을 전달해야 하며, 이벤트 객체(event)는 쓰지 않는다
         // 해당 함수가 실행되면 현재 선택된 Tab Menu 가 갱신.
         setSelectTabs(tabsValue);
@@ -281,34 +281,34 @@ function ElasticBoard() {
 
                             {/* tabs menu */}
                             <div>
-                            <ul className="tabs">
-                        {tabEvent.map((el, index) => (
-                            <Link key={el.id} to={`/board?b_type=${el.link}&viewCnt=${pageCount}&search=${currentPage}`}>
-                                <li className={index === tabsCss ? "tab-link current" : "tab-link"}
-                                    id={el.id}
-                                    onClick={() => selectMenuHandler(index,el.link)}
-                                    style={{ color: "black" }}>
-                                    {el.name}
-                                </li>
-                            </Link>
-                        ))}
-                    </ul>
+                                <ul className="tabs">
+                                    {tabEvent.map((el, index) => (
+                                        <Link key={el.id} to={`/board?b_type=${el.link}&viewCnt=${pageCount}&search=${currentPage}`}>
+                                            <li className={index === tabsCss ? "tab-link current" : "tab-link"}
+                                                id={el.id}
+                                                onClick={() => selectMenuHandler(index, el.link)}
+                                                style={{ color: "black" }}>
+                                                {el.name}
+                                            </li>
+                                        </Link>
+                                    ))}
+                                </ul>
                             </div>
 
                             {/* 글작성 버튼 */}
                             <div className="write_form">
-                    <button type="submit" id="write-top" className="btn-board-top" onClick={moveWriteForm}>
-                        <img src={"https://cdn-icons-png.flaticon.com/512/5218/5218705.png"} id="img_write" />글쓰기
-                    </button>
-                </div>
+                                <button type="submit" id="write-top" className="btn-board-top" onClick={moveWriteForm}>
+                                    <img src={"https://cdn-icons-png.flaticon.com/512/5218/5218705.png"} id="img_write" />글쓰기
+                                </button>
+                            </div>
                         </div>
 
                         {/* 글 출력수량 설정 */}
                         <div className="menu_select">
                             <div className='text'>
-                                <select className="form-select form-select-sm" id="view-select" aria-label="form-select-sm example" 
-                                value={usepageSize}
-                                onChange={handlePagecountChange}  >
+                                <select className="form-select form-select-sm" id="view-select" aria-label="form-select-sm example"
+                                    value={usepageSize}
+                                    onChange={handlePagecountChange}  >
                                     {pagecount.map((sl) => {
                                         return (<option key={sl.id} id={sl.id} value={sl.value}>
                                             {sl.name}
@@ -359,21 +359,22 @@ function ElasticBoard() {
                             </tbody>
                         </table>
                         <div className="page_wrap">
-                            
-					<span className="page_nation" style={{padding: '0 0 0 20%'}}></span>
-                        { /* board paging start */}
-                        {paging(pagevalue, currentPage, pagingSize).map((button) => (
-    React.cloneElement(button, {
-        onClick: () => handlePageChange(parseInt(button.props.value))
-    })
-))}
 
-<span
-						className="write-bottom-wrap" style={{float: 'right'}}>
-						<button type="submit" id="write-bottom" className="btn btn-blue top"
-							onClick={moveWriteForm} style={{height: '40px'}}>글쓰기</button>
-					</span>
-				</div>
+                            <span className="page_nation" style={{ padding: '0 0 0 20%', }}>
+                            { /* board paging start */}
+                            {paging(pagevalue, currentPage, pagingSize).map((button) => (
+                                React.cloneElement(button, {
+                                    onClick: () => handlePageChange(parseInt(button.props.value))
+                                })
+                            ))}
+                            </span>
+                        
+                        <span
+                            className="write-bottom-wrap" style={{ float: 'right' }}>
+                            <button type="submit" id="write-bottom" className="btn btn-blue top"
+                                    onClick={moveWriteForm} style={{ height: '40px' }}>글쓰기</button>
+                            </span>
+                            </div>
                         { /* board paging end */}
 
                     </div>
