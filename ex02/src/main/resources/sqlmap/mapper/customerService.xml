@@ -7,15 +7,12 @@
 			select announcement_num,c_type,c_title,postdate,c_content from announcement 
 		]]>
 		
-		<if test="announcement_num !=null">
-			where announcement_num = #{announcement_num}
-		</if>
+		
+		where announcement_num = #{announcement_num}
 		
 		order by announcement_num desc
 		
-		<if test="announcement_num ==null">
-			limit 1
-		</if>
+		
 	</select>
 	
 	<select id="selectAnnouncementList" parameterType="hashmap" resultType="hashmap">
@@ -26,7 +23,7 @@
 	
 	<select id="customerImgSelect" parameterType="hashmap" resultType="hashmap">
 		<![CDATA[
-			select boardImg,announcement_num from boardimg where announcement_num = #{announcement_num}
+			select boardImg,announcement_num,boardImg_num from boardimg where announcement_num = #{announcement_num}
 		]]>
 	</select>
 	
@@ -158,6 +155,13 @@
 		<![CDATA[
 			insert into announcement(c_type,c_title,c_content) values(#{c_type},#{c_title},#{c_content})
 		]]>
+		
+		<selectKey resultType="hashmap" keyProperty="announcement_num" order="AFTER">
+		
+		
+	       	SELECT announcement_num from announcement order by announcement_num desc limit 1
+		
+	    </selectKey>  
 	</insert>
 	
 	
@@ -202,7 +206,7 @@
 	
 	<delete id="customerImgDelete" parameterType="hashmap">
 		<![CDATA[
-			delete from boardimg where announcement_num= #{announcement_num}
+			delete from boardimg where boardImg_num= #{boardImg_num}
 		]]>
 	</delete>
 	

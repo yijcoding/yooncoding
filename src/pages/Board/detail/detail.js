@@ -7,6 +7,7 @@ import CommentList from './component/commentList';
 import { useLocation } from 'react-router-dom';
 import Advertisment_leftSide from '../../../components/advertisement/advertisement_leftSide';
 import KakaoAPI from '../../../components/kakaoAPI';
+import ElasticBoard from '../main/ElasticBoard';
 
 function Detail() {
     const [comments, setComments] = useState([]);
@@ -99,7 +100,7 @@ function Detail() {
                     <br></br>
 
 
-                    { /* 이미지 나중에 수정해라*/}
+                    { /* 이미지*/}
                     <div className="main-content">
                         {viewData.boardImg && viewData.boardImg.map((imgData) => (
                             <div key={imgData.boardImg_num} className="image-wrap">
@@ -165,6 +166,7 @@ function Detail() {
 
                 </div>
             </div>
+            <ElasticBoard></ElasticBoard>
         </div>
     );
 }

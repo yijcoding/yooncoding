@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import AddReComment from './addReComment';
 import UpdateComment from './updateComment';
-import { useLocation } from 'react-router-dom';
 
 function CommentList(props) {
 

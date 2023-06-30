@@ -1,13 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
-import Board from './pages/Board/main/board.js'
-import React, { useEffect, useState } from 'react';
-import { call } from './ApiService';
-import { Route, Router, Routes } from 'react-router-dom';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import AddBoard from './pages/Board/addBoard/addBoard';
 import Detail from './pages/Board/detail/detail';
 import UpdateBoard from './pages/Board/updateBoard/updateBoard';
 import ElasticBoard from './pages/Board/main/ElasticBoard';
+import Announcement from './pages/customerService/announcement/main/announcement';
+import AddAnnouncement from './pages/customerService/announcement/addAnnouncement/addAnnouncement';
+import AnnouncementDetail from './pages/customerService/announcement/detail/announcementDetail';
+import UploadAnnouncement from './pages/customerService/announcement/updateAnnouncement/uploadAnnouncement';
+
+
+
+
+
+
 
 
 function App() {
@@ -16,11 +23,17 @@ function App() {
 
 
     <Routes>
-      <Route path="/board" element={<ElasticBoard />}></Route>
-      <Route path="/addboard" element={<AddBoard></AddBoard>}></Route>
-      <Route path="/detail" element={<Detail />}></Route>
-      <Route path="/updateBoard" element={<UpdateBoard />}></Route >
+      <Route exact path="board" element={<ElasticBoard />}></Route>
+      <Route exact path="addboard" element={<AddBoard></AddBoard>}></Route>
+      <Route exact path="detail" element={<Detail />}></Route>
+      <Route exact path="updateBoard" element={<UpdateBoard />}></Route >
+      <Route exact path="announcement" element={<Announcement />}></Route >
+      <Route exact path="addAnnouncement" element={<AddAnnouncement />}></Route >
+      <Route exact path="announcementDetail" element={<AnnouncementDetail />}></Route >
+      <Route exact path="uploadAnnouncement" element={<UploadAnnouncement />}></Route >
+
     </Routes >
+
 
 
 

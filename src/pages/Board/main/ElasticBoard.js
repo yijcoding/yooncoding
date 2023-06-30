@@ -130,7 +130,7 @@ function ElasticBoard() {
         const url = 'http://localhost:9200/board_index/_search';
 
 
-
+        console.log('111111111111111' + pageSize)
         const headers = { 'Content-Type': 'application/json' };
         const data = JSON.stringify(sel[0]);
         const requestOption = {
@@ -166,7 +166,13 @@ function ElasticBoard() {
 
         const pagegroup = Math.ceil(currentPage / maxpage);
 
+        console.log('lowpage = ' + lowpage)
+        console.log(pagegroup)
+        console.log(pageSize)
+        console.log(pagevalue)
         let last = pagegroup * pageSize;
+
+        console.log(last)
         if (last > lowpage) {
             last = lowpage;
         }
@@ -263,7 +269,9 @@ function ElasticBoard() {
     function handlePageChange(newPage) {
         console.log(newPage)
         setCurrentPage(newPage);
-        elastick(newPage);
+        const newPath = `/board?b_type=${selectTabs}&viewCnt=${usepageSize}&search=${currentPage}`;
+        history(newPath)
+        //elastick(newPage);
     }
 
     return (
@@ -361,20 +369,20 @@ function ElasticBoard() {
                         <div className="page_wrap">
 
                             <span className="page_nation" style={{ padding: '0 0 0 20%', }}>
-                            { /* board paging start */}
-                            {paging(pagevalue, currentPage, pagingSize).map((button) => (
-                                React.cloneElement(button, {
-                                    onClick: () => handlePageChange(parseInt(button.props.value))
-                                })
-                            ))}
+                                { /* board paging start */}
+                                {paging(pagevalue, currentPage, pagingSize).map((button) => (
+                                    React.cloneElement(button, {
+                                        onClick: () => handlePageChange(parseInt(button.props.value))
+                                    })
+                                ))}
                             </span>
-                        
-                        <span
-                            className="write-bottom-wrap" style={{ float: 'right' }}>
-                            <button type="submit" id="write-bottom" className="btn btn-blue top"
+
+                            <span
+                                className="write-bottom-wrap" style={{ float: 'right' }}>
+                                <button type="submit" id="write-bottom" className="btn btn-blue top"
                                     onClick={moveWriteForm} style={{ height: '40px' }}>글쓰기</button>
                             </span>
-                            </div>
+                        </div>
                         { /* board paging end */}
 
                     </div>

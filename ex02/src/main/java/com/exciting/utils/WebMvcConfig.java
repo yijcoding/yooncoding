@@ -1,5 +1,4 @@
-package com.exciting.utils;
-//package com.exciting.util;
+//package com.exciting.utils;
 //
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,7 +12,7 @@ package com.exciting.utils;
 //	@Override
 //	public void addCorsMappings(CorsRegistry registry) {
 //		registry.addMapping("/**")
-//			.allowedOrigins("http://localhost:3000")
+//			.allowedOrigins("*")
 //			.allowedMethods("GET","POST","PUT","PATCH","DELETE","OPTIONS")
 //			.allowedHeaders("*")
 //			.allowCredentials(true)

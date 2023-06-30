@@ -1,7 +1,6 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { emojiList } from "./emojis";
-import { useLocation } from "react-router-dom";
 
 function UpdateComment(props) {
     const { index, openUpdate, commentData, getCommentList } = props;

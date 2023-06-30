@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +34,6 @@ import utils.BoardPage;
 import utils.ChangeHtml;
 
 @RestController
-@Data
 @Log4j2
 public class CustomerServiceController {
 
@@ -63,12 +64,15 @@ public class CustomerServiceController {
 
 	
 	@RequestMapping(value = "/customer/announcement", method = RequestMethod.GET)
-	public ModelAndView Board(@RequestParam Map<String,Object> map,HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
-		//System.out.println(request.getRequestURI());
+	@ResponseBody
+	public List<Map<String,Object>> Board(@RequestParam Map<String,Object> map,HttpServletRequest request) {
 		
+		//System.out.println(request.getRequestURI());
+		System.out.println("11111111111111111111111111111111111111111111"+map);
+		Map<String,Object> pagingMap = new HashMap<>();
 		
 		Map<String,Object> res = service.selectAnnouncementCnt(map);
+		List<Map<String,Object>>list = new ArrayList<>();
 		CustomerServiceController cus = new CustomerServiceController();
 		//System.out.println(res);
 		if(res.size() !=0) {
@@ -84,13 +88,13 @@ public class CustomerServiceController {
 				cus.pageNum = Integer.parseInt(cus.pageTemp);
 			cus.start = (cus.pageNum - 1) * cus.pageSize+1;  // 첫 게시물 번호
 			cus.end = 10; // 마지막 게시물 번호
-			String paging = BoardPage.customerstr(cus.totalCount, cus.pageSize, cus.blockPage, cus.pageNum, request.getRequestURI());
+			String paging = BoardPage.customerstr(cus.totalCount, cus.pageSize, cus.blockPage, cus.pageNum, "/announcement");
 			int start2 = cus.start-1;
 			
 			map.put("start", start2);
 			map.put("end", cus.end);
 			
-			List<Map<String,Object>>list = service.selectAnnouncementList(map);
+			list = service.selectAnnouncementList(map);
 			//System.out.println(list);
 			
 			//사진업로드
@@ -114,72 +118,91 @@ public class CustomerServiceController {
 			}
 			
 			
-			mav.addObject("announcementList",list);
-			mav.addObject("paging",paging);
-		}else {
-			mav.addObject("paging","<span class=page-item>1</span>");;
+			pagingMap.put("paging", paging);
+			
+			list.add(pagingMap);
+			
+			
 		}
+//		else {
+//			pagingMap.put("paging","<span class=page-item>1</span>");
+//			list.add("paging",pagingMap);;
+//			return list;
+//		}
+		return list;
 		
 		//텍스트 처리
 		
-		mav.setViewName("/customerService/announcement");
 		
-		return mav;
 	}
 	
-	@RequestMapping(value = "/customer/insertAnnouncement", method = RequestMethod.GET)
-	public ModelAndView announcementGet(@RequestParam Map<String,Object> map) {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/customerService/insertannouncement");
-		return mav;
-	}
+//	@RequestMapping(value = "/customer/insertAnnouncement", method = RequestMethod.GET)
+//	public ModelAndView announcementGet(@RequestParam Map<String,Object> map) {
+//		ModelAndView mav = new ModelAndView();
+//		mav.setViewName("/customerService/insertannouncement");
+//		return mav;
+//	}
 	
-	@RequestMapping(value = "/customer/insertAnnouncement", method = RequestMethod.POST)
-	public ModelAndView announcementPost(@RequestParam Map<String,Object> map,@RequestParam(value="file",required = false) List<MultipartFile> mf,HttpSession session,HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
-		
-		//System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+map);
-		service.insertAnnouncement(map);
-		
-		String c_title = ChangeHtml.change(String.valueOf(map.get("c_title")));
-		map.put("c_title", c_title);
-		String c_content = ChangeHtml.change(String.valueOf(map.get("c_content")));
-		map.put("c_content", c_content);
-		
-		Map<String,Object> customer = service.selectAnnouncement(map);
-		System.out.println("-----------------------------------------"+customer);
+	
+	@RequestMapping(value = "/customer/imageUpload/{announcement_num}", method = RequestMethod.POST)
+	@ResponseBody
+	public String createBoard(@RequestParam (value="file",required = false) List<MultipartFile> mf
+			,HttpServletRequest request
+			,@PathVariable("announcement_num") int announcement_num) {
 		Map<String,Object> fi = new HashMap<>();
 		
-		try {
-			if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals("")) ) {
+		System.out.println("-----------------------------------------"+mf);
 		
-				for(MultipartFile file:mf) {
-					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
-					String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-					String safeFile = uploadDir+"/"+originalFileName;
-					fi.put("announcement_num", customer.get("announcement_num"));
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
-			
-					fi.put("boardImg", originalFileName);		
-					service.customerImg(fi);
-					fi.remove("boardImg");
-					file.transferTo(new File(safeFile));
+		try {
+			if(mf != null) {
+				if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals(""))) {
 					
-				}	
+					for(MultipartFile file:mf) {
+						String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
+		
+						String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
+						String safeFile = uploadDir+"/"+originalFileName;
+						
+						
+						fi.put("announcement_num", announcement_num);
+						fi.put("boardImg", originalFileName);		
+						service.customerImg(fi);
+						file.transferTo(new File(safeFile));
+					}	
+				}
+				
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mav.setViewName("redirect:/customer/announcement");
-		return mav;
+		
+		
+		
+		return "/board/createBoard";
 	}
 	
+	
+	//공지사항 글쓰기
+	@RequestMapping(value = "/customer/insertAnnouncement", method = RequestMethod.POST)
+	@ResponseBody
+	public int announcementPost(@RequestBody Map<String,Object> map) {
+		
+		map.put("c_type","공지");
+		service.insertAnnouncement(map);
+		Map<String,Object> customer = service.selectAnnouncement(map);
+		
+		int announcement_num = Integer.parseInt(String.valueOf(map.get("announcement_num")));
+		
+		return announcement_num;
+	}
+	
+	
+	
+	
+	//공지사항 세부
 	@RequestMapping(value = "/customer/view", method = RequestMethod.GET)
-	public ModelAndView announcementView(@RequestParam Map<String,Object> map) {
-		ModelAndView mav = new ModelAndView();
+	@ResponseBody
+	public Map<String,Object> announcementView(@RequestParam Map<String,Object> map) {
 		
 		//view
 		Map<String,Object> viewOne = service.selectAnnouncement(map);
@@ -191,10 +214,10 @@ public class CustomerServiceController {
 		}
 		
 		// 특수문자처리
-		String c_content = ChangeJavanontextarea.change(String.valueOf(viewOne.get("c_content")));
-		viewOne.put("c_content", c_content);
-		String c_title = ChangeJavanontextarea.change(String.valueOf(viewOne.get("c_title")));
-		viewOne.put("c_title", c_title);
+//		String c_content = ChangeJavanontextarea.change(String.valueOf(viewOne.get("c_content")));
+//		viewOne.put("c_content", c_content);
+//		String c_title = ChangeJavanontextarea.change(String.valueOf(viewOne.get("c_title")));
+//		viewOne.put("c_title", c_title);
 		
 		//날짜처리
 		String date = viewOne.get("postdate").toString();
@@ -203,38 +226,33 @@ public class CustomerServiceController {
 		String hms=date.substring(11);
 		String postdate=ymd2+" "+hms;
 		viewOne.put("postdate", postdate);
+		viewOne.put("boardImg",boardImg);
 		
 		
-		mav.addObject("boardImg", boardImg);
-		mav.addObject("view",viewOne);
-		mav.setViewName("/customerService/announcementView");
-		return mav;
+		return viewOne;
 	}
 	
 	
 	@RequestMapping(value = "/customer/updateAnnouncement", method = RequestMethod.GET)
-	public ModelAndView updateBoard(@RequestParam Map<String,Object>map){
-		ModelAndView mav = new ModelAndView();
+	public Map<String, Object> updateAnnouncement(@RequestParam Map<String,Object>map){
+		
 		Map<String, Object> customer = service.selectAnnouncement(map); 
-		
-		
-		
-		String c_title = ChangeJava.change(String.valueOf(customer.get("c_title")));
-		customer.put("c_title", c_title);
-		String c_content = ChangeJava.change(String.valueOf(customer.get("c_content")));
-		customer.put("c_content", c_content);
-		
-		
-		mav.addObject("boardView",customer);
-		mav.setViewName("/customerService/updateAnnouncement");
-		return mav;
+		List<Map<String,Object>> boardImg = service.customerImgSelect(map);
+//		String c_title = ChangeJava.change(String.valueOf(customer.get("c_title")));
+//		customer.put("c_title", c_title);
+//		String c_content = ChangeJava.change(String.valueOf(customer.get("c_content")));
+//		customer.put("c_content", c_content);
+		for(Map<String,Object> img : boardImg){
+			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
+		}
+		customer.put("boardImg", boardImg);
+		return customer;
 	}
 	
-	@RequestMapping(value = "/customer/updateBoard", method = RequestMethod.POST)
-	public ModelAndView updateBoardpost(@RequestParam Map<String,Object> map,@RequestParam(value="file",required = false) List<MultipartFile> mf,HttpServletRequest request){
-		ModelAndView mav = new ModelAndView();
+	@RequestMapping(value = "/customer/updateAnnouncement", method = RequestMethod.POST)
+	public void updateBoardpost(@RequestBody Map<String,Object> map,@RequestParam(value="file",required = false) List<MultipartFile> mf,HttpServletRequest request){
 	
-		Map<String,Object> fi = new HashMap<>();
+		
 
 		Map<String,Object> board_id = service.selectAnnouncement(map);
 		
@@ -243,38 +261,10 @@ public class CustomerServiceController {
 		System.out.println("map++++++++++++++++++++++++++++"+map);
 		
 		//이미지 넣기
-		try {
-			if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals("")) ) {
 		
-				for(MultipartFile file:mf) {
-					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
-					String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-					String safeFile = uploadDir+"/"+originalFileName;
-					fi.put("announcement_num", board_id.get("announcement_num"));
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
-			
-					fi.put("boardImg", originalFileName);		
-					service.customerImg(fi);
-					fi.remove("boardImg");
-					file.transferTo(new File(safeFile));
-					
-				}	
-			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		String c_title = ChangeHtml.change(String.valueOf(map.get("c_title")));
-		map.put("c_title", c_title);
-		String c_content = ChangeHtml.change(String.valueOf(map.get("c_content")));
-		map.put("c_content", c_content);
 		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+map);
 		service.updateannouncement(map); 
-		mav.setViewName("redirect:/customer/view?announcement_num="+map.get("announcement_num"));
-		return mav;
+		
 	}
 	
 	@RequestMapping(value = "/customer/deleteAnnouncement", method = RequestMethod.GET)
@@ -319,10 +309,11 @@ public class CustomerServiceController {
 	
 	@RequestMapping(value = "/customer/deleteBoardImg", method = RequestMethod.POST)
 	@ResponseBody
-	public int deleteBoardImg(@RequestParam Map<String,Object>map,HttpServletRequest request){
+	public int deleteBoardImg(@RequestBody Map<String,Object>map,@RequestParam(value="file",required = false) List<MultipartFile> mf,HttpServletRequest request){
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++"+map);
-		List<Map<String, Object>> img = service.customerImgSelect(map);
 		
+		List<Map<String, Object>> img = service.customerImgSelect(map);
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++"+img);
 		
 		for(Map<String,Object> rs : img) {
 			//System.out.println("11111111111111111111111111111111111111111"+rs.get("boardImg"));
