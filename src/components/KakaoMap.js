@@ -6,7 +6,8 @@ const { kakao } = window;
 const KakaoMap = (props) => {
     const lat = props.lat;
     const lng = props.lng;
-
+  
+    //[]에 lat, lng 추가!!!!
     useEffect(() => {
         const container = document.getElementById('map');
         const options = {
@@ -26,7 +27,7 @@ const KakaoMap = (props) => {
     }, [lat, lng])
     
       return (
-        <Container className="py-5">
+        <Container id='location' className="py-5">
             <header className='header-title'>위치</header>
             <div className="kakao-map">
                 <div id="map" style={{width:'100%', height:'400px', margin:'auto', borderRadius:'20px'}}/>

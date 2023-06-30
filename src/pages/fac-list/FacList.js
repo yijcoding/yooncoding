@@ -44,7 +44,7 @@ const FacList = () => {
     
     if(facId === null){
         return (
-        <Container className="mt-5">
+        <Container id='facility' className="mt-5">
             <section className="py-5">
                 <header className='header-title'>편의시설</header>
                     <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 
@@ -60,7 +60,7 @@ const FacList = () => {
     }
     else{
         return (
-        <Container className="mt-5">
+        <Container id='facility' className="mt-5">
             <section className="py-5">
                 <header className='header-title'>편의시설</header>
                     <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 

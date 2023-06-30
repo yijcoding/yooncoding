@@ -11,7 +11,7 @@ import StarRating from '../../components/StarRating';
 function Write(props){
     const [memberId, setMemberId] = useState("");
     const [content, setContent] = useState("");
-    const [ratingNum, setRatingNum] = useState();
+    const [ratingNum, setRatingNum] = useState(null);
 
     const starRatingFunc = rating => {
         setRatingNum(rating);
@@ -30,12 +30,19 @@ function Write(props){
 
         // post로 서버에 데이터 전달
         // 등록
-        axios.post("http://localhost:8080/test/write", {
-            amuse_id: amuse_id,
-            member_id: "hong1",
-            r_content: content,
-            r_grade: ratingNum
-        },[]).then(result => props.onWrite());
+        if(content.length !== 0 && ratingNum !== null){
+            axios.post("http://localhost:8080/test/write", {
+                amuse_id: amuse_id,
+                member_id: "hong1",
+                r_content: content,
+                r_grade: ratingNum
+            },[])
+            .then(result => props.onWrite());
+        }
+        else{
+            alert("점수 또는 글을 입력해주세요")
+        }
+        
     }}>
         {/* star rating component */}
         <StarRating starRatingFunc={starRatingFunc}/>
@@ -51,9 +58,8 @@ function Write(props){
             type="text"
             name="content"
             value={content}
-            cols='96'
-            rows='3'
             placeholder='후기 작성'
+            style={{margin:'auto', width:'100%', height:'4.5rem'}}
             onChange={e => {
                 setContent(e.target.value);
             }}/>
@@ -77,39 +83,43 @@ function Answer(props){
         const content = e.target.content.value;
         const amuse_id = Number(props.amuse_id);
         const review_id = Number(props.review_id);
-
-        axios.post("http://localhost:8080/test/answer", {
-            amuse_id: amuse_id,
-            member_id: memberId,
-            r_content: " ㄴ " + content,
-            review_id: review_id
-        },[]).then(result => props.onAnswer());
+        
+        if(content.length !== 0){
+            axios.post("http://localhost:8080/test/answer", {
+                amuse_id: amuse_id,
+                member_id: memberId,
+                r_content: " ㄴ " + content,
+                review_id: review_id
+            },[]).then(result => props.onAnswer());
+        }
+        else{
+            alert("답글을 입력해주세요");
+        }
     }}>
         <br/>
         <textarea 
             type="text"
             name="content"
             value={content}
-            cols='96'
-            rows='3'
             placeholder='답글 작성'
-            style={{marginLeft:'5%'}}
+            style={{margin:'auto', width:'100%', height:'4.5rem'}}
             onChange={e => {
                 setContent(e.target.value);
             }}/>
-        <div style={{float:'right', marginRight:'7%'}}>
+        <div style={{float:'right'}}>
             <input type='submit' className='btn btn-outline-dark mt-auto' value="Answer"/>&nbsp;
             <input type='button' className='btn btn-outline-dark mt-auto' value="Close" onClick={e => {
                 props.setMode("");
+                props.setSelectedReviewId(null);
             }}/>
         </div>
     </form>
 }
 
-function reviewDelete(review_id, {setMode}){
+function reviewDelete(review_id, setIsChk, isChk){
     if(window.confirm("삭제합니까?")){
-        axios.get(`http://localhost:8080/test/delete/${review_id}`,[])
-        setMode("");
+        axios.get(`http://localhost:8080/test/delete/${review_id}`)
+        setIsChk(!isChk);
     }
 }
 
@@ -120,14 +130,16 @@ const ReviewList = () => {
     const [mode, setMode] = useState("");
     const [review_id, setReview_id] = useState();
 
-    const [isChk, setIsChk] = useState(false);
-    const [selectedReviewId, setSelectedReviewId] = useState();
+    const [isChk, setIsChk] = useState(0);
+    const [selectedReviewId, setSelectedReviewId] = useState(null);
 
     //글, 답글 작성 및 삭제할 때에도 다시 렌더링 되도록 하는 방법???
-    useLayoutEffect(() => {
+    useEffect(() => {
         axios.get(`http://localhost:8080/test/reviewList/${amuse_id}`)
             .then(response => setReview(response.data))
-    },[review_id, mode, amuse_id]);
+    },[review_id, amuse_id, isChk, mode]);
+
+    // console.log("isChk", isChk);
 
     let content, write = null;
 
@@ -148,7 +160,8 @@ const ReviewList = () => {
     }
     else if(mode === "ANSWER"){
         content = 
-        <Answer setMode={setMode} amuse_id={amuse_id} review_id={review_id} 
+        <Answer setMode={setMode} setSelectedReviewId={setSelectedReviewId} 
+                amuse_id={amuse_id} review_id={review_id} 
                     onAnswer={() => {
                         setMode("");
                     }}>
@@ -166,7 +179,7 @@ const ReviewList = () => {
     //paging
 
     return (
-        <Container className="mt-5">
+        <Container id='review' className="mt-5">
             <header className='header-title' id='ride'>후기</header>
             <Table className='table-borderless text-center'>
                 <thead className='border-bottom'>
@@ -187,7 +200,7 @@ const ReviewList = () => {
                         <Button type='button' className='mt-auto'
                             onClick={e => {
                                 e.preventDefault();
-                                reviewDelete(review.review_id, {setMode});
+                                reviewDelete(review.review_id, setIsChk, isChk);
                         }}>Delete</Button>&nbsp;
                         <Button type='button' className='mt-auto'
                             style={{backgroundColor: selectedReviewId === review.review_id && 'lightseagreen'}}

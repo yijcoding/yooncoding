@@ -7,8 +7,8 @@
     .ride-tot-img{
         border-radius: 10px;
         width: 100%;
-        height: 40lvh;
-        opacity: 0.4;
+        height: 45lvh;
+        opacity: 0.7;
     }
     .ride-main-img{
         width: 550px;
@@ -29,8 +29,11 @@
         transform: translate(-50%, 17%);
 
         .ride-second-wrapper{
-            margin-top: 7%;
-            margin-right: auto;
+            margin: auto;
         }
     }
+}
+
+.header-title{
+    font-family: 'GowunDodum-Regular';
 }

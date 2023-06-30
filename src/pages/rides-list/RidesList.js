@@ -12,14 +12,14 @@ import { useParams } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
 const RidesList = (props) => {
-    const {amuse_id} = useParams();
 
+    const {amuse_id} = useParams();
     const [ridesList, setRidesList] = useState();
     
     useEffect(() => {
         axios.get(`http://localhost:8080/test/ridesList/${amuse_id}`)
             .then(response => setRidesList(response.data))
-    },[]);
+    },[amuse_id]);
 
     const settings = {
         infinite : true,      // 무한 반복 옵션     
@@ -32,7 +32,7 @@ const RidesList = (props) => {
       }
 
     return (
-        <Container className="rides-wrapper mt-5">
+        <Container id='ride' className="rides-wrapper mt-5">
             <section className="py-5">
                 <header className='header-title'>놀이기구</header>
                 <Slider {...settings}>

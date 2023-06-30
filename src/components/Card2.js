@@ -1,11 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './card2.scss';  
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Card, CardBody, CardFooter, Col } from 'reactstrap';
 
 export const Card2 = ({path, name, country, img, id, location, btnDetail, btnBack, info}) => {
   const navigate = useNavigate();
-  const {amuse_id} = useParams();
 
   return (
     path !== undefined

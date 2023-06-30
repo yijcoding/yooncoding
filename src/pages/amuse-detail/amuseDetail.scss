@@ -20,17 +20,19 @@
         height: 600px;
         margin-bottom: 5px;
     }
-    .side-image{
-        width: 95%;
-        height: 150px;
-        margin-right: 5px;
-        object-fit: cover;
-    }
     
     .side-image-wrapper{
+        margin-left: 5px;
+        width: auto;
+        overflow: hidden;
         .side-image{
+            width: 95%;
+            height: 125px;
+            margin-right: 5px;
+            object-fit: cover;
+
             &:hover {
-                border: 2px solid white;
+                border: 2px solid rgb(37, 36, 36);
                 box-shadow: lightskyblue 0px 30px 70px 20px;
                 transition: width 1s, height 1s, box-shadow 0.5s;
             }
