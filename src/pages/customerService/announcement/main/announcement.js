@@ -31,7 +31,7 @@ function Announcement() {
             <section className="notice">
                 <div id="board-list">
                     <div className="page-title">
-                        <h1>게시판</h1>
+                        <h1>공지사항</h1>
                     </div>
                     <br></br>
                     <div className="container">

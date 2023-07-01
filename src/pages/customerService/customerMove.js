@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function CustomerMove() {
+    const [menuOpen,setMenuOpen] = useState(0);
     const Move = () => {
         let list = document.querySelector('.menu_select .option-list');
-
+        setMenuOpen(1)
         //이거 상태관리로 값에 따라 보이고 안보이게 하셈
         if (list.style.overflow === 'hidden' || list.style.overflow === '') {
             list.style.overflow = 'visible';
@@ -11,6 +12,7 @@ function CustomerMove() {
             list.style.overflow = 'hidden';
         }
     };
+
 
     const handleLinkClick = (link) => {
         window.location.href = link;
@@ -33,12 +35,12 @@ function CustomerMove() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" onClick={() => handleLinkClick('/customer/faq?f_type=')}>
+                        <a href="#" onClick={() => handleLinkClick('/faq?f_type=')}>
                             FAQ
                         </a>
                     </li>
                     <li>
-                        <a href="#" onClick={() => handleLinkClick('/customer/announcementInquiry')}>
+                        <a href="#" onClick={() => handleLinkClick('/announcementInquiry')}>
                             문의하기
                         </a>
                     </li>

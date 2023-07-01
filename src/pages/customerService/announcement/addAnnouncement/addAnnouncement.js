@@ -47,7 +47,7 @@ function AddAnnouncement() {
                 const data = response.data;
                 console.log(response.data);
                 const announcement_num = data;  // 서버에서 생성된 게시물 ID를 기반으로 함. 적절한 Key로 대체해야 함.
-
+                
                 if (selectedFiles.length > 0) {
                     // 이미지 데이터 전송
                     const formData = new FormData();
@@ -58,16 +58,25 @@ function AddAnnouncement() {
                     });
 
                     // boardId와 함께 이미지 업로드 API에 전송
-                    const imageResponse = await axios.post(`http://localhost:8080/customer/imageUpload/${announcement_num}`, formData, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
+                    await axios.post(
+                        `http://localhost:8080/customer/imageUpload?announcement_num=${announcement_num}`,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        }
+                    ).then(()=>{
+                        window.location.href = "/announcement";
+                        console.log(11111111111)
+                    }).catch(error=>{
+                        console.log(error)
                     });
 
-                    console.log(imageResponse);
+                    
                 }
 
-                window.location.href = "/announcement";
+                
             } catch (error) {
                 console.log("HTTP error");
                 console.log(error);

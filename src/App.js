@@ -9,6 +9,7 @@ import Announcement from './pages/customerService/announcement/main/announcement
 import AddAnnouncement from './pages/customerService/announcement/addAnnouncement/addAnnouncement';
 import AnnouncementDetail from './pages/customerService/announcement/detail/announcementDetail';
 import UploadAnnouncement from './pages/customerService/announcement/updateAnnouncement/uploadAnnouncement';
+import InsertInquiry from './pages/customerService/Inquiry/insertInquiry/inserInquiry';
 
 
 
@@ -31,7 +32,7 @@ function App() {
       <Route exact path="addAnnouncement" element={<AddAnnouncement />}></Route >
       <Route exact path="announcementDetail" element={<AnnouncementDetail />}></Route >
       <Route exact path="uploadAnnouncement" element={<UploadAnnouncement />}></Route >
-
+      <Route exact path="announcementInquiry" element={<InsertInquiry />}></Route >
     </Routes >
 
 

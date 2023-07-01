@@ -193,6 +193,13 @@
 			insert into inquiry(b_title,b_content,b_type,member_id) values(#{b_title},#{b_content},#{b_type},#{member_id})
 		]]>
 		
+		<selectKey resultType="hashmap" keyProperty="inquiry_num" order="AFTER">
+		
+		
+	       	SELECT inquiry_num from inquiry order by inquiry_num desc limit 1
+		
+	    </selectKey>  
+		
 	</insert>
 	
 	<insert id="insertConsultation" parameterType="hashmap">

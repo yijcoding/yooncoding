@@ -144,16 +144,24 @@ public class CustomerServiceController {
 //	}
 	
 	
-	@RequestMapping(value = "/customer/imageUpload/{announcement_num}", method = RequestMethod.POST)
+	@RequestMapping(value = "/customer/imageUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public String createBoard(@RequestParam (value="file",required = false) List<MultipartFile> mf
 			,HttpServletRequest request
-			,@PathVariable("announcement_num") int announcement_num) {
+			,@RequestParam(value="announcement_num", required=false) Integer announcementNum,
+		    @RequestParam(value="inquiry_num", required=false) Integer inquiry_num
+			) {
 		Map<String,Object> fi = new HashMap<>();
 		
+		
 		System.out.println("-----------------------------------------"+mf);
+		System.out.println("-----------------------------------------"+announcementNum);
+		System.out.println("-----------------------------------------"+inquiry_num);
 		
 		try {
+			
+			
+			
 			if(mf != null) {
 				if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals(""))) {
 					
@@ -163,8 +171,14 @@ public class CustomerServiceController {
 						String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
 						String safeFile = uploadDir+"/"+originalFileName;
 						
+						if(announcementNum!=null) {
+							fi.put("announcement_num", announcementNum);
+						}
 						
-						fi.put("announcement_num", announcement_num);
+						if(inquiry_num != null) {
+							fi.put("inquiry_num", inquiry_num);
+						}
+						
 						fi.put("boardImg", originalFileName);		
 						service.customerImg(fi);
 						file.transferTo(new File(safeFile));
@@ -452,50 +466,23 @@ public class CustomerServiceController {
 	}
 	
 	
-	@RequestMapping(value = "/customer/announcementInquiry", method = RequestMethod.GET)
-	public ModelAndView announcementInquiryGET(@RequestParam Map<String,Object> map) {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/customerService/announcementInquiry");
-		return mav;
-	}
-	
+
 	@RequestMapping(value = "/customer/announcementInquiry", method = RequestMethod.POST)
-	public ModelAndView announcementInquiryPOST(@RequestParam Map<String,Object> map,@RequestParam(value="file",required = false) List<MultipartFile> mf,HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
+	@ResponseBody
+	public int announcementInquiryPOST(@RequestBody Map<String,Object> map,HttpServletRequest request) {
+		
 		Map<String,Object> fi = new HashMap<>();
 		map.put("b_title", "(답변 대기중)"+map.get("b_title"));
 		service.insertAnnouncementInquiry(map);
 		//Map<String,Object> customer = service.consultationView(map);
 		//fi.put("ref", map.get("inquiry_num"));
 		//ref 업데이트
+		System.out.println("*******************************************************"+map);
+		int inquiry_num = Integer.parseInt(String.valueOf(map.get("inquiry_num")));
+		System.out.println(inquiry_num);
 		service.updateRefInquiry(map);
-		fi.remove("ref");
-		try {
-			if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals("")) ) {
 		
-				for(MultipartFile file:mf) {
-					String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+originalFileName);
-					String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-					String safeFile = uploadDir+"/"+originalFileName;
-					fi.put("inquiry_num", map.get("inquiry_num"));
-					//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+safeFile);
-			
-					fi.put("boardImg", originalFileName);		
-					service.customerImg(fi);
-					fi.remove("boardImg");
-					file.transferTo(new File(safeFile));
-					
-				}	
-			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		mav.setViewName("redirect:/customer/consultationDetails");
-		return mav;
+		return inquiry_num;
 	}
 	
 	@RequestMapping(value = "/customer/consultationDetails", method = RequestMethod.GET)

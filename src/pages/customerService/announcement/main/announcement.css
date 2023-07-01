@@ -102,12 +102,14 @@ section.notice {
   padding: 80px 0;
 }
 
-.page-title h3 {
+.page-title h1 {
   font-size: 28px;
   color: #333333;
   font-weight: 400;
   text-align: center;
 }
+
+
 
 #board-search .search-window {
   padding: 15px 0;

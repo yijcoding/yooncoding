@@ -79,8 +79,8 @@ function AnnouncementList() {
         <thead>
           <tr>
             <th scope="col" className="th-num" style={{ width: '5%' }}>번호</th>
-            <th scope="col" className="th-num" style={{ width: '10%' }}>분류</th>
-            <th scope="col" className="th-title" style={{ width: '30%' }}>제목</th>
+            <th scope="col" className="th-num" style={{ width: '15%' }}>분류</th>
+            <th scope="col" className="th-title" style={{ width: '25%' }}>제목</th>
             <th scope="col" className="th-date" style={{ width: '30%' }}>등록일</th>
           </tr>
         </thead>
