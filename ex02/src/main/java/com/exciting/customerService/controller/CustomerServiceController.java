@@ -486,15 +486,27 @@ public class CustomerServiceController {
 	}
 	
 	@RequestMapping(value = "/customer/consultationDetails", method = RequestMethod.GET)
-	public ModelAndView consultationDetailsGET(@RequestParam Map<String,Object> map,HttpSession session,HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
-		if(session.getAttribute("member_id")!=null) {
-			map.put("member_id", session.getAttribute("member_id"));
-			map.put("m_admin", session.getAttribute("m_admin"));
+	@ResponseBody
+	public List<Map<String,Object>> consultationDetailsGET(@RequestParam Map<String,Object> map,HttpSession session,HttpServletRequest request) {
+		List<Map<String,Object>> consultationDetailsList =new ArrayList<>();
+		Map<String,Object> pagingWrap = new HashMap<>();
+		String member_id = null;
+		//아이다 체크\
+		//session.getAttribute("member_id")!=null
+		if(1==1) {
+			map.put("member_id", "hong1");
+			map.put("m_admin", "1");
+			if(map.get("member_id") != null &&map.get("member_id") != "" ) {
+				member_id = String.valueOf(map.get("member_id"));
+			}
+
+//			map.put("member_id", session.getAttribute("member_id"));
+//			map.put("m_admin", session.getAttribute("m_admin"));
 			CustomerServiceController cus = new CustomerServiceController();
 			
-			List<Map<String,Object>> consultationDetailsList =new ArrayList<>();
+			
 			Map<String,Object> res = service.selectconsultationDetailsCnt(map);
+			System.out.println("////////////////////////////"+res);
 			String paging=null;
 			
 			
@@ -519,7 +531,7 @@ public class CustomerServiceController {
 					map.put("end", cus.end);
 					
 					consultationDetailsList =service.consultationDetails(map);
-	
+	System.out.println(consultationDetailsList);
 					for(Map<String,Object> map2:consultationDetailsList) {
 					
 					String date = map2.get("postdate").toString();
@@ -538,28 +550,29 @@ public class CustomerServiceController {
 						map2.put("postdate", postdate);
 						map2.put("cnt", consultationDetailsList.size());
 					}
-					mav.addObject("list",consultationDetailsList);
-					mav.addObject("paging",paging);
 				}
+					
+					
 			}
 		}
 		
 		
+		pagingWrap.put("paging", paging);
+		consultationDetailsList.add(pagingWrap);
 		
-		mav.setViewName("/customerService/consultationDetails");
 		
 		
 		
-		return mav;
+		return consultationDetailsList;
 	}
 	
 	@RequestMapping(value = "/customer/consultationView", method = RequestMethod.GET)
-	public ModelAndView consultationViewGET(@RequestParam Map<String,Object> map,HttpSession session) {
-		ModelAndView mav = new ModelAndView();
-		map.put("m_admin",session.getAttribute("m_admin") );
+	public List consultationViewGET(@RequestParam Map<String,Object> map,HttpSession session) {
+		System.out.println("너오니너오니너오니너오니너오니너오니너오니너오니너오니너오니너오니");
+		map.put("m_admin",1 );
 		List<Map<String, Object>> consultationView = service.consultationDetails(map);
 		List<Map<String,Object>> boardImg = service.selectCustomImg(map);
-		
+		List wrap = new ArrayList();
 		
 		for(Map<String, Object> img : boardImg) {
 			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
@@ -581,12 +594,11 @@ public class CustomerServiceController {
 			map2.put("cnt", consultationView.size());
 		}
 				
-				
-			
-		mav.addObject("boardImg", boardImg);
-		mav.addObject("view",consultationView);
-		mav.setViewName("/customerService/consultationView");
-		return mav;
+		//consultationView.put(boardImg);		
+		wrap.add(consultationView);
+		wrap.add(consultationView);
+		
+		return wrap;
 	}
 	
 	@RequestMapping(value = "/customer/consultationView", method = RequestMethod.POST)

@@ -206,7 +206,7 @@ function answer(){
 </script>
 </head>
 <body>
-<jsp:include page="/WEB-INF/views/menu.jsp"/>
+
 <div class='wrap'>
 	
 	<div id="view-wrap">
@@ -279,7 +279,7 @@ function answer(){
 		<hr style="border:0; ">
 	</div>	
 </div>
-<jsp:include page="/WEB-INF/views/footer.jsp"/>
+
 
 </body>
 </html>

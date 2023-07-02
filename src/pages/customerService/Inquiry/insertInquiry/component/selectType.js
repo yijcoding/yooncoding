@@ -23,7 +23,7 @@ function SelectType(props) {
     };
 
     const changeTitleValue = (titleEvent) => {
-        inputRef.current = titleEvent.target.value;
+        inputRef.current.value = titleEvent.target.value;
         console.log(inputRef.current);
     };
 

@@ -45,7 +45,7 @@ function CustomerMove() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" onClick={() => handleLinkClick('/customer/consultationDetails')}>
+                        <a href="#" onClick={() => handleLinkClick('/inquiry')}>
                             상담내역
                         </a>
                     </li>

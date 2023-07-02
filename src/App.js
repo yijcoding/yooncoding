@@ -10,6 +10,12 @@ import AddAnnouncement from './pages/customerService/announcement/addAnnouncemen
 import AnnouncementDetail from './pages/customerService/announcement/detail/announcementDetail';
 import UploadAnnouncement from './pages/customerService/announcement/updateAnnouncement/uploadAnnouncement';
 import InsertInquiry from './pages/customerService/Inquiry/insertInquiry/inserInquiry';
+import Inquiry from './pages/customerService/Inquiry/InquriyList/inquiry';
+import InquiryDetail from './pages/customerService/Inquiry/InquiryDetail/inquiryDetail';
+
+
+
+
 
 
 
@@ -33,6 +39,8 @@ function App() {
       <Route exact path="announcementDetail" element={<AnnouncementDetail />}></Route >
       <Route exact path="uploadAnnouncement" element={<UploadAnnouncement />}></Route >
       <Route exact path="announcementInquiry" element={<InsertInquiry />}></Route >
+      <Route exact path="inquiry" element={<Inquiry />}></Route >
+      <Route exact path="inquiryDetail" element={<InquiryDetail />}></Route >
     </Routes >
 
 
