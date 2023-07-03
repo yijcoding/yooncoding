@@ -16,6 +16,7 @@ function SelectType(props) {
         { name: "해외", id: "option", value: "해외" },
         { name: "질문", id: "option", value: "질문" },
         { name: "자유", id: "option", value: "자유" }
+
     ];
 
     const changeSelectValue = (event) => {

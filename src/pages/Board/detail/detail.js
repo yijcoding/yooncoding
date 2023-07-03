@@ -104,7 +104,7 @@ function Detail() {
                     <div className="main-content">
                         {viewData.boardImg && viewData.boardImg.map((imgData) => (
                             <div key={imgData.boardImg_num} className="image-wrap">
-                                <img src={imgData.boardImg} alt="Board Image22" style={{ margin: '20px 0', maxwidth: '600px' }} />
+                                <a href={imgData.boardImg}><img src={imgData.boardImg} alt="Board Image22" style={{ margin: '20px 0', maxwidth: '600px' }} /></a>
                             </div>
                         ))}
                         <br />

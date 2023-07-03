@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -571,12 +572,7 @@ public class CustomerServiceController {
 		System.out.println("너오니너오니너오니너오니너오니너오니너오니너오니너오니너오니너오니");
 		map.put("m_admin",1 );
 		List<Map<String, Object>> consultationView = service.consultationDetails(map);
-		List<Map<String,Object>> boardImg = service.selectCustomImg(map);
-		List wrap = new ArrayList();
 		
-		for(Map<String, Object> img : boardImg) {
-			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
-		}
 				
 		for(Map<String, Object> map2 : consultationView) {
 			String date = map2.get("postdate").toString();
@@ -595,31 +591,41 @@ public class CustomerServiceController {
 		}
 				
 		//consultationView.put(boardImg);		
-		wrap.add(consultationView);
-		wrap.add(consultationView);
 		
-		return wrap;
+		
+		return consultationView;
+	}
+	
+	@GetMapping("/customer/inquiryImage")
+	public List<Map<String,Object>> inquiryImage(@RequestParam Map<String,Object> map){
+		List<Map<String,Object>> boardImg = service.selectCustomImg(map);
+		
+		for(Map<String, Object> img : boardImg) {
+			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
+		}
+		//System.out.println("1111111111111111111111111111"+boardImg);
+		
+		return boardImg;
 	}
 	
 	@RequestMapping(value = "/customer/consultationView", method = RequestMethod.POST)
-	public ModelAndView  consultationViewPOST(@RequestParam Map<String,Object> map) {
-		ModelAndView mav = new ModelAndView();
+	public int consultationViewPOST(@RequestBody Map<String,Object> map) {
+		//System.out.println("222222222222222222222222222222222222222222222222222"+map);
 		String b_title = map.get("b_title").toString().replace("(답변 대기중)", "(답변 완료)");
 		map.put("b_title",b_title );
-		service.insertConsultation(map);
+		int rs = service.insertConsultation(map);
 		service.updateTitleInquiry(map);
-		mav.setViewName("redirect:/customer/consultationView");
-		mav.addObject("inquiry_num",map.get("inquiry_num"));
-		return mav;
+		
+		return rs;
 	}
 	
 	@RequestMapping(value = "/customer/deleteconsultationView", method = RequestMethod.GET)
-	public ModelAndView  deleteconsultationView(@RequestParam Map<String,Object> map) {
+	public int  deleteconsultationView(@RequestParam Map<String,Object> map) {
 		ModelAndView mav = new ModelAndView();
-		service.deleteconsultationView(map);
-		mav.setViewName("redirect:/customer/consultationDetails");
-		mav.addObject("member_id",map.get("member_id"));
-		return mav;
+		int rs = service.deleteconsultationView(map);
+		System.out.println("11111111111111111111111111111111111111111rs"+rs);
+		//mav.addObject("member_id",map.get("member_id"));
+		return rs;
 	}
 	
 	
