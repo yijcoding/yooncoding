@@ -259,3 +259,8 @@ ul.tabs li a{
 textarea{
     resize: none;
 }
+
+.boardView-content{
+    min-height: 500px;
+    margin-left: 20px;
+}

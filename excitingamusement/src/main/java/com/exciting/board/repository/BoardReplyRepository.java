@@ -13,4 +13,6 @@ import com.exciting.entity.BoardReplyEntity;
 public interface BoardReplyRepository extends JpaRepository<BoardReplyEntity, Integer>{
 	@Query("select count(reply_num) as cnt from BoardReplyEntity  where board_id=?1")
 	Long boardReplyCnt(int board_id);
+
+	
 }

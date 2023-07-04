@@ -37,8 +37,8 @@ function Detail() {
                     board_id: board_id
                 }
             });
-            console.log(response.data[0])
-            setViewData(response.data);
+            console.log(response)
+            setViewData(response.data[0]);
         } catch (error) {
             console.log(error);
         }
@@ -92,7 +92,7 @@ function Detail() {
                             <span>
                                 {`${viewData.postdate[0]}년 ${viewData.postdate[1]}월 ${viewData.postdate[2]}일 ${viewData.postdate[3]}:${viewData.postdate[4]}`}
                             </span>
-                            <span style={{ float: 'right' }}><button type="button" id="commentMove-top" onClick={commentMoveTop}>댓글 {viewData.boardReplyCnt}</button></span>
+                            <span style={{ float: 'right' }}><button type="button" id="commentMove-top" onClick={commentMoveTop}>댓글 {viewData.cnt}</button></span>
                             <span style={{ float: 'right' }} id="visitcount-top">조회 {viewData.visitcount}  | </span>
                         </div>
                     </div>
@@ -146,13 +146,14 @@ function Detail() {
 
                     {/*댓글리스트*/}
                     <div id="commentList">
-                        {/* {viewData.board_id !== "" &&
+                        {viewData.board_id !== "" &&
                             <CommentList
                                 viewData={viewData}
                                 comments={comments}
                             />
-                        } */}
+                        }
                     </div>
+
                     <hr style={{ border: 0 }}></hr>
 
 

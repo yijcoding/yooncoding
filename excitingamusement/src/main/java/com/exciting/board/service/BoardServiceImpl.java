@@ -4,76 +4,85 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exciting.board.repository.BoardFavoriteRepasitory;
 import com.exciting.board.repository.BoardImgRepository;
 import com.exciting.board.repository.BoardReplyRepository;
 import com.exciting.board.repository.BoardRepository;
 import com.exciting.dto.BoardDTO;
+import com.exciting.dto.BoardFavoriteDTO;
+import com.exciting.dto.BoardImgDTO;
 import com.exciting.dto.BoardReplyDTO;
 import com.exciting.entity.BoardEntity;
+import com.exciting.entity.BoardFavoriteEntity;
 import com.exciting.entity.BoardImgEntity;
+import com.exciting.entity.BoardReplyEntity;
 
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class BoardServiceImpl implements BoardService {
-	
-	
+
 	BoardRepository boardRepository;
 	BoardReplyRepository boardReplyRepository;
 	BoardImgRepository boardImgRepository;
-	
+	BoardFavoriteRepasitory boardFavoriteRepasitory;
+
 	@Autowired
-	public BoardServiceImpl(
-			BoardRepository boardRepository,
-			BoardReplyRepository boardReplyRepository,
-			BoardImgRepository boardImgRepository) {
-		
+	public BoardServiceImpl(BoardRepository boardRepository, BoardReplyRepository boardReplyRepository,
+			BoardImgRepository boardImgRepository,BoardFavoriteRepasitory boardFavoriteRepasitory) {
+
 		this.boardRepository = boardRepository;
 		this.boardReplyRepository = boardReplyRepository;
 		this.boardImgRepository = boardImgRepository;
+		this.boardFavoriteRepasitory = boardFavoriteRepasitory;
 	}
 
-	
 	@Override
 	public BoardDTO boardList(int board_id) {
-        Optional<BoardEntity> boardOpt = boardRepository.findById(board_id);
-        if (boardOpt.isPresent()) {
-            return new BoardDTO(boardOpt.get());
-        } else {
-        	return new BoardDTO(boardOpt.get());
-        }
-    }
+		Optional<BoardEntity> boardOpt = boardRepository.findById(board_id);
+		if (boardOpt.isPresent()) {
+			return new BoardDTO(boardOpt.get());
+		} else {
+			return new BoardDTO(boardOpt.get());
+		}
+	}
 
+	// 게시글 한개정보 가져오기
 	@Override
 	public BoardDTO boardView(int board_id) {
 		Optional<BoardEntity> boardView = boardRepository.findById(board_id);
-		if(boardView.isPresent()) {
+		if (boardView.isPresent()) {
 			return new BoardDTO(boardView.get());
 		}
 		return null;
 	}
-	
+
+	// 게시글의 댓글 갯수
 	public Long boardReplyCnt(int board_id) {
 		Long boardReplyCnt = boardReplyRepository.boardReplyCnt(board_id);
-		
-		return boardReplyCnt;	
+
+		return boardReplyCnt;
 	}
-	
-	//조회수 업데이트 처리
+
+	// 조회수 업데이트 처리
 	@Override
 	public void boardVisit(final BoardEntity entity) {
-		try{
+		try {
 			final Optional<BoardEntity> original = boardRepository.findById(entity.getBoard_id());
-			
+
 			original.ifPresent(visit -> {
-				entity.setVisitcount(entity.getVisitcount()+1);
+				entity.setVisitcount(entity.getVisitcount() + 1);
 			});
-			
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -85,7 +94,39 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	
-	
+//댓글추가 작업
+	@Override
+	public void replyInsert(BoardReplyEntity boardReplyEntity) {
+		
+		//댓글 추가
+		
+		try {
+			BoardReplyEntity savedBoardReplyEntity = boardReplyRepository.save(boardReplyEntity);
+			log.info("boardReply 추가"+boardReplyEntity.getMember_id());
+			int getReply_num = savedBoardReplyEntity.getReply_num();
+			//새로 추가된 글
+			Optional<BoardReplyEntity> entity = boardReplyRepository.findById(getReply_num);
+			//dto로 변환
+			Optional<BoardReplyDTO> dto = entity.map(BoardReplyDTO::new);
+			
+			// ref갱신
+			entity.get().setRef(getReply_num);
+			BoardReplyEntity savedDTO = entity.get();
+			//업데이트 처리
+			boardReplyRepository.save(savedDTO);
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("ReplyInsert Fail");
+		}
+		
+		
+	}
+
+	@Override
+	public BoardFavoriteDTO getFavorite(BoardFavoriteEntity boardFavoriteEntity) {
+		return boardFavoriteRepasitory.findByBoardId(boardFavoriteEntity.getBoard_id());
+	}
+
 //
 //	@Override
 //	public int boardInsert(Map<String, Object> map) {
@@ -193,7 +234,5 @@ public class BoardServiceImpl implements BoardService {
 //		// TODO Auto-generated method stub
 //		return repository.re_replyInsert(map);
 //	}
-
-	
 
 }

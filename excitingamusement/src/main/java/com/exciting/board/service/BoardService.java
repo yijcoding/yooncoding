@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.exciting.dto.BoardDTO;
+import com.exciting.dto.BoardFavoriteDTO;
+import com.exciting.dto.BoardReplyDTO;
 import com.exciting.entity.BoardEntity;
+import com.exciting.entity.BoardFavoriteEntity;
 import com.exciting.entity.BoardImgEntity;
+import com.exciting.entity.BoardReplyEntity;
 
 public interface BoardService {
 //	public List<Map<String, Object>> boardList(Map<String, Object> map);
@@ -32,5 +36,7 @@ public interface BoardService {
 	Long boardReplyCnt(int board_id);
 	void boardVisit(final BoardEntity entity);
 	List<BoardImgEntity> boardImgSelect(int board_id);
+	void replyInsert(final BoardReplyEntity boardReplyEntity);
+	BoardFavoriteDTO getFavorite(final BoardFavoriteEntity boardFavoriteEntity);
 
 }

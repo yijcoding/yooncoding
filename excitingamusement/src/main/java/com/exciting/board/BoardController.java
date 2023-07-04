@@ -35,10 +35,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.exciting.board.service.BoardService;
 import com.exciting.dto.BoardDTO;
+import com.exciting.dto.BoardFavoriteDTO;
 import com.exciting.dto.BoardImgDTO;
+import com.exciting.dto.BoardReplyDTO;
+import com.exciting.dto.ResponseDTO;
 import com.exciting.entity.BoardEntity;
+import com.exciting.entity.BoardFavoriteEntity;
 import com.exciting.entity.BoardImgEntity;
+import com.exciting.entity.BoardReplyEntity;
 import com.exciting.utils.ChangeJson;
+import com.exciting.utils.ChangeTEXT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -65,209 +71,29 @@ public class BoardController {
 	private static final String Home_BOARD_SAVE_PATH ="C:\\Users\\MOON\\git\\repository2\\ex01\\src\\main\\webapp\\resources\\upload\\" ;
 	private static final String BOARD_LOAD_PATH ="/resources/upload/" ;
 	
-	@GetMapping("/board")
-	@ResponseBody
-	public ResponseEntity<?> Board(@RequestBody BoardDTO boardDTO ,@RequestParam(value="viewCnt") int viewCntParams) {
-	
 
-		//BoardPage boardPage = new BoardPage();
-		//board.jsp에서 설정한 보이는 글 갯수가 없을시 기본적으로 10개가 보임
-		if(viewCntParams!=10 && String.valueOf(viewCntParams) == null && String.valueOf(viewCntParams) == ""  )
-			boardDTO.setViewCnt(viewCntParams);
-		else
-			boardDTO.setViewCnt(10);
+	@PostMapping("/reply-insert")
+	@ResponseBody
+	public ResponseEntity<?> reply_insert(@RequestBody BoardReplyDTO boardReplyDTO) {
 		
+		try {
+		// 문자 치환
+		boardReplyDTO.setB_reply(ChangeTEXT.ToJAVA(boardReplyDTO.getB_reply())); 
+
+		BoardReplyEntity entity = BoardReplyDTO.ToEntity(boardReplyDTO);
 		
-//		
-//		//내가 한번에 볼 글갯수 받아옴
-//		int cntCheck = boardDTO.getViewCnt(viewCnt);
-//		
-//		//System.out.println("11111111111111111111111111111111111111111111111"+boardDTO);
-//		System.out.println(cntCheck);
-//		//viewCnt가 null일시 viewCnt 초기값은 10
-//		if(!(cntCheck.equals("null") && !(cntCheck.equals("")))) {
-//			if(Integer.parseInt(cntCheck)!=10) {
-//				viewCnt= boardDTO.getViewCnt();
-//			
-//			}
-//		}
-//		
-//		//paging 처리
-//		boardDTO<String,Object> res = service.boardCnt(boardDTO);
-//		int totalCount = Integer.parseInt(res.get("cnt").toString());
-//		int pageSize =viewCnt;
-//		int blockPage = 10;
-//		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
-//		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
-//		String pageTemp = String.valueOf(boardDTO.get("pageNum"));
-//		if (pageTemp != "null" && !pageTemp.equals(""))
-//			pageNum = Integer.parseInt(pageTemp);
-//		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
-//		int start2 = start-1;
-//		int end =viewCnt;
-//		Map<String,Object> map2 = new HashMap<>();
-//		map2.put("start", start2);
-//		map2.put("end", end);
-//		//mav.setViewName("/board/Board");
-//		mav.addAttribute("startend",map2);
-//		System.out.println(start2);
-//		System.out.println(end);
-		return null;
+		//댓글 추가 작업 
+		service.replyInsert(entity);
+		
+		return ResponseEntity.ok().body(1);
+		}catch(Exception e){
+			String error = e.getMessage();
+			ResponseDTO<BoardReplyDTO> response = ResponseDTO.<BoardReplyDTO>builder().error(error).build();
+			return ResponseEntity.badRequest().body(response);
+		}
 	}
 	
-//	@RequestMapping(value = "/board/boardPaging", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String BoardPaging(@RequestParam Map<String,Object> map) throws UnsupportedEncodingException {
-//		
-//		BoardPage boardPage = new BoardPage();
-//		
-//		//검색페이징을 위한 데이터
-//		//encoding 이거안쓰면 a태그로 넘어왔을시 한글이 깨짐
-//		String search = URLEncoder.encode(String.valueOf(map.get("search")), "UTF-8");
-//		String select = String.valueOf(map.get("select"));
-//		String b_type = String.valueOf(map.get("b_type"));
-//		//System.out.println("++++++++++++++++++++++++++++++++++"+search);
-//		int viewCnt=10;
-//		//System.out.println("lllllllllllllllllllllllllllllll"+map.get("viewCnt"));
-//		String cntCheck = String.valueOf(map.get("viewCnt"));
-//		//System.out.println("lllllllllllllllllllllllllllllll"+cntCheck);
-//	
-//		//viewCnt가 null일시 viewCnt 초기값은 10
-//		if(!(cntCheck.equals("null"))) {
-//			if(Integer.parseInt(cntCheck)!=10) {
-//				viewCnt= Integer.parseInt(String.valueOf(map.get("viewCnt")));
-//			
-//			}
-//		}
-//		
-//		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+viewCnt);
-//		
-//		
-//		//paging 처리
-//		Map<String,Object> res = service.boardCnt(map);
-//		
-//		//게시글 갯수
-//		int boardListCnt = res.size();
-//		
-//		//검색결과가 0이면 차단 아니면 페이징계산
-//		if(boardListCnt !=0) {
-//			
-//			
-//			int totalCount = Integer.parseInt(res.get("cnt").toString());
-////			System.out.println("*******************************"+totalCount);
-////			System.out.println("*******************************"+res.get("cnt"));
-//			int pageSize =viewCnt;
-//			int blockPage = 10;
-//			int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
-//			int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
-//			String pageTemp = String.valueOf(map.get("pageNum"));
-//			if (pageTemp != "null" && !pageTemp.equals(""))
-//				pageNum = Integer.parseInt(pageTemp);
-//			int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
-//			int end = viewCnt; // 마지막 게시물 번호
-//			String paging = BoardPage.pagingStr(totalCount, pageSize, blockPage, pageNum, "/board/board",search,select,b_type);
-//			int start2 = start-1;
-//		
-//			
-//			return paging;
-//		}else {
-//			//게시글아 하나도 없을시 반환
-//			return "<span class=page-item>1</span>";
-//		}
-//		
-//	}
-//
-//	
-//	
-//	//게시글 목록 ajax를 통해 출력
-//	@RequestMapping(value = "/board/boardList", method = RequestMethod.GET)
-//	@ResponseBody
-//	public List<Map<String,Object>> BoardList(@RequestParam Map<String,Object> map) {
-//		
-//		int viewCnt=10;
-//		
-//		//내가 한번에 볼 글갯수 받아옴
-//		String cntCheck = String.valueOf(map.get("viewCnt"));
-//		
-//		//System.out.println("11111111111111111111111111111111111111111111111"+map);
-//		System.out.println(cntCheck);
-//		//viewCnt가 null일시 viewCnt 초기값은 10
-//		if(!(cntCheck.equals("null"))) {
-//			if(Integer.parseInt(cntCheck)!=10) {
-//				viewCnt= Integer.parseInt(String.valueOf(map.get("viewCnt")));
-//			
-//			}
-//		}
-//		
-//		//paging 처리
-//		Map<String,Object> res = service.boardCnt(map);
-//		int totalCount = Integer.parseInt(res.get("cnt").toString());
-//		int pageSize =viewCnt;
-//		int blockPage = 10;
-//		int totalPage = (int)Math.ceil((double)totalCount / pageSize); // 전체 페이지 수
-//		int pageNum = 1; // 바꿔가면서 테스트 1~10 =>1, 11~20 => 11
-//		String pageTemp = String.valueOf(map.get("pageNum"));
-//		if (pageTemp != "null" && !pageTemp.equals(""))
-//			pageNum = Integer.parseInt(pageTemp);
-//		int start = (pageNum - 1) * pageSize+1;  // 첫 게시물 번호
-//		int start2 = start-1;
-//		int end =viewCnt;
-//		map.put("start", start2);
-//		map.put("end", end);
-//		//mav.setViewName("/board/Board");
-//		System.out.println(start2);
-//		System.out.println(end);
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		List<Map<String,Object>> boardList = service.boardList(map);
-////		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+map.get("start"));
-////		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+map.get("end"));
-////		System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqq"+ boardList.size());
-//		
-//		
-//		//System.out.println("11111111111111111111111111111111111111111111111"+map);
-//		//sql시간값 json으로 변환하기 위한 작업
-//		for(Map<String,Object> map2:boardList) {
-//			String date = map2.get("postdate").toString();
-//			String ymd=date.substring(0,10);
-//			String ymd2=ymd.replaceAll("-",".");
-//			String hms=date.substring(11);
-//			String postdate=ymd2+" "+hms;
-//			//System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+map);
-//			
-//			//
-//			if(boardList.size()!=0) {
-//				map2.put("postdate", postdate);
-//			}
-//		}
-//		
-////		System.out.println("================================================================="+boardList.size());
-////		System.out.println("================================================================="+boardList);
-//		return boardList;
-//	}
-//
-//	@RequestMapping(value = "board/reply-insert", method = RequestMethod.POST)
-//	@ResponseBody
-//	public void reply_insert(@RequestBody Map<String,Object> map) {
-//		
-//		//System.out.println("11111111111111111111111111111"+map);
-//		String b_reply = ChangeHtml.change(String.valueOf(map.get("b_reply")));
-//		map.put("b_reply", b_reply);
-//		//mapper에서 if문으로 거르기 위한 임시 데이터
-//		map.put("refcheck", '1');
-//		//System.out.println("++++++++++444444444444"+map);
-//		int rs =service.replyInsert(map);
-//		//System.out.println("++++++++++444444444444"+map);
-//		//System.out.println("---------------------------------------------------------"+map);
-//		service.replyUpdate(map);
-////		System.out.println(rs);
-//		//return String.valueOf(rs);
-//	}
+	
 //
 //	@RequestMapping(value = "/board/imageUpload/{board_id}", method = RequestMethod.POST)
 //	@ResponseBody
@@ -331,54 +157,58 @@ public class BoardController {
 //
 	@GetMapping("/view")
 	@ResponseBody
-	public List<Map<String,Object>> boardView(BoardDTO boardDTO) {
+	public ResponseEntity<?> boardView(BoardDTO boardDTO) {
 		
-		List<Map<String,Object>> boardView = new ArrayList<>(); 
 		
-		//이미지 처리
-		
-		List<Map<String,Object>> boardImg = new ArrayList<>();;
-		
-		BoardEntity boardEntity = BoardDTO.toEntity(boardDTO);
-		
-		System.out.println("board_id========================="+boardDTO.getBoard_id());
-		//System.out.println("boardView========================="+boardView);
-		
-		Long boardReplyCnt = service.boardReplyCnt(boardDTO.getBoard_id());
-		
-		//조회수 업데이트 처리
-		service.boardVisit(boardEntity);
-		//게시판 이미지 불러오기
+		try {
+			List<Map<String,Object>> boardView = new ArrayList<>(); 
+			
+			//이미지 처리
+			List<Map<String,Object>> boardImg = new ArrayList<>();;
+			
+			BoardEntity boardEntity = BoardDTO.toEntity(boardDTO);
+			
+			
+			Long boardReplyCnt = service.boardReplyCnt(boardDTO.getBoard_id());
+			
+			//조회수 업데이트 처리
+			service.boardVisit(boardEntity);
+			
+			//게시판 이미지 불러오기
+			List<BoardImgEntity> boardImgEntity = service.boardImgSelect(boardDTO.getBoard_id());
 
-		List<BoardImgEntity> boardImgEntity = service.boardImgSelect(boardDTO.getBoard_id());
-		System.out.println("111111111111111111111111111111111111111111111111111");
+			//게시판 이미지 dto로 변환
+			List<BoardImgDTO> boardImgDTO = boardImgEntity.stream().map(BoardImgDTO::new).collect(Collectors.toList());
+			
+			// 이미지 경로 주입	
+			for(BoardImgDTO imgs : boardImgDTO) {
+				Map<String,Object> map = new HashMap<>();
+				map.put("boardImg", BOARD_LOAD_PATH+imgs);
+				boardImg.add(map);
+			}
+			
+			//전체 데이터
+			BoardDTO boardViewData = service.boardView(boardDTO.getBoard_id());
+			
+			JSONObject jsonObj = ChangeJson.ToChangeJson(boardViewData);
 
-		//게시판 이미지 dto로 변환
-		List<BoardImgDTO> boardImgDTO = boardImgEntity.stream().map(BoardImgDTO::new).collect(Collectors.toList());
-		
-		
-		
-		
-		for(BoardImgDTO imgs : boardImgDTO) {
-			Map<String,Object> map = new HashMap<>();
-			map.put("boardImg", BOARD_LOAD_PATH+imgs);
-			boardImg.add(map);
+			jsonObj.put("cnt", boardReplyCnt);
+			boardView.add(jsonObj);
+			boardView.addAll(boardImg);
+			
+			System.out.println(boardView);
+			
+			
+			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(boardView).build();
+			
+			return ResponseEntity.ok().body(response.getData());
+			
+		} catch (Exception e) {
+			String error = e.getMessage();
+			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().error(error).build();
+			return ResponseEntity.badRequest().body(response);
 		}
 		
-		//전체 데이터
-		BoardDTO boardViewData = service.boardView(boardDTO.getBoard_id());
-		
-		
-		
-		System.out.println(boardViewData+"++++++++++++++++++++++++++++++++++++++");
-
-		JSONObject jsonObj = ChangeJson.ToChangeJson(boardViewData);
-		System.out.println(jsonObj+"++++++++++++++++++++++++++++++++++++++");
-		jsonObj.put("cnt", boardReplyCnt);
-		boardView.add(jsonObj);
-		boardView.addAll(boardImg);
-		
-		System.out.println(boardView);
 		//boardView.add(boardViewData);
 		
 		//boardView.put("b_content",ChangeHtml.change(boardView.get("b_content").toString()));
@@ -387,17 +217,19 @@ public class BoardController {
 //		mav.addObject("boardView",boardView);
 		//mav.addObject("startend",map2);
 		
-		return boardView;
+		
 	}
 //	
-//	@RequestMapping(value = "/board/favoriteBoard", method = RequestMethod.GET)
-//	@ResponseBody
-//	public Map<String,Object> favoriteBoardGet(@RequestParam Map<String,Object>map){
-//		//게시판 추천 ajax뽑아낼 자료
-//		Map<String,Object> data = service.boardView(map);
-//		
-//		return data;
-//	}
+	@GetMapping("/favoriteBoard")
+	@ResponseBody
+	public ResponseEntity<?> favoriteBoardGet(BoardFavoriteDTO boardFavoriteDTO){
+		//게시판 추천 ajax뽑아낼 자료
+		BoardFavoriteEntity entity = BoardFavoriteDTO.toEntity(boardFavoriteDTO);
+		
+		BoardFavoriteDTO favoriteData = service.getFavorite(entity);
+		
+		return data;
+	}
 //	
 //	
 //	@RequestMapping(value = "/board/favoriteBoard", method = RequestMethod.POST)

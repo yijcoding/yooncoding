@@ -37,7 +37,7 @@ public class BoardReplyDTO {
 		this.lev = entity.getLev();
 	}
 	
-	public static BoardReplyEntity boardentityEntity(BoardReplyEntity entity) {
+	public static BoardReplyEntity ToEntity(BoardReplyDTO entity) {
 		return BoardReplyEntity.builder()
 				.reply_num(entity.getReply_num())
 				.board_id(entity.getBoard_id())

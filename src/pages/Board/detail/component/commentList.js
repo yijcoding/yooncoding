@@ -172,7 +172,7 @@ function CommentList(props) {
     return (
         <div id="commentform">
             <div style={{ fontWeight: 'bold', fontSize: '12px' }}>
-                <b>전체 댓글 </b> <span style={{ color: 'red' }}>{viewData.boardReplyCnt}</span><b>개</b>
+                <b>전체 댓글 </b> <span style={{ color: 'red' }}>{viewData.cnt}</span><b>개</b>
                 <span id="commentHide" className="comment-show" style={{ float: 'right' }}>댓글 접기</span>
             </div>
             <table id="table">
