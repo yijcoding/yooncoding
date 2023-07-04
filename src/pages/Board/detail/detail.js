@@ -37,7 +37,7 @@ function Detail() {
                     board_id: board_id
                 }
             });
-            console.log(response.data)
+            console.log(response.data[0])
             setViewData(response.data);
         } catch (error) {
             console.log(error);
@@ -146,12 +146,12 @@ function Detail() {
 
                     {/*댓글리스트*/}
                     <div id="commentList">
-                        {viewData.board_id !== "" &&
+                        {/* {viewData.board_id !== "" &&
                             <CommentList
                                 viewData={viewData}
                                 comments={comments}
                             />
-                        }
+                        } */}
                     </div>
                     <hr style={{ border: 0 }}></hr>
 
