@@ -41,4 +41,5 @@ public interface BoardService {
 	void reReplyInsert(final BoardReplyEntity boardReplyEntity);
 	BoardEntity updateBoard(final BoardEntity entity); 
 	int commitUpdateBoard(final BoardEntity boardEntity);
+	void boardImgInsert(final BoardImgEntity boardImgEntity);
 }

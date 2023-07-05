@@ -347,8 +347,10 @@ public class BoardServiceImpl implements BoardService {
 			e.printStackTrace();
 			throw new RuntimeException("BoardUpdateCommit Error");
 		}
-	};
-	
+	}
+
+
+
 
 	/*
 	 * 
@@ -356,6 +358,23 @@ public class BoardServiceImpl implements BoardService {
 	 * 
 	 * */
 	
+	
+	/*
+	 * 
+	 * BoardImg 이미지 upload 업로드 POST Start
+	 * 
+	 * */
+	@Override
+	public void boardImgInsert(BoardImgEntity boardImgEntity) {
+		// TODO Auto-generated method stub
+		
+	};
+
+	/*
+	 * 
+	 * BoardImg 이미지 upload 업로드 POST End
+	 * 
+	 * */
 	
 	
 }

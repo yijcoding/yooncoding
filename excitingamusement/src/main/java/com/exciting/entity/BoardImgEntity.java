@@ -24,5 +24,6 @@ public class BoardImgEntity {
     private String boardImg;
 
     private int announcement_num;
+    
     private int inquiry_num;
 }

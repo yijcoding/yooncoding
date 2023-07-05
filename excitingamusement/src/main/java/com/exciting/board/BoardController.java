@@ -1,5 +1,7 @@
 package com.exciting.board;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,10 +57,16 @@ public class BoardController {
 	@Autowired
 	private static ServletContext servletContext;
 	
-	private static final String BOARD_UPLOAD_PATH = "src/main/resources/static/upload";
-	private static final String Home_BOARD_SAVE_PATH ="C:\\Users\\MOON\\git\\repository2\\ex01\\src\\main\\webapp\\resources\\upload\\" ;
-	private static final String BOARD_LOAD_PATH ="src/main/resources/static/upload" ;
+	private static final String BOARD_UPLOAD_PATH;
 	
+	
+	static {
+	    try {
+	        BOARD_UPLOAD_PATH = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+	    } catch (IOException e) {
+	        throw new RuntimeException("Failed to get the upload path", e);
+	    }
+	}
 
 	
 	
@@ -71,24 +79,25 @@ public class BoardController {
 			,@PathVariable("board_id") int board_id) {
 		
 		
-		Map<String,Object> fi = new HashMap<>();
-		
-		
-		
 		try {
 			if(mf != null) {
-				if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals(""))) {
+				String firstFileName = mf.get(0).getOriginalFilename();
+			    boolean isFileNotEmpty = firstFileName != null && !firstFileName.equals("");
+				if(isFileNotEmpty) {
 					
 					for(MultipartFile file:mf) {
+						BoardImgEntity boardImgEntity = new BoardImgEntity();
+						
 						String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
 		
-						String uploadDir = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+						String uploadDir = BOARD_UPLOAD_PATH;
 						String safeFile = uploadDir+"/"+originalFileName;
 						
+						boardImgEntity.setBoard_id(board_id);
+						boardImgEntity.setBoardImg(originalFileName);
 						
-						fi.put("board_id", board_id);
-						fi.put("boardImg", originalFileName);		
-						service.boardImgInsert(fi);
+						service.boardImgInsert(boardImgEntity);
+						
 						file.transferTo(new File(safeFile));
 					}	
 				}
@@ -96,6 +105,7 @@ public class BoardController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("BoardImgInsert Error");
 		}
 		
 		
