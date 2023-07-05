@@ -17,9 +17,12 @@ public class BoardFavoriteDTO {
 	private String member_id;
 	private int favorite;
 	private int hate;
+	private String message;
+	private int checkData;
 	
 	public BoardFavoriteDTO(final BoardFavoriteEntity board) {
         super();
+        this.favorite_num = board.getFavorite_num();
         this.board_id = board.getBoard_id();
         this.member_id = board.getMember_id();
         this.favorite = board.getFavorite();
@@ -28,11 +31,12 @@ public class BoardFavoriteDTO {
 	
 	public static BoardFavoriteEntity toEntity(final BoardFavoriteDTO board) {
 	   return BoardFavoriteEntity.builder()
-	       .board_id(board.getBoard_id())
-	       .member_id(board.getMember_id())
-	       .favorite(board.getFavorite())
-	       .hate(board.getHate())
-	       .build();
+			.favorite_num(board.getFavorite_num())
+	        .board_id(board.getBoard_id())
+	        .member_id(board.getMember_id())
+	        .favorite(board.getFavorite())
+	        .hate(board.getHate())
+	        .build();
 	}
 	
 }

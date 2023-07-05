@@ -102,7 +102,7 @@ function ImageUpload(
         <div>
           <div className="imgs_wrap">
             {
-              selectedFiles.map((file, index) => (
+              selectedFiles && selectedFiles.map((file, index) => (
                 <a onClick={() => handleDeleteFile(index)} key={index}>
                   <img
                     src={URL.createObjectURL(file)}

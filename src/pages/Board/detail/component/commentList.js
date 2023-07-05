@@ -28,7 +28,7 @@ function CommentList(props) {
                 },
             })
             .then((response) => {
-                //response.data);
+                console.log(response);
                 setCommentList(response.data);
             })
             .catch((error) => {
@@ -97,9 +97,43 @@ function CommentList(props) {
         <td style={{ width: "30%", minHeight: "200px" }}>{comment.b_reply}</td>
     );
 
-    const renderPostDate = (comment) => (
-        <td style={{ width: "25%", textAlign: "center" }}>{comment.postdate}</td>
-    );
+    const renderPostDate = (comment) => {
+        const separator = [".", ".", " ", ":", ":"];
+        const postDateArray = comment.postdate;
+
+        // 두 자릿수로 맞춰주는 함수
+        const padNumber = (number) => {
+            return String(number).padStart(2, "0");
+        };
+
+        const formattedDate = postDateArray.map((element, index) => {
+            if (index < postDateArray.length - 1) {
+                return (
+                    <React.Fragment key={index}>
+                        {index === 0 ? element : padNumber(element)}
+                        {separator[index]}
+                    </React.Fragment>
+                );
+            } else {
+                return (
+                    <React.Fragment key={index}>
+                        {index === 0 ? element : padNumber(element)}
+                    </React.Fragment>
+                );
+            }
+        });
+
+        return (
+            <td
+                style={{
+                    width: "25%",
+                    textAlign: "center",
+                }}
+            >
+                {formattedDate}
+            </td>
+        );
+    };
 
     //답글 버튼
     const renderReplyBtn = (index) => (

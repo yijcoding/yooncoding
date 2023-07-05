@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class BoardFavoriteEntity {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="favorite_num")
     private int favorite_num;
 	
 	@Column(nullable = false)

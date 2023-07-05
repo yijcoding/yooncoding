@@ -1,5 +1,7 @@
 package com.exciting;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +29,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
+@Slf4j
 class ExcitingamusementApplicationTests {
 	@Autowired
 	private BoardRepository boardRepository;
@@ -37,6 +42,7 @@ class ExcitingamusementApplicationTests {
 	private BoardReplyRepository boardReplyRepository; 
 	@Autowired
 	private BoardFavoriteRepasitory boardFavoriteRepasitory;
+	
 //	@Test
 //	void contextLoads() {
 //		BoardDTO boardDTO = new BoardDTO();
@@ -102,6 +108,68 @@ class ExcitingamusementApplicationTests {
 //		} catch (JsonProcessingException e) {
 //		    e.printStackTrace();
 //		}
+	}
+	
+	//favoriteTest
+	@Test
+	public void Favorite() {
+		
+		BoardFavoriteEntity boardFavoriteEntity = new BoardFavoriteEntity();
+		BoardFavoriteDTO dto = new BoardFavoriteDTO();
+		boardFavoriteEntity.setBoard_id(1511);
+		boardFavoriteEntity.setMember_id("hong1");
+		dto.setCheckData(1);
+		try {
+			final int board_id = boardFavoriteEntity.getBoard_id();
+			final String member_id = boardFavoriteEntity.getMember_id();
+			
+			int checkData = dto.getCheckData();
+			
+			//비교값 로딩
+			Optional<BoardFavoriteEntity> boardEntity = boardFavoriteRepasitory.getFavoriteData(board_id, member_id);
+			
+			Optional<BoardFavoriteDTO> boardDTO = boardEntity.map(BoardFavoriteDTO::new);
+			System.out.println("--------------------------------------------------------------------------------"+boardDTO);
+			int favorite = boardDTO.get().getFavorite();
+			int hate = boardDTO.get().getHate();
+			
+			System.out.println(boardEntity.get());
+			
+			if(checkData ==1) {
+				if(favorite==0 && hate == 0) 
+					favorite +=1;
+				else if(favorite==1 && hate == 0)
+					favorite -=1;
+				else if(favorite==0 && hate == 1) {
+					boardDTO.get().setMessage("좋아요와 싫어요는 하나만 선택가능해요");
+					
+				}			
+			}
+			
+			if(checkData ==2) {
+				if(favorite==0 && hate == 0) 
+					hate +=1;
+				else if(favorite==0 && hate == 1)
+					hate -=1;
+				else if(favorite==1 && hate == 0) 
+					boardDTO.get().setMessage("좋아요와 싫어요는 하나만 선택가능해요");			
+			}
+			System.out.println("////////////////////////////////////////////////////////////////////////");
+			
+			//boardFavoriteRepasitory.findby
+			
+			boardFavoriteEntity.setFavorite(favorite);
+			boardFavoriteEntity.setHate(hate);
+			boardFavoriteRepasitory.save(boardFavoriteEntity);
+			System.out.println("*********************************************************************");
+
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("-------------------------------------------------------------");
+			throw new RuntimeException("FavoriteUpdate Fail");
+		}
+		
+		
 	}
 
 }

@@ -31,12 +31,14 @@ public interface BoardService {
 //	public int deleteBoardImg(Map<String,Object> map);
 //	public int deleteFavoriteBoard(Map<String,Object> map);
 //	public int re_replyInsert(Map<String,Object> map);
-	BoardDTO boardList(int board_id);
 	BoardDTO boardView(int board_id);
 	Long boardReplyCnt(int board_id);
 	void boardVisit(final BoardEntity entity);
 	List<BoardImgEntity> boardImgSelect(int board_id);
 	void replyInsert(final BoardReplyEntity boardReplyEntity);
-	BoardFavoriteDTO getFavorite(final BoardFavoriteEntity boardFavoriteEntity);
-
+	void changefavorite(final BoardFavoriteEntity boardFavoriteEntity,int checkData);
+	List<BoardReplyEntity> getCommentList(final BoardReplyEntity boardReplyEntity);
+	void reReplyInsert(final BoardReplyEntity boardReplyEntity);
+	BoardEntity updateBoard(final BoardEntity entity); 
+	int commitUpdateBoard(final BoardEntity boardEntity);
 }

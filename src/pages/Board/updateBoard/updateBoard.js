@@ -43,18 +43,16 @@ function UpdateBoard() {
 
     const handleValueChange = (slValue) => {
         typeSelect.current = slValue;
-        console.log(slValue);
     };
 
     const getDetailInfo = async () => {
         const board_id = urlSearch.get("board_id")
-        console.log(board_id)
+
         const response = await axios.get('http://localhost:8080/board/updateBoard', {
             params: {
                 board_id: board_id
             }
         });
-
 
         return response.data;
     }
