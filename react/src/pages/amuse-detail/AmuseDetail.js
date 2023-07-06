@@ -161,7 +161,7 @@ const AmuseDetail = (props) => {
                                 ))}
                             </div>
                         </article>
-                        <article className='info-text'>
+                        <article className='info-text' id='info'>
                             <br/><br/>
                             {amuseDetail?.a_info}
                         </article>
@@ -195,9 +195,9 @@ const AmuseDetail = (props) => {
                         <List style={{textDecoration:'none'}}>
                             <ul className='side-ul'>
                                 {/* 0 ~ 953 */}
-                                <li style={{backgroundColor: scrollY < 950 ? 'lightblue' : null}}><a href='#top'>Main</a></li>
+                                <li style={{backgroundColor: scrollY < 930 ? 'lightblue' : null}}><a href='#top'>Main</a></li>
                                 {/* 953 ~ 1353 */}
-                                <li style={{backgroundColor: scrollY >= 950 && scrollY < 1270 ? 'lightblue' : null}}><a href='#info'>Info</a></li>
+                                <li style={{backgroundColor: scrollY >= 930 && scrollY < 1270 ? 'lightblue' : null}}><a href='#info'>Info</a></li>
                                 {/* ~ 1900 */}
                                 <li style={{backgroundColor: scrollY >= 1270 && facY > 5  ? 'lightblue' : null}}><a href='#ride'>Rides</a></li>
                                 {/* 1900 ~  */}
@@ -209,7 +209,7 @@ const AmuseDetail = (props) => {
                                         style={{borderRadius:'10px', border:'1px solid black', height:'40px', backgroundColor: isChk && 'lightblue'}}>
                                     Popup</button></li>
 
-                                <li>{scrollY}</li>
+                                {/* <li>{scrollY}</li> */}
                             </ul>
                             <React.Fragment>
                                 <Modal open={modalOpen} close={closeModal} header="Modal">

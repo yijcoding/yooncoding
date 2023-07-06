@@ -227,6 +227,7 @@ const ReviewList = () => {
                 amuse_id={amuse_id} review_id={review_id} 
                     onAnswer={() => {
                         setMode("");
+                        setSelectedReviewId(null);
                     }}>
         </Answer>
     }
@@ -278,7 +279,7 @@ const ReviewList = () => {
                 {review?.slice(offset, offset + limit).map((review, index) => (
                     <tr key={review.review_id}>
                         <td>{index + 1}</td>
-                        <td>{review.member_id}</td>
+                        <td>{review.member_id.replace(/\d{3}$/, '***')}</td>
                         <td>{review.r_content}</td>
                         <td>{review.r_regidate}</td>    
                         <td>

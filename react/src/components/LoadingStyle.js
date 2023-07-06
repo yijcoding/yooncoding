@@ -1,7 +1,18 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const hideSlowAnimation = keyframes`
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+`;
 
 export const Background = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 100vh;
   top: 0;
@@ -12,9 +23,15 @@ export const Background = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  animation-name: ${hideSlowAnimation};
+  animation-delay: 1s;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
 `;
 
 export const LoadingText = styled.div`
   font: 1rem 'Noto Sans KR';
   text-align: center;
 `;
+
