@@ -6,8 +6,16 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { Container } from 'reactstrap';
+import Loading from '../../components/Loading';
 
 const AmuseList = () => {
+
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        //2초 후에 alert의 상태 값을 true => false로 변경
+        let timer = setTimeout(() => {setLoading(false)}, 1500);
+    })
+
     const [opt, setOpt] = useState("");
 
     const [amuseList, setAmuseList] = useState([]);
@@ -15,15 +23,17 @@ const AmuseList = () => {
     const [inReviewCntList, setInReviewCntList] = useState([]);
 
     useEffect(() => {
-    axios.get('http://localhost:8080/amusement/amuseList')
-      .then(response => setAmuseList(response.data))
+        axios.get('http://localhost:8080/amusement/amuseList')
+        .then(response => setAmuseList(response.data))
 
-    axios.get('http://localhost:8080/amusement/inAvgGradeList')
-      .then(response => setInAvgGradeList(response.data))
+        axios.get('http://localhost:8080/amusement/inAvgGradeList')
+        .then(response => setInAvgGradeList(response.data))
 
-    axios.get('http://localhost:8080/amusement/inReviewCntList')
-      .then(response => setInReviewCntList(response.data))
+        axios.get('http://localhost:8080/amusement/inReviewCntList')
+        .then(response => setInReviewCntList(response.data))
     },[]);
+
+    
 
     const settings = {
       infinite : true,      // 무한 반복 옵션     
@@ -83,6 +93,7 @@ const AmuseList = () => {
 
     return (
         <Container className='amuseList-wrapper'>
+            {loading ? <Loading/> : null}
             <div className='amuseList-body' style={{position:'relative', left:'84%'}}>
                 <select onChange={handleChangeSelect} style={{height:'30px'}}>
                     {/* <option value="none">선택</option> */}

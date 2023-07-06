@@ -7,12 +7,13 @@ export const Card2 = ({path, name, country, img, id, amuse_id, location, btnDeta
   const navigate = useNavigate();
 
   return (
-    // 1) ride list 2) amuse list
+    //ride list
     path !== undefined
     ?
     <Col className="mb-5 main-wrapper-1" onClick={e => {
       e.preventDefault();
       navigate(`/${path}/${id}/${amuse_id}`);
+      //새로고침 해서 첫번째 탭 메뉴로 초기화 되도록 하기 위함
       window.location.replace(`/${path}/${id}/${amuse_id}`);
     }}>
       <Card className="card-wrapper">
@@ -72,7 +73,6 @@ export const Card2 = ({path, name, country, img, id, amuse_id, location, btnDeta
               <Button type='button' className="btn" 
                 onClick={e => {
                   e.preventDefault();
-                  // window.location.replace(`/amusement/${amuse_id}`);
                   btnBack();
               }}>Back</Button>
             </div>

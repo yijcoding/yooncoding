@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Container, List } from 'reactstrap';
 import './rideDetail.scss';
 import TabMenu from '../../components/TabMenu';
+import Loading from '../../components/Loading';
 
 const RideDetail = () => {
     const { rides_id } = useParams();
@@ -16,8 +17,15 @@ const RideDetail = () => {
     
     //console.log(rideDetail?.r_video);
 
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        //2초 후에 alert의 상태 값을 true => false로 변경
+        let timer = setTimeout(() => {setLoading(false)}, 1500);
+    })
+
     return (
     <div>
+        {loading ? <Loading/> : null}
         <div className='ride-detail-wrapper'>
             <img src={rideDetail?.r_img} className='ride-tot-img col-md-7' alt='totImg'/>
             <List type='unstyled' className='ride-list-wrapper'>

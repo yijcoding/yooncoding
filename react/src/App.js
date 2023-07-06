@@ -9,6 +9,7 @@ import RideDetail from './pages/ride-detail/RideDetail';
 import ReviewListPaging from './pages/review/ReviewListPaging';
 
 const App = () => {
+
   return (
     <Router>
       <Routes>

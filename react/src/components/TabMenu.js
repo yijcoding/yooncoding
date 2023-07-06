@@ -9,6 +9,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Slider from 'react-slick';
 import { Card2 } from './Card2';
+import { Card } from './Card';
 
 import './tabMenu.scss';
 
@@ -20,6 +21,8 @@ const TabMenu = () => {
 
     const [rideDetail, setRideDetail] = useState();
     const [ridesList, setRidesList] = useState();
+
+    const [inAvgGradeList, setInAvgGradeList] = useState([]);
 
     //console.log("amuse_id", amuse_id);
 
@@ -35,9 +38,11 @@ const TabMenu = () => {
     
     useEffect(() => {
         axios.get(`http://localhost:8080/amusement/rideDetail/${rides_id}`)
-            .then(response => setRideDetail(response.data))
+            .then(response => setRideDetail(response.data));
         axios.get(`http://localhost:8080/amusement/ridesList/${amuse_id}`)
-            .then(response => setRidesList(response.data))
+            .then(response => setRidesList(response.data));
+        axios.get(`http://localhost:8080/amusement/inAvgGradeList`)
+        .then(response => setInAvgGradeList(response.data));
     },[rides_id, amuse_id]);
 
     const menuArr = [
@@ -69,7 +74,7 @@ const TabMenu = () => {
                     </li>
                 </List>
         },
-        {   name: '추천', 
+        {   name: '추천 놀이기구', 
             content:
             <Container>
                 <Slider {...settings}>
@@ -78,6 +83,18 @@ const TabMenu = () => {
                         name={rList.r_name} img={rList.r_img} location={rList.r_location}/>
                     ))}
                 </Slider>
+            </Container>
+        },
+        {   name: '추천 놀이공원', 
+            content:
+            <Container>
+                <Slider {...settings}>
+                    {inAvgGradeList.map(amuse => (
+                        <Card key={amuse.amuse_id} id={amuse.amuse_id} path="amusement"
+                        name={amuse.a_name} country={amuse.a_country} img={amuse.a_img}
+                        avg={amuse.avg_grade} review_cnt={amuse.review_cnt}/>
+                    ))}
+            </Slider>
             </Container>
         }
     ];

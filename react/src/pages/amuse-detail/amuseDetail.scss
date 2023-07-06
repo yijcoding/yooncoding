@@ -43,10 +43,11 @@
         margin-bottom: 10px;
         border-radius: 15px;
     
-        height: 3500px;
+        height: 5100px;
 
         .side-box{
             top: 0px;
+            width: 270px;
             border-radius: 15px;
             position: sticky;
             margin-top: 100px;
@@ -60,7 +61,7 @@
                     a{
                         text-decoration: none;
                         color: black;
-                        font-size: 1.5rem;
+                        font-size: 1.2rem;
                         &:hover{
                             color: red;
                         }

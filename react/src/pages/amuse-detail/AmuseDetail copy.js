@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,15 +13,24 @@ import ReviewList from '../review/ReviewList';
 import AmuseList from '../amuse-list/AmuseList';
 import AmuseListOut from '../amuse-list/AmuseListOut';
 import Modal from '../../components/Modal';
+import { MoonLoader } from 'react-spinners';
 
 const AmuseDetail = (props) => {
+
+    let [alert, setAlert] = useState(true);
+
+    useEffect(() => {
+        //2초 후에 alert의 상태 값을 true => false로 변경
+        let timer = setTimeout(() => {setAlert(false)}, 2000);
+    })
+
     const {amuse_id} = useParams();
     const [amuseDetail, setAmuseDatail] = useState();
     const [amuseImage, setAmuseImage] = useState();
 
     const [imgUrl, setImgUrl] = useState("");
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         axios.get(`http://localhost:8080/amusement/amuseDetail/${amuse_id}`)
             .then(response => setAmuseDatail(response.data))
     
@@ -39,24 +48,24 @@ const AmuseDetail = (props) => {
     //브라우저 현재 높이: window.innerHeight
     //document가 수직으로 얼마나 스크롤 됐는지 픽셀 단위로 반환: window.scrollY(window.pageYOffset)
 
-    // const useScrollRestoration = () => {
-    //     const location = useLocation();
-    //     const scrollPositions = useRef({});
+    const useScrollRestoration = () => {
+        const location = useLocation();
+        const scrollPositions = useRef({});
         
-    //     useLayoutEffect(() => {
-    //       //현재 스크롤 위치를 저장
-    //       scrollPositions.current[location.key] = window.scrollY;
+        useLayoutEffect(() => {
+          //현재 스크롤 위치를 저장
+          scrollPositions.current[location.key] = window.scrollY;
       
-    //       //이전 페이지로 돌아갈 때(뒤로 가기 누를 때) 저장된 스크롤 위치로 복원
-    //       const restoreScrollPosition = () => {
-    //         if(scrollPositions.current[location.key] !== undefined){
-    //           window.scrollTo(0, scrollPositions.current[location.key])
-    //         }
-    //       };
+          //이전 페이지로 돌아갈 때(뒤로 가기 누를 때) 저장된 스크롤 위치로 복원
+          const restoreScrollPosition = () => {
+            if(scrollPositions.current[location.key] !== undefined){
+              window.scrollTo(0, scrollPositions.current[location.key])
+            }
+          };
       
-    //       restoreScrollPosition();
-    //     }, [location]);
-    //   };
+          restoreScrollPosition();
+        }, [location]);
+      };
 
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -76,54 +85,12 @@ const AmuseDetail = (props) => {
         setIsChk(false);
     }
 
-    //==============현재 스크롤 위치 파악 & 특정 영역 위치 파악==============
-    const [scrollY, setScrollY] = useState(0);
-
-    const facRef = useRef(null);
-    const reviewRef = useRef(null);
-    const amuseListRef = useRef(null);
-    const locaRef = useRef(null);
-
-    const [facY, setFacY] = useState();
-    const [reY, setReY] = useState();
-    const [amuseY, setAmuseY] = useState();
-    const [locaY, setLocaY] = useState();
-
-    useEffect(() => {
-      const handleScroll = () => {
-        setScrollY(window.scrollY);
-      };
-
-      // 스크롤 이벤트 리스너 등록
-      window.addEventListener('scroll', handleScroll);
-  
-      // 컴포넌트 언마운트 시 이벤트 리스너 제거
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
-    }, []);
-
-    useEffect(() => {
-        if(!facRef.current || !reviewRef.current || !amuseListRef.current || !locaRef.current) return;
-        window.addEventListener("scroll", yScrollEvent);
-        return () => {
-            window.removeEventListener("scroll", yScrollEvent);
-        };
-    }, [facRef.current, reviewRef.current, amuseListRef.current, locaRef.current]);
-
-    const yScrollEvent = () => {
-        const scroll1 = facRef.current.getBoundingClientRect();
-        const scroll2 = reviewRef.current.getBoundingClientRect();
-        const scroll3 = amuseListRef.current.getBoundingClientRect();
-        const scroll4 = locaRef.current.getBoundingClientRect();
-
-        setFacY(scroll1.y);
-        setReY(scroll2.y);
-        setAmuseY(scroll3.y);
-        setLocaY(scroll4.y);
+    const override = {
+        height: '500px'
     }
 
     return (
+        alert === false ?
         <Container className='d-flex tot-wrapper'>
             <div className='main-wrapper col-md-8'> 
                 <Container id='top'>
@@ -170,19 +137,19 @@ const AmuseDetail = (props) => {
                 <div>
                     <RidesList/>
                 </div>
-                <div ref={facRef}>
+                <div>
                     <FacList/>
                 </div>
-                <div ref={reviewRef}>
+                <div>
                     <ReviewList/>
                 </div>
-                <div ref={amuseListRef}>
+                <div>
                     <br/><br/><br/><br/>
                     <header className='header-title' style={{marginLeft:'10px'}} id='list'>국내외 놀이공원</header>
                     <AmuseList/><br/><br/>
                     <AmuseListOut/>
                 </div>
-                <div ref={locaRef}>
+                <div>
                     <br/>
                     <KakaoMap lat={amuseDetail?.a_lat} lng={amuseDetail?.a_lng}/>
                 </div>
@@ -191,25 +158,18 @@ const AmuseDetail = (props) => {
                 <Container className="side-box">
                     <section className="py-3">
                         <header className='header-title' 
-                            style={{fontSize:'2rem', textAlign:'center'}}>Category</header>
+                            style={{fontSize:'2.5rem', textAlign:'center'}}>Category</header>
                         <List style={{textDecoration:'none'}}>
                             <ul className='side-ul'>
-                                {/* 0 ~ 953 */}
-                                <li style={{backgroundColor: scrollY < 950 ? 'lightblue' : null}}><a href='#top'>Main</a></li>
-                                {/* 953 ~ 1353 */}
-                                <li style={{backgroundColor: scrollY >= 950 && scrollY < 1270 ? 'lightblue' : null}}><a href='#info'>Info</a></li>
-                                {/* ~ 1900 */}
-                                <li style={{backgroundColor: scrollY >= 1270 && facY > 5  ? 'lightblue' : null}}><a href='#ride'>Rides</a></li>
-                                {/* 1900 ~  */}
-                                <li style={{backgroundColor: facY <= 5 && reY > 50 ? 'lightblue' : null}}><a href='#facility'>Facilities</a></li>
-                                <li style={{backgroundColor: reY <= 50 && amuseY > 5 ? 'lightblue' : null}}><a href='#review'>Reviews</a></li>
-                                <li style={{backgroundColor: amuseY <= 5 && locaY > 5 ? 'lightblue' : null}}><a href='#list'>Amusement list</a></li>
-                                <li style={{backgroundColor: locaY <= 5 ? 'lightblue' : null}}><a href='#location'>Location</a></li>
+                                <li><a href='#top'>Title</a></li>
+                                <li><a href='#ride'>Ride</a></li>
+                                <li><a href='#facility'>Facilitiy</a></li>
+                                <li><a href='#review'>Review</a></li>
+                                <li><a href='#list'>Amusement list</a></li>
+                                <li><a href='#location'>Location</a></li>
                                 <li><button onClick={openModal} onMouseOver={mouseOver} onMouseLeave={mouseLeave} 
                                         style={{borderRadius:'10px', border:'1px solid black', height:'40px', backgroundColor: isChk && 'lightblue'}}>
                                     Popup</button></li>
-
-                                <li>{scrollY}</li>
                             </ul>
                             <React.Fragment>
                                 <Modal open={modalOpen} close={closeModal} header="Modal">
@@ -221,6 +181,14 @@ const AmuseDetail = (props) => {
                 </Container>
             </div>
         </Container>
+        :
+        <MoonLoader
+            color="rgba(19, 37, 195, 1)"
+            cssOverride={{override}}
+            loading
+            size={40}
+            speedMultiplier={0.8}
+        />
     );
 };
 

@@ -4,6 +4,7 @@ import "./card.scss";
 
 export const Card = ({path, name, country, img, id, location, avg, review_cnt}) => {
   const navigate = useNavigate();
+  
   return (
     avg !== undefined
     ? <div className="card-wrapper" onClick={e => {
@@ -25,7 +26,7 @@ export const Card = ({path, name, country, img, id, location, avg, review_cnt}) 
         <div className="card-body-text-content">
           {(() => {
               const array = [];
-              for(let i = 0; i < Math.round(avg); i++) {
+              for(let i = 0; i < Math.floor(avg); i++) {
                   array.push(<span style={{fontSize:'1.1rem'}} key={i}>⭐</span>);
               }
               return array;
@@ -41,7 +42,6 @@ export const Card = ({path, name, country, img, id, location, avg, review_cnt}) 
     <div className="card-wrapper" onClick={e => {
       e.preventDefault();
       navigate(`/${path}/${id}`);
-      window.location.replace(`/${path}/${id}`);
     }}>
       <div className="card-body-img">
         <img src={img} alt="img"/>
