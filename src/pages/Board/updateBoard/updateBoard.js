@@ -53,7 +53,7 @@ function UpdateBoard() {
                 board_id: board_id
             }
         });
-
+        console.log(response)
         return response.data;
     }
 
@@ -83,7 +83,6 @@ function UpdateBoard() {
                 });
 
                 const data = response.data;
-                console.log(response.data);
                 const boardId = data;  // 서버에서 생성된 게시물 ID를 기반으로 함. 적절한 Key로 대체해야 함.
 
                 if (selectedFiles.length > 0) {

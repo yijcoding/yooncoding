@@ -15,11 +15,14 @@ function UpdateComment(props) {
         console.log(getCommentList)
         const reply = textAreaRef.current.value;
         console.log(reply);
-        await axios.post('http://localhost:8080/board/replyUpdate', {
+
+        await axios.put('http://localhost:8080/board/replyUpdate', {
+
             b_reply: reply,
             reply_num: commentData.reply_num,
             ref: commentData.ref,
             seq: commentData.seq
+
         }).then(() => {
             getCommentList()
             openUpdate(index)

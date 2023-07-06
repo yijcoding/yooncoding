@@ -20,7 +20,7 @@ function Detail() {
         boardReplyCnt: "",
         visitcount: "",
         b_content: "",
-        boardImg: []
+        boardimg: []
     });
     const location = useLocation()
 
@@ -63,6 +63,12 @@ function Detail() {
                     },
                 })
                 .then(() => {
+                    axios.delete(`http://localhost:8080/board/deleteBoardImg`, {
+                        params: {
+                            board_id: viewData.board_id
+                        }
+                    })
+                }).then(() => {
                     window.location.href = "http://localhost:3000/board";
                 })
                 .catch((error) => {
@@ -102,9 +108,9 @@ function Detail() {
 
                     { /* 이미지*/}
                     <div className="main-content">
-                        {viewData.boardImg && viewData.boardImg.map((imgData) => (
-                            <div key={imgData.boardImg_num} className="image-wrap">
-                                <a href={imgData.boardImg}><img src={imgData.boardImg} alt="Board Image22" style={{ margin: '20px 0', maxwidth: '600px' }} /></a>
+                        {viewData.boardimg && viewData.boardimg.map((imgData) => (
+                            <div key={imgData.boardimg_num} className="image-wrap">
+                                <a href={imgData.boardimg}><img src={imgData.boardimg} alt="Board Image22" style={{ margin: '20px 0', maxwidth: '600px' }} /></a>
                             </div>
                         ))}
                         <br />

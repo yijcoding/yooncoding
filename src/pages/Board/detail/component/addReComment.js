@@ -11,18 +11,24 @@ function AddReComment(props) {
         console.log(commentList)
         const reply = textAreaRef.current.value;
         console.log(reply);
-        await axios.post('/board/insertReReply', {
-            member_id: 'hong1',
-            board_id: commentList.board_id,
-            b_reply: reply,
-            ref: commentList.ref,
-            seq: commentList.seq
-        }).then(() => {
-            getCommentList()
-            toggleReply(index)
-        }).catch(error => {
-            console.log(error);
-        })
+
+        if (reply.length < 3) {
+            window.alert("네글자이상 입력해주세요!!")
+        } else {
+            await axios.post('/board/insertReReply', {
+                member_id: 'hong1',
+                board_id: commentList.board_id,
+                b_reply: reply,
+                ref: commentList.ref,
+                seq: commentList.seq
+            }).then(() => {
+                getCommentList()
+                toggleReply(index)
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+
     };
 
     const emo = (event, emoji) => {

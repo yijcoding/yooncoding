@@ -38,12 +38,14 @@ function ImageUpload(
 
   const renderOriginBoardImg = () => {
     return originBoardImg.map((image) => (
+
       <a
-        onClick={() => deleteBoardImg(image.boardImg_num)}
+        onClick={() => deleteBoardImg(image.boardimg_num)}
         id={`img_id_${image.board_id}`}
       >
+
         <img
-          src={image.boardImg}
+          src={image.boardimg}
           className='selProductFile'
           title='Click to remove'
           alt='board'
@@ -52,16 +54,20 @@ function ImageUpload(
     ));
   };
 
-  const deleteBoardImg = async (boardImgNum) => {
+  const deleteBoardImg = async (boardimgNum) => {
     const result = window.confirm('사진을 삭제하시겠습니까?');
-
+    const boardimg_num = boardimgNum;
     if (result) {
       try {
-        await axios.post('/board/deleteBoardImg', { boardImg_num: boardImgNum });
+        await axios.delete(`/board/deleteBoardImg`, {
+          params: {
+            boardimg_num: boardimg_num
+          }
+        });
         // 통신이 성공하면 여기에서 이미지 갱신 로직을 구현하세요.
         // 임시 이미지 배열에서 해당 이미지를 제거하거나 다른 로직을 사용할 수 있습니다.
-        setOriginBoardImg(originBoardImg.filter((img) => img.boardImgNum !== boardImgNum));
-        setImageCheck(boardImgNum);
+        setOriginBoardImg(originBoardImg.filter((img) => img.boardimgNum !== boardimgNum));
+        setImageCheck(boardimgNum);
       } catch (error) {
         console.error('Error deleting image:', error);
       }
