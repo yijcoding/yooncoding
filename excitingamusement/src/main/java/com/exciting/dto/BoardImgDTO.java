@@ -12,27 +12,27 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class BoardImgDTO {
-	private int boardImg_num;
-	private int board_id;
-	private String boardImg;
-	private int announcement_num;
-	private int inquiry_num;
+	private Integer boardimg_num;
+	private Integer board_id;
+	private String boardimg;
+	private Integer announcement_num;
+	private Integer inquiry_num;
 	
 	
 	public BoardImgDTO(final BoardImgEntity entity) {
 	    super();
-	    this.boardImg_num = entity.getBoardImg_num();
+	    this.boardimg_num = entity.getBoardimg_num();
 	    this.board_id = entity.getBoard_id();
-	    this.boardImg = entity.getBoardImg();
+	    this.boardimg = entity.getBoardimg();
 	    this.announcement_num = entity.getAnnouncement_num();
 	    this.inquiry_num = entity.getInquiry_num();
 	}
 	
 	public static BoardImgEntity toEntity(BoardImgDTO dto) {
 	    return BoardImgEntity.builder()
-	            .boardImg_num(dto.getBoardImg_num())
+	            .boardimg_num(dto.getBoardimg_num())
 	            .board_id(dto.getBoard_id())
-	            .boardImg(dto.getBoardImg())
+	            .boardimg(dto.getBoardimg())
 	            .announcement_num(dto.getAnnouncement_num())
 	            .inquiry_num(dto.getInquiry_num())
 	            .build();

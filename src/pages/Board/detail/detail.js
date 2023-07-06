@@ -11,6 +11,8 @@ import ElasticBoard from '../main/ElasticBoard';
 
 function Detail() {
     const [comments, setComments] = useState([]);
+    const [deleteCheck, setdelteCheck] = useState(0);
+
 
     const [viewData, setViewData] = useState({
         board_id: "",
@@ -31,6 +33,7 @@ function Detail() {
     const data = async () => {
         const urlParams = new URLSearchParams(location.search);
         const board_id = urlParams.get("board_id");
+
         try {
             const response = await axios.get('http://localhost:8080/board/view', {
                 params: {
@@ -38,9 +41,16 @@ function Detail() {
                 }
             });
             console.log(response)
+
             setViewData(response.data[0]);
         } catch (error) {
             console.log(error);
+
+            if (deleteCheck === 0) {
+                window.alert("해당 페이지는 존재 하지 않습니다.")
+                window.location.href = "/board"
+            }
+
         }
     };
 
@@ -57,7 +67,7 @@ function Detail() {
 
         if (window.confirm("정말로 삭제하시겠습니까?")) {
             axios
-                .get("http://localhost:8080/board/deleteBoard", {
+                .delete("http://localhost:8080/board/deleteBoard", {
                     params: {
                         board_id: viewData.board_id,
                     },
@@ -69,7 +79,9 @@ function Detail() {
                         }
                     })
                 }).then(() => {
+                    window.alert("삭제 완료되었습니다.");
                     window.location.href = "http://localhost:3000/board";
+                    setdelteCheck(1);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -173,8 +185,10 @@ function Detail() {
 
                 </div>
             </div>
-            <ElasticBoard></ElasticBoard>
-        </div>
+            <div id="board-wrap" >
+                <ElasticBoard></ElasticBoard>
+            </div>
+        </div >
     );
 }
 

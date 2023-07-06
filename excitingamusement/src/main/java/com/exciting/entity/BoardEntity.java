@@ -1,6 +1,7 @@
 package com.exciting.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -10,16 +11,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name="board")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-@Entity
-@Table(name="board")
 public class BoardEntity {
 	
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_id")
     private int board_id;
     
     @Column(length = 45)
@@ -46,4 +48,6 @@ public class BoardEntity {
 
     @Column(nullable = false)
     private int hate;
+
+   
 }

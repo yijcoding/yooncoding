@@ -2,6 +2,7 @@ package com.exciting.board.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.exciting.dto.BoardDTO;
 import com.exciting.dto.BoardFavoriteDTO;
@@ -12,25 +13,6 @@ import com.exciting.entity.BoardImgEntity;
 import com.exciting.entity.BoardReplyEntity;
 
 public interface BoardService {
-//	public List<Map<String, Object>> boardList(Map<String, Object> map);
-//	public List<Map<String, Object>> getComment(Map<String, Object> map);
-//	public List<Map<String, Object>> boardImgSelect(Map<String, Object> map);
-//	public int boardInsert(Map<String,Object> map);
-//	public int replyInsert(Map<String,Object> map);
-//	public int updateBoard(Map<String,Object> map);
-//	public int deleteBoard(Map<String,Object> map);
-//	public int boardVisit(Map<String,Object> map);
-//	public int intsertFavoriteBoard(Map<String,Object> map);
-//	public Map<String, Object> boardView(Map<String,Object> map);
-//	public Map<String, Object> boardCnt(Map<String,Object> map);
-//	public Map<String, Object> boardReplyCnt(Map<String,Object> map);
-//	public Map<String, Object> favoriteBoard(Map<String,Object> map);
-//	public int replyDelete(Map<String,Object> map);
-//	public int replyUpdate(Map<String,Object> map);
-//	public int boardImgInsert(Map<String,Object> map);
-//	public int deleteBoardImg(Map<String,Object> map);
-//	public int deleteFavoriteBoard(Map<String,Object> map);
-//	public int re_replyInsert(Map<String,Object> map);
 	BoardDTO boardView(int board_id);
 	Long boardReplyCnt(int board_id);
 	void boardVisit(final BoardEntity entity);
@@ -42,4 +24,9 @@ public interface BoardService {
 	BoardEntity updateBoard(final BoardEntity entity); 
 	int commitUpdateBoard(final BoardEntity boardEntity);
 	void boardImgInsert(final BoardImgEntity boardImgEntity);
+	List<BoardImgEntity> boardImgDelete(final BoardImgEntity boardImgEntity);
+	void boardReply(final BoardReplyEntity boardReplyEntity);
+	void replyDelete(final BoardReplyEntity boardReplyEntity);
+	List<BoardImgEntity> deleteBoard(final BoardEntity boardentity);
+	int createBoard(final BoardEntity boardEntity);
 }

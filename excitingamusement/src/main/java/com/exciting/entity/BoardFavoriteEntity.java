@@ -21,7 +21,6 @@ public class BoardFavoriteEntity {
 	@Column(name="favorite_num")
     private int favorite_num;
 	
-	@Column(nullable = false)
     private int board_id;
 
     @Column(nullable = false)

@@ -278,143 +278,154 @@ function ElasticBoard() {
         <>
             <section className="notice">
                 {/* board list area */}
-                <div id="board-list" style={{ clear: "both" }}>
-                    <div className="page-title" style={{ textAlign: 'center' }}>
-                        <h1>게시판</h1>
-                    </div>
-
-
-                    <div className='container'>
-                        <div className="write_from_wrap">
-
-                            {/* tabs menu */}
-                            <div>
-                                <ul className="tabs">
-                                    {tabEvent.map((el, index) => (
-                                        <Link key={el.id} to={`/board?b_type=${el.link}&viewCnt=${pageCount}&search=${currentPage}`}>
-                                            <li className={index === tabsCss ? "tab-link current" : "tab-link"}
-                                                id={el.id}
-                                                onClick={() => selectMenuHandler(index, el.link)}
-                                                style={{ color: "black" }}>
-                                                {el.name}
-                                            </li>
-                                        </Link>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {/* 글작성 버튼 */}
-                            <div className="write_form">
-                                <button type="submit" id="write-top" className="btn-board-top" onClick={moveWriteForm}>
-                                    <img src={"https://cdn-icons-png.flaticon.com/512/5218/5218705.png"} id="img_write" />글쓰기
-                                </button>
-                            </div>
+                <div className='wrap'>
+                    <div id="board-list" style={{ clear: "both" }}>
+                        <div className="page-title" style={{ textAlign: 'center' }}>
+                            <h1>게시판</h1>
                         </div>
 
-                        {/* 글 출력수량 설정 */}
-                        <div className="menu_select">
-                            <div className='text'>
-                                <select className="form-select form-select-sm" id="view-select" aria-label="form-select-sm example"
-                                    value={usepageSize}
-                                    onChange={handlePagecountChange}  >
-                                    {pagecount.map((sl) => {
-                                        return (<option key={sl.id} id={sl.id} value={sl.value}>
-                                            {sl.name}
-                                        </option>
-                                        )
+
+                        <div className='container'>
+                            <div className="write_from_wrap">
+
+                                {/* tabs menu */}
+                                <div>
+                                    <ul className="tabs">
+                                        {tabEvent.map((el, index) => (
+                                            <Link key={el.id} to={`/board?b_type=${el.link}&viewCnt=${pageCount}&search=${currentPage}`}>
+                                                <li className={index === tabsCss ? "tab-link current" : "tab-link"}
+                                                    id={el.id}
+                                                    onClick={() => selectMenuHandler(index, el.link)}
+                                                    style={{ color: "black" }}>
+                                                    {el.name}
+                                                </li>
+                                            </Link>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* 글작성 버튼 */}
+                                <div className="write_form">
+                                    <button type="submit" id="write-top" className="btn-board-top" onClick={moveWriteForm}>
+                                        <img src={"https://cdn-icons-png.flaticon.com/512/5218/5218705.png"} id="img_write" />글쓰기
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* 글 출력수량 설정 */}
+                            <div className="menu_select">
+                                <div className='text'>
+                                    <select className="form-select form-select-sm" id="view-select" aria-label="form-select-sm example"
+                                        value={usepageSize}
+                                        onChange={handlePagecountChange}  >
+                                        {pagecount.map((sl) => {
+                                            return (<option key={sl.id} id={sl.id} value={sl.value}>
+                                                {sl.name}
+                                            </option>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <table className="board-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" className="th-num" style={{ width: '5%' }} > 번호</th>
+                                        <th scope="col" className="th-num" style={{ width: '10%' }}>분류</th>
+                                        <th scope="col" className="th-title" style={{ width: '30%' }}>제목</th>
+                                        <th scope="col" className="th-member" style={{ width: '10%' }}>작성자</th>
+                                        <th scope="col" className="th-date" style={{ width: '30%' }}>등록일</th>
+                                        <th scope="col" className="th-date" style={{ width: '5%' }}>추천수</th>
+                                        <th scope="col" className="th-date" style={{ width: '5%' }}>조회수</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="elasti">
+                                    {elasticResults.map((hit) => {
+
+                                        let source = hit._source;
+                                        let member_id = source.member_id;
+                                        let postdate = source.postdate;
+
+                                        let ymd = postdate ? postdate.substring(0, 10) + ' ' + postdate.substring(14, 19) : "";
+                                        let ymd2 = ymd.replaceAll("-", ".");
+
+                                        return (
+                                            <tr key={hit._id}>
+                                                <td>{hit._id}</td>
+                                                <td>{hit._source.b_type}</td>
+                                                <td style={{ textAlign: "center", padding: "0 0 0 10px" }}>
+                                                    <a href={"/detail?board_id=" + hit._id}>{hit._source.b_title}</a>
+                                                </td>
+                                                <td>{member_id}</td>
+                                                <td>{ymd2}</td>
+                                                <td>{hit._source.favorite}</td>
+                                                <td>{hit._source.visitcount}</td>
+                                            </tr>
+                                        );
+
                                     })}
-                                </select>
+                                </tbody>
+                            </table>
+                            <div className="page_wrap">
+
+                                <span className="page_nation" style={{ padding: '0 0 0 20%', }}>
+                                    { /* board paging start */}
+                                    {paging(pagevalue, currentPage, pagingSize).map((button) => (
+                                        React.cloneElement(button, {
+                                            onClick: () => handlePageChange(parseInt(button.props.value))
+                                        })
+                                    ))}
+                                </span>
+
+                                <span
+                                    className="write-bottom-wrap" style={{ float: 'right' }}>
+                                    <button type="submit" id="write-bottom" className="btn btn-blue top"
+                                        onClick={moveWriteForm} style={{ height: '40px' }}>글쓰기</button>
+                                </span>
                             </div>
+                            { /* board paging end */}
+
                         </div>
-
-                        <table className="board-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col" className="th-num" style={{ width: '5%' }} > 번호</th>
-                                    <th scope="col" className="th-num" style={{ width: '10%' }}>분류</th>
-                                    <th scope="col" className="th-title" style={{ width: '30%' }}>제목</th>
-                                    <th scope="col" className="th-member" style={{ width: '10%' }}>작성자</th>
-                                    <th scope="col" className="th-date" style={{ width: '30%' }}>등록일</th>
-                                    <th scope="col" className="th-date" style={{ width: '5%' }}>추천수</th>
-                                    <th scope="col" className="th-date" style={{ width: '5%' }}>조회수</th>
-                                </tr>
-                            </thead>
-                            <tbody id="elasti">
-                                {elasticResults.map((hit) => {
-
-                                    let source = hit._source;
-                                    let member_id = source.member_id;
-                                    let postdate = source.postdate;
-
-                                    let ymd = postdate ? postdate.substring(0, 10) + ' ' + postdate.substring(14, 19) : "";
-                                    let ymd2 = ymd.replaceAll("-", ".");
-
-                                    return (
-                                        <tr key={hit._id}>
-                                            <td>{hit._id}</td>
-                                            <td>{hit._source.b_type}</td>
-                                            <td style={{ textAlign: "center", padding: "0 0 0 10px" }}>
-                                                <a href={"/detail?board_id=" + hit._id}>{hit._source.b_title}</a>
-                                            </td>
-                                            <td>{member_id}</td>
-                                            <td>{ymd2}</td>
-                                            <td>{hit._source.favorite}</td>
-                                            <td>{hit._source.visitcount}</td>
-                                        </tr>
-                                    );
-
-                                })}
-                            </tbody>
-                        </table>
-                        <div className="page_wrap">
-
-                            <span className="page_nation" style={{ padding: '0 0 0 20%', }}>
-                                { /* board paging start */}
-                                {paging(pagevalue, currentPage, pagingSize).map((button) => (
-                                    React.cloneElement(button, {
-                                        onClick: () => handlePageChange(parseInt(button.props.value))
-                                    })
-                                ))}
-                            </span>
-
-                            <span
-                                className="write-bottom-wrap" style={{ float: 'right' }}>
-                                <button type="submit" id="write-bottom" className="btn btn-blue top"
-                                    onClick={moveWriteForm} style={{ height: '40px' }}>글쓰기</button>
-                            </span>
-                        </div>
-                        { /* board paging end */}
-
                     </div>
-                </div>
-                <div style={{ clear: 'both' }}></div>
+                    <div style={{ clear: 'both' }}></div>
 
-                { /* board search area */}
-                <div id="board-search">
-                    <div className='container'>
-                        <div className='search-window'>
-                            <div className='search-wrap'>
-                                <select
-                                    name="selectField">
-                                    <option value="b_title">제목</option>
-                                    <option value="b_content">내용</option>
-                                    <option value="member_id">작성자</option>
-                                </select>
-                                <label htmlFor="search" className="blind">검색</label>
-                                <input
-                                    id="text"
-                                    type="search"
-                                    name="search"
-                                    value={searchValue}
-                                    onChange={handleSearchChange} />
-                                <button
-                                    type="button"
-                                    id="searchButton"
-                                    className="btn btn-search"
-                                    onClick={() => elastick(currentPage)}>
-                                    검색
-                                </button>
+                    { /* board search area */}
+                    <div id="board-search">
+                        <div className='container'>
+                            <div className='search-window'>
+                                <div className='search-wrap'>
+                                    <select
+                                        name="selectField"
+                                        className="selectField"
+                                        style={{
+                                            width: "20%",
+                                            height: "40px",
+                                            float: "left",
+                                            textAlign: "center",
+                                            fontSize: "14px"
+                                        }}>
 
+                                        <option value="b_title">제목</option>
+                                        <option value="b_content">내용</option>
+                                        <option value="member_id">작성자</option>
+                                    </select>
+                                    <label htmlFor="search" className="blind">검색</label>
+                                    <input
+                                        id="text"
+                                        type="search"
+                                        name="search"
+                                        value={searchValue}
+                                        onChange={handleSearchChange} />
+                                    <button
+                                        type="button"
+                                        id="searchButton"
+                                        className="btn btn-search"
+                                        onClick={() => elastick(currentPage)}>
+                                        검색
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
                     </div>

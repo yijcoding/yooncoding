@@ -14,9 +14,13 @@ java {
 configurations {
     all {
         exclude group: 'javax.servlet', module: 'servlet-api'
+        exclude group: 'javax.servlet', module: 'servlet-api'
+        exclude group: 'org.apache.tomcat.embed', module: 'tomcat-embed-core'
     }
     compileOnly {
         extendsFrom annotationProcessor
+        
+    }
     }
 }
 
@@ -41,11 +45,12 @@ dependencies {
     //testImplementation 'org.springframework.security:spring-security-test'
     
     //corsfilter
-    compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
-    implementation 'com.exciting.utils:CORSFilter:1.0'
+		compile 'javax.servlet:javax.servlet-api:3.1.0'
+	//implementation 'com.exciting.utils:CORSFilter:1.0'
     
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
 }
 
 tasks.named('test') {

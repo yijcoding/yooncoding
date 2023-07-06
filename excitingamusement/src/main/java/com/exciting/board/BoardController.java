@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +16,12 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,143 +54,201 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequestMapping("/board")
 public class BoardController {
-	
+
 	@Autowired
 	BoardService service;
-	
+
 	@Autowired
 	private static ServletContext servletContext;
-	
-	private static final String BOARD_UPLOAD_PATH;
-	
-	
-	static {
-	    try {
-	        BOARD_UPLOAD_PATH = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
-	    } catch (IOException e) {
-	        throw new RuntimeException("Failed to get the upload path", e);
-	    }
-	}
 
-	
-	
-	
+	private static final String BOARD_UPLOAD_PATH;
+
+	static {
+		try {
+			BOARD_UPLOAD_PATH = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to get the upload path", e);
+		}
+	}
+	/*
+	 * 
+	 * 이미지 Image 삭제 Delete Start
+	 * 
+	 */
+
+	@DeleteMapping("/deleteBoardImg")
+	@ResponseBody
+	public void deleteBoardImg(@RequestParam(value = "boardimg_num", required = false) int boardimg_num,
+			@RequestParam(value = "boardimg_num", required = false) int board_id) {
+
+		BoardImgEntity boardImgEntity = new BoardImgEntity();
+
+		if (boardimg_num != 0)
+			boardImgEntity.setBoardimg_num(boardimg_num);
+		else if (board_id != 0)
+			boardImgEntity.setBoard_id(board_id);
+
+		// 기존 이미지 데이터를 조회 및 DB에 저장된 이미지 정보 삭제
+		List<BoardImgEntity> OriginData = service.boardImgDelete(boardImgEntity);
+		System.out.println(OriginData);
+		// dto변환
+		List<BoardImgDTO> OriginDataDTO = OriginData.stream().map(BoardImgDTO::new).collect(Collectors.toList());
+
+		for (BoardImgDTO rs : OriginDataDTO) {
+
+			// String uploadDir = BOARD_UPLOAD_PATH;
+			String uploadDir = new File(BOARD_UPLOAD_PATH).getAbsolutePath();
+			File file = new File(uploadDir, rs.getBoardimg());
+			// String safeFile = uploadDir+"/"+originalFileName;
+			if (file.exists()) { // 파일이 존재하면
+				file.delete(); // 파일 삭제
+			}
+		}
+
+		// int rs = service.deleteBoardImg(map);
+
+	}
+	/*
+	 * 
+	 * 이미지 Image 삭제 Delete End
+	 * 
+	 */
+
+	/*
+	 * 
+	 * 이미지 Image 업로드 Upload Start
+	 * 
+	 */
 
 	@PostMapping("/imageUpload/{board_id}")
 	@ResponseBody
-	public String createBoard(@RequestParam(value="file",required = false) List<MultipartFile> mf
-			,HttpServletRequest request
-			,@PathVariable("board_id") int board_id) {
-		
-		
+	public String createBoard(@RequestParam(value = "file", required = false) List<MultipartFile> mf,
+			@PathVariable("board_id") int board_id) {
+
 		try {
-			if(mf != null) {
+			if (mf != null) {
 				String firstFileName = mf.get(0).getOriginalFilename();
-			    boolean isFileNotEmpty = firstFileName != null && !firstFileName.equals("");
-				if(isFileNotEmpty) {
-					
-					for(MultipartFile file:mf) {
+				boolean isFileNotEmpty = firstFileName != null && !firstFileName.equals("");
+				if (isFileNotEmpty) {
+
+					for (MultipartFile file : mf) {
 						BoardImgEntity boardImgEntity = new BoardImgEntity();
-						
-						String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-		
+
+						String originalFileName = System.currentTimeMillis() + file.getOriginalFilename();
+
 						String uploadDir = BOARD_UPLOAD_PATH;
-						String safeFile = uploadDir+"/"+originalFileName;
-						
+						String safeFile = uploadDir + "/" + originalFileName;
+
 						boardImgEntity.setBoard_id(board_id);
-						boardImgEntity.setBoardImg(originalFileName);
-						
+						boardImgEntity.setBoardimg(originalFileName);
+
 						service.boardImgInsert(boardImgEntity);
-						
+
 						file.transferTo(new File(safeFile));
-					}	
+					}
 				}
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("BoardImgInsert Error");
 		}
-		
-		
-		
+
 		return "/board/createBoard";
 	}
+
+	/*
+	 * 
+	 * 이미지 Image 업로드 Upload End
+	 * 
+	 */
+
+
+	/*
+	 * 
+	 * 게시글쓰기 Writeboard createboard insertboard Start
+	 * 
+	 */
+
+	@PostMapping("/createBoard")
+	public int createBoardPost(@RequestBody BoardDTO boardDTO) {
+		
+		BoardEntity boardEntity = BoardDTO.toEntity(boardDTO);
+		
+		int board_id = service.createBoard(boardEntity);
+		
+		return board_id;
+	}
 	
-//
-//	@RequestMapping(value = "/board/createBoard", method = RequestMethod.POST)
-//	public int createBoardPost(@RequestBody Map<String,Object> map,Model model
-//			) throws IOException {
-//		
-//		map.put("member_id","hong1");
-//		//이미지 처리를 위한 map
-//		
-//		System.out.println(map);
-//		
-//		
-//		
-//		//insert하고 추가한 튜플의 board_id가져옴
-//		service.boardInsert(map);
-//		int board_id = Integer.parseInt(String.valueOf(map.get("board_id")));
-//		
-//		return board_id;
-//	}
-//	
-//	
-//	
-//
-//
 	
 	/*
 	 * 
-	 *  게시글 낱개 불러오기 START
+	 * 게시글쓰기 Writeboard createboard insertboard END
 	 * 
-	 * */
+	 */
+
+
+
+	/*
+	 * 
+	 * 게시글 낱개 불러오기 START
+	 * 
+	 */
 	@GetMapping("/view")
 	@ResponseBody
 	public ResponseEntity<?> boardView(BoardDTO boardDTO) {
-		
-		
+
 		try {
-			List<Map<String,Object>> boardView = new ArrayList<>(); 
-			
-			//이미지 처리
-			List<Map<String,Object>> boardImg = new ArrayList<>();;
-			
+			List<Map<String, Object>> boardView = new ArrayList<>();
+
+			// 이미지 처리
+			List<Map<String, Object>> boardimg = new ArrayList<>();
+			;
+
 			BoardEntity boardEntity = BoardDTO.toEntity(boardDTO);
-			
-			
+
 			Long boardReplyCnt = service.boardReplyCnt(boardDTO.getBoard_id());
-			
-			//조회수 업데이트 처리
+
+			// 조회수 업데이트 처리
 			service.boardVisit(boardEntity);
-			
-			//게시판 이미지 불러오기
+
+			// 게시판 이미지 불러오기
 			List<BoardImgEntity> boardImgEntity = service.boardImgSelect(boardDTO.getBoard_id());
 
-			//게시판 이미지 dto로 변환
+			// 게시판 이미지 dto로 변환
 			List<BoardImgDTO> boardImgDTO = boardImgEntity.stream().map(BoardImgDTO::new).collect(Collectors.toList());
-			
-			// 이미지 경로 주입	
-			boardImgDTO.stream().map(img->BOARD_LOAD_PATH+img).collect(Collectors.toList());;
 
-			
-			//전체 데이터
+			// 이미지 경로 주입
+			List<String> boardimgPathData = boardImgDTO.stream().map(img -> "/uploads/" + img.getBoardimg())
+					.collect(Collectors.toList());
+			;
+
+			int num = 0;
+			for (String i : boardimgPathData) {
+
+				boardImgDTO.get(num).setBoardimg(i);
+				num += 1;
+			}
+
+			// 전체 데이터
 			BoardDTO boardViewData = service.boardView(boardDTO.getBoard_id());
-			
+
 			JSONObject jsonObj = ChangeJson.ToChangeJson(boardViewData);
+
+			List<JSONObject> imgjson = boardImgDTO.stream().map(img -> ChangeJson.ToChangeJson(img))
+					.collect(Collectors.toList());
+
+			jsonObj.put("boardimg", imgjson);
 
 			jsonObj.put("cnt", boardReplyCnt);
 			boardView.add(jsonObj);
-			boardView.addAll(boardImg);
-			
-			//System.out.println(boardView);
-			
-			
+
+			System.out.println(boardView);
+
 			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(boardView).build();
-			
+
 			return ResponseEntity.ok().body(response.getData());
-			
+
 		} catch (Exception e) {
 			String error = e.getMessage();
 			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().error(error).build();
@@ -194,84 +256,75 @@ public class BoardController {
 		}
 
 	}
-	
+
 	/*
 	 * 
-	 *  게시글 낱개 불러오기 END
+	 * 게시글 낱개 불러오기 END
 	 * 
-	 * */
-	
+	 */
+
 	@GetMapping("/favoriteBoard")
 	@ResponseBody
-	public ResponseEntity<?> favoriteBoardGet(BoardDTO boardDTO){
-		
+	public ResponseEntity<?> favoriteBoardGet(BoardDTO boardDTO) {
+
 		try {
-			//게시판 추천 ajax뽑아낼 자료
+			// 게시판 추천 ajax뽑아낼 자료
 			BoardEntity entity = BoardDTO.toEntity(boardDTO);
-			
+
 			BoardDTO favoriteData = service.boardView(entity.getBoard_id());
-			
+
 			JSONObject favoriteJSON = ChangeJson.ToChangeJson(favoriteData);
-			
+
 			List<JSONObject> responseData = new ArrayList<>();
-			
+
 			responseData.add(favoriteJSON);
-			
-			
-			ResponseDTO<BoardDTO> response = ResponseDTO
-					.<BoardDTO>builder()
-					.data(responseData).build();;
-					
+
+			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(responseData).build();
+			;
+
 			return ResponseEntity.ok().body(response.getData());
-		}catch(Exception e) {
+		} catch (Exception e) {
 			String error = e.getMessage();
 			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
-		
-		
-		
-		
-		 
+
 	}
-	
-	
+
 	@PostMapping("/favoriteBoard")
 	@ResponseBody
-	public int favoriteBoardPost(@RequestBody BoardFavoriteDTO boardFavoriteDTO){
-		//member_id ,board_id 필요
-		//추천을 이미 햇는지 검사하는 코드
+	public int favoriteBoardPost(@RequestBody BoardFavoriteDTO boardFavoriteDTO) {
+		// member_id ,board_id 필요
+		// 추천을 이미 햇는지 검사하는 코드
 		System.out.println();
 		try {
 			BoardFavoriteEntity entity = BoardFavoriteDTO.toEntity(boardFavoriteDTO);
-			//db 작업
-			service.changefavorite(entity,boardFavoriteDTO.getCheckData());
+			// db 작업
+			service.changefavorite(entity, boardFavoriteDTO.getCheckData());
 			return 1;
 		} catch (Exception e) {
 			return 0;
 		}
-			
-		
+
 	}
-	
-	
-	
-/*
- * 
- * 	댓글리스트 출럭 Start
- * 
- * */
+
+	/*
+	 * 
+	 * 댓글리스트 출럭 Start
+	 * 
+	 */
 	@GetMapping("/replyList")
 	@ResponseBody
 	public ResponseEntity<?> replyList(BoardReplyDTO boardReplyDTO) {
 
 		try {
-			
-			BoardReplyEntity boardReplyEntity =  BoardReplyDTO.ToEntity(boardReplyDTO);
-			List<BoardReplyEntity> replyList= service.getCommentList(boardReplyEntity);
+
+			BoardReplyEntity boardReplyEntity = BoardReplyDTO.ToEntity(boardReplyDTO);
+			List<BoardReplyEntity> replyList = service.getCommentList(boardReplyEntity);
 			List<BoardReplyDTO> replyListDTO = replyList.stream().map(BoardReplyDTO::new).collect(Collectors.toList());
 			List<JSONObject> replyListJson = new ArrayList<>();
-			for(BoardReplyDTO i :replyListDTO) {
+
+			for (BoardReplyDTO i : replyListDTO) {
 				JSONObject jsonObj = ChangeJson.ToChangeJson(i);
 				replyListJson.add(jsonObj);
 			}
@@ -284,229 +337,211 @@ public class BoardController {
 			ResponseDTO<JSONObject> response = ResponseDTO.<JSONObject>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
-		
+
 	}
 
 	/*
 	 * 
-	 * 	댓글리스트 출럭 END
+	 * 댓글리스트 출럭 END
 	 * 
-	 * */
-	
-	
+	 */
+
 	/*
 	 * 
 	 * 댓글 추가 Start
 	 * 
-	 * */
+	 */
 	@PostMapping("/reply-insert")
 	@ResponseBody
 	public ResponseEntity<?> reply_insert(@RequestBody BoardReplyDTO boardReplyDTO) {
-		
-		try {
-		// 문자 치환
-		boardReplyDTO.setB_reply(ChangeTEXT.ToJAVA(boardReplyDTO.getB_reply())); 
 
-		BoardReplyEntity entity = BoardReplyDTO.ToEntity(boardReplyDTO);
-		
-		//댓글 추가 작업 
-		service.replyInsert(entity);
-		
-		return ResponseEntity.ok().body(1);
-		}catch(Exception e){
+		try {
+			// 문자 치환
+			boardReplyDTO.setB_reply(ChangeTEXT.ToJAVA(boardReplyDTO.getB_reply()));
+
+			BoardReplyEntity entity = BoardReplyDTO.ToEntity(boardReplyDTO);
+
+			// 댓글 추가 작업
+			service.replyInsert(entity);
+
+			return ResponseEntity.ok().body(1);
+		} catch (Exception e) {
 			String error = e.getMessage();
 			ResponseDTO<BoardReplyDTO> response = ResponseDTO.<BoardReplyDTO>builder().error(error).build();
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
-	
+
 	/*
 	 * 
 	 * 댓글 추가 END
 	 * 
-	 * */
-	
+	 */
+
 	/*
 	 * 
 	 * 대댓글 추가 Start
 	 * 
-	 * */
+	 */
 	@PostMapping("/insertReReply")
 	@ResponseBody
-	public void reReplyUpdate(@RequestBody BoardReplyDTO boardReplyDTO){
-		System.out.println("reply_insert++++++++++++++++++++++++++++++++++++++"+boardReplyDTO);
+	public void reReplyinsert(@RequestBody BoardReplyDTO boardReplyDTO) {
 		boardReplyDTO.setB_reply(ChangeTEXT.ToJAVA(boardReplyDTO.getB_reply()));
 		BoardReplyEntity entity = BoardReplyDTO.ToEntity(boardReplyDTO);
 		service.reReplyInsert(entity);
 	}
-	
+
 	/*
 	 * 
 	 * 대댓글 추가 END
 	 * 
-	 * */
+	 */
+
+	/*
+	 * 
+	 * 대댓글 추가 END
+	 * 
+	 */
+
+	@PutMapping("/replyUpdate")
+	@ResponseBody
+	public int replyUpdate(@RequestBody BoardReplyDTO boardReplyDTO) {
+
+		BoardReplyEntity ReplyEntity = BoardReplyDTO.ToEntity(boardReplyDTO);
+
+		service.boardReply(ReplyEntity);
+
+		return 0;
+	}
+
+	/*
+	 * 
+	 * 대댓글 추가 END
+	 * 
+	 */
+
+	@DeleteMapping("/replyDelete")
+	@ResponseBody
+	public void replyDelete(BoardReplyDTO boardReplyDTO) {
+		BoardReplyEntity boardReplyEntity = BoardReplyDTO.ToEntity(boardReplyDTO);
+		service.replyDelete(boardReplyEntity);
+	}
 
 	/*
 	 * 
 	 * Board 게시글 update 수정 GET Start
 	 * 
-	 * */
+	 */
 	@GetMapping("/updateBoard")
 	@ResponseBody
-	public ResponseEntity<?> updateBoard(BoardDTO boardDTO){
-		
+	public ResponseEntity<?> updateBoard(BoardDTO boardDTO) {
+
 		try {
 			BoardEntity entity = BoardDTO.toEntity(boardDTO);
-			
-			//게시물 정보 가져오기
+
+			// 게시물 정보 가져오기
 			BoardEntity BoardDataEntity = service.updateBoard(entity);
-			
+
 			BoardDTO BoardDataDTO = new BoardDTO(BoardDataEntity);
-			
-			//json 파싱
+
+			// json 파싱
 			JSONObject jsonData = ChangeJson.ToChangeJson(BoardDataDTO);
-			
+
 			List<BoardImgEntity> imgListEntity = service.boardImgSelect(BoardDataEntity.getBoard_id());
 			List<BoardImgDTO> imgList = imgListEntity.stream().map(BoardImgDTO::new).collect(Collectors.toList());
-			
-			//이미지 각각의 요소 앞에 경로 주입
-			imgList.stream().map(img->BOARD_LOAD_PATH+img).collect(Collectors.toList());;
-			
-			//이미지데이터 같이 전송
+
+			// 이미지 각각의 요소 앞에 경로 주입
+			List<String> finalImgData = imgList.stream().map(img -> "/uploads/" + img.getBoardimg())
+					.collect(Collectors.toList());
+
+			int num = 0;
+			for (String i : finalImgData) {
+				imgList.get(num).setBoardimg(i);
+				num += 1;
+			}
+			// 이미지데이터 같이 전송
 			jsonData.put("boardImg", imgList);
-			
+
 			ResponseDTO<JSONObject> response = ResponseDTO.<JSONObject>builder().json(jsonData).build();
-			
+
 			return ResponseEntity.ok().body(response.getJson());
 		} catch (Exception e) {
 			String error = e.getMessage();
-			
+
 			ResponseDTO<JSONObject> response = ResponseDTO.<JSONObject>builder().error(error).build();
-			
+
 			return ResponseEntity.badRequest().body(response);
 		}
-		
+
 	}
 	/*
 	 * 
 	 * Board 게시글 update 수정 GET END
 	 * 
-	 * */
+	 */
 
-	
 	/*
 	 * 
 	 * Board 게시글 update 수정 POST Start
 	 * 
-	 * */
+	 */
 
 	@PostMapping("/updateBoard")
-	public int updateBoardpost(@RequestBody BoardDTO boardDTO){
-		
-	try {
-		BoardEntity boardentity  = BoardDTO.toEntity(boardDTO);
-		
-		service.commitUpdateBoard(boardentity);
+	public int updateBoardpost(@RequestBody BoardDTO boardDTO) {
+
+		try {
+			BoardEntity boardentity = BoardDTO.toEntity(boardDTO);
+
+			service.commitUpdateBoard(boardentity);
 			return 1;
-	} catch (Exception e) {
-		e.printStackTrace();
-		return 2;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 2;
+		}
 	}
-		
-		
-	
-		
-		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++"+map);
-		
-	}
-	
-	
+
 	/*
 	 * 
 	 * Board 게시글 update 수정 POST END
 	 * 
-	 * */
-//	
-//	
-//	
-//	//ajax 이미지 수정
-//	@RequestMapping(value = "/board/boardImgShow", method = RequestMethod.POST)
-//	@ResponseBody
-//	public List<Map<String,Object>> boardImgShow(@RequestParam Map<String,Object>map){
-//		List<Map<String,Object>> list = service.boardImgSelect(map);
-//		
-//		for(Map<String,Object> img : list){
-//			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
-//		}
-//		
-//		return list;
-//	}
-//
-//	
-//	@RequestMapping(value = "/board/deleteBoardImg", method = RequestMethod.POST)
-//	@ResponseBody
-//	public int deleteBoardImg(@RequestBody Map<String,Object>map,HttpServletRequest request){
-//		System.out.println("00000000000000000000000000000000000000"+map);
-//		List<Map<String, Object>> img = service.boardImgSelect(map);
-//		System.out.println(img);
-//		
-//		for(Map<String,Object> rs : img) {
-//			String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-//			File file =  new File(uploadDir+"/"+rs.get("boardImg"));
-//			if(file.exists()) { // 파일이 존재하면
-//				file.delete(); // 파일 삭제	
-//			}
-//		}
-//		
-//		int rs = service.deleteBoardImg(map);
-//				
-//		return rs;
-//	}
-//	
-//	
-//	
-//	
-//	@RequestMapping(value = "/board/deleteBoard", method = RequestMethod.GET)
-//	public ModelAndView deleteBoard(@RequestParam Map<String,Object>map,HttpServletRequest request){
-//		ModelAndView mav = new ModelAndView();
-//		
-//		List<Map<String, Object>> img = service.boardImgSelect(map);
-//		service.replyDelete(map);
-//		//System.out.println("+++++++++++++++++++++++++++++++++++++++++"+map);
-//		for(Map<String,Object> rs : img) {
-//			//System.out.println("11111111111111111111111111111111111111111"+rs.get("boardImg"));
-//			String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-//			File file =  new File(uploadDir+"/"+rs.get("boardImg"));
-//			if(file.exists()) { // 파일이 존재하면
-//				file.delete(); // 파일 삭제	
-//			}
-//		}
-//		
-//		service.deleteBoardImg(map);
-//		service.deleteBoard(map); 
-//		
-//		mav.setViewName("redirect:/board/board");
-//		return mav;
-//	}
-//
-//	@RequestMapping(value = "/board/replyDelete", method = RequestMethod.DELETE)
-//	@ResponseBody
-//	public int replyDelete(@RequestParam Map<String,Object>map){
-//		//System.out.println("reply_delete+++++++"+map);
-//		int rs = service.replyDelete(map); 
-//		return rs;
-//	}
-//
-//	@RequestMapping(value = "/board/replyUpdate", method = RequestMethod.POST)
-//	@ResponseBody
-//	public int replyUpdate(@RequestBody Map<String,Object>map){
-//		
-//		System.out.println("reply_update++++++++++++++++++++++++++++++++++++++"+map);
-//		String b_reply = ChangeHtml.change(String.valueOf(map.get("b_reply")));
-//		map.put("b_reply", b_reply);
-//		int rs = service.replyUpdate(map); 
-//		return rs;
-//	}
+	 */
+
+	/*
+	 * 
+	 * Board 게시글 Delete 삭제 Start
+	 * 
+	 */
+
+	@DeleteMapping("/deleteBoard")
+	public void deleteBoard(BoardDTO boardDTO) {
+		
+		BoardEntity entity = BoardDTO.toEntity(boardDTO);
+		
+		List<BoardImgEntity> deleteImgs = service.deleteBoard(entity);
+		
+//		BoardImgEntity boardImgEntity = new BoardImgEntity();
+
+
+		// dto변환
+		List<BoardImgDTO> OriginDataDTO = deleteImgs.stream().map(BoardImgDTO::new).collect(Collectors.toList());
+
+		for (BoardImgDTO rs : OriginDataDTO) {
+
+			// String uploadDir = BOARD_UPLOAD_PATH;
+			String uploadDir = new File(BOARD_UPLOAD_PATH).getAbsolutePath();
+			File file = new File(uploadDir, rs.getBoardimg());
+			// String safeFile = uploadDir+"/"+originalFileName;
+			if (file.exists()) { // 파일이 존재하면
+				file.delete(); // 파일 삭제
+			}
+		}
+	}
+
+	/*
+	 * 
+	 * Board 게시글 Delete 삭제 END
+	 * 
+	 */
 
 //	
 //	@PostMapping("/board/test")

@@ -1,6 +1,11 @@
 @charset "UTF-8";
 body{
 	width:100%;
+  background-color: #fdfafa;
+
+}
+.wrap{
+  left:200px;
 }
 table {
   border-collapse: collapse;
@@ -204,6 +209,7 @@ section.notice {
 .page_nation {
 	display:inline-block;
 	padding:0 0 0 20%;
+  margin-right: 170px;
 }
 .page_nation .none {
 	display:none;
@@ -291,6 +297,7 @@ ul.tabs li a{
 
 .notice{
     text-align:center;
+    margin-left:200px;
 }
 
 .container,.notice{

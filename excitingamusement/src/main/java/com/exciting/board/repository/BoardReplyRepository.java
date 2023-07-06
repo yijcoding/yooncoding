@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,8 @@ public interface BoardReplyRepository extends JpaRepository<BoardReplyEntity, In
 	
 	@Query(nativeQuery = true, value="select b.seq from boardreply b where ref = ?1 order by b.seq desc limit 1")
 	int replyData(int ref);
+	
+	@Modifying
+	@Query(nativeQuery = true,value = "delete from boardreply b where b.board_id = ?1")
+	void deleteByBoardId(int board_id);
 }

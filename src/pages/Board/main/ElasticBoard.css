@@ -23,6 +23,8 @@ ul.tabs li a {
 #boardList td a {
 	text-decoration: none;
 	color: black;
+	background-color: #fdfafa;
+
 }
 
 .board-table {
@@ -42,20 +44,30 @@ ul.tabs li a {
 	text-align: center;
 }
 
-.container, .notice {
+.container,
+.notice {
 	max-width: 1500px;
 	margin: auto;
 }
+
 .pagination-button {
-	display:block;
-	margin:0 3px;
-	float:left;
-	width:28px;
-	height:28px;
-	line-height:28px;
-	text-align:center;
-	background-color:#fff;
-	font-size:13px;
-	color:#999999;
-	text-decoration:none;
+	display: block;
+	margin: 0 3px;
+	float: left;
+	width: 28px;
+	height: 28px;
+	line-height: 28px;
+	text-align: center;
+	background-color: #fff;
+	font-size: 13px;
+	color: #999999;
+	text-decoration: none;
+}
+
+.selectField {
+	width: 20%;
+	height: 40px;
+	float: left;
+	text-align: center;
+	font-size: 14px;
 }
