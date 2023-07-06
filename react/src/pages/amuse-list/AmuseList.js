@@ -10,6 +10,9 @@ import Loading from '../../components/Loading';
 
 const AmuseList = () => {
 
+    // console.log("sessionstorage => ",sessionStorage);
+    // console.log("sessionstorage => ",sessionStorage.getItem("MEMBER_ID") === null);
+
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         //2초 후에 alert의 상태 값을 true => false로 변경

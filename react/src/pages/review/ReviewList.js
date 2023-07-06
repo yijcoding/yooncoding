@@ -15,6 +15,8 @@ function Write(props){
     const [content, setContent] = useState("");
     const [ratingNum, setRatingNum] = useState(null);
 
+    const [idChk, setIdChk] = useState(false);
+
     const starRatingFunc = rating => {
         setRatingNum(rating);
     }
@@ -41,21 +43,27 @@ function Write(props){
         // const memberId = e.target.memberId.value;
         const content = e.target.content.value;
         const amuse_id = Number(props.amuse_id);
+        const member_id = sessionStorage.getItem("MEMBER_ID");
 
         // post로 서버에 데이터 전달
         // 등록
-        if(content.length !== 0 && ratingNum !== null){
+        
+        if(sessionStorage.getItem("MEMBER_ID") === null){
+            setIdChk(false);
+            openModal();
+        }
+        else if(content.length === 0 || ratingNum === null){
+            setIdChk(true);
+            openModal();
+        }
+        else{
             axios.post("http://localhost:8080/amusement/write", {
                 amuse_id: amuse_id,
-                member_id: "kim1234",
+                member_id: member_id,
                 r_content: content,
                 r_grade: ratingNum
             },[])
             .then(result => props.onWrite());
-        }
-        else{
-            openModal();
-            // alert("점수 또는 글을 입력해주세요")
         }
         
     }}>
@@ -84,12 +92,14 @@ function Write(props){
                 props.setMode("");
             }}/>
         </div>
-        <React.Fragment>
-            <Modal open={modalOpen} close={closeModal} check={checkModal} header="Warning!">
-                <main style={{fontSize:'1.5rem'}}>점수 혹은 후기를 작성해주세요</main>
-            </Modal>
-        </React.Fragment>
     </form>
+    <React.Fragment>
+        <Modal open={modalOpen} close={closeModal} check={checkModal} header="Warning!">
+        <main style={{fontSize:'1.5rem'}}>
+            {idChk === true ? "점수 혹은 후기를 작성해주세요" : "로그인 후 작성 가능합니다"}
+        </main>
+        </Modal>
+    </React.Fragment>
     </Container>
 }
 
@@ -155,13 +165,9 @@ function Answer(props){
     </form>
 }
 
-// function reviewDelete(review_id){
-//     if(window.confirm("삭제합니까?")){
-//         axios.get(`http://localhost:8080/amusement/delete/${review_id}`);
-//     }
-// }
-
 const ReviewList = () => {
+    // const member_id = sessionStorage.getItem("MEMBER_ID");
+
     const {amuse_id} = useParams();
     
     //paging에서 post
@@ -253,7 +259,7 @@ const ReviewList = () => {
     return (
         <Container id='review' className="mt-5">
             <header className='header-title' id='ride'>후기</header>
-            <Table className='table-borderless text-center'>
+            <Table className='table-borderless text-center' style={{borderRadius:'20px'}}>
                 <thead className='border-bottom'>
                     <tr>
                         <th>No</th>
@@ -277,17 +283,24 @@ const ReviewList = () => {
                 </thead>
                 <tbody>
                 {review?.slice(offset, offset + limit).map((review, index) => (
-                    <tr key={review.review_id}>
+                    <tr key={review.review_id} className='text-center'>
                         <td>{index + 1}</td>
-                        <td>{review.member_id.replace(/\d{3}$/, '***')}</td>
+                        {/* <td>{review.member_id.replace(/\d{3}$/, '***')}</td> */}
+                        <td>{review.member_id.replace(review.member_id.slice(-2), "**")}</td>
                         <td>{review.r_content}</td>
                         <td>{review.r_regidate}</td>    
                         <td>
+                        {
+                        sessionStorage.getItem("MEMBER_ID") === review.member_id &&
                         <Button type='button' className='mt-auto'
                             onClick={e => {
                                 // e.preventDefault();
                                 reviewDelete(review.review_id);
-                        }}>Delete</Button>&nbsp;
+                        }}>Delete</Button>
+                        }
+                        &nbsp;
+                        {
+                        sessionStorage.getItem("MEMBER_ID") === "hong1" &&
                         <Button type='button' className='mt-auto'
                             style={{backgroundColor: selectedReviewId === review.review_id && 'lightseagreen'}}
                             onClick={e => {
@@ -299,6 +312,7 @@ const ReviewList = () => {
                                 //alert(review.review_id);
                                 //setMode("ANSWER");
                         }}>Answer</Button>
+                        }
                         </td>
                     </tr>
                 ))}

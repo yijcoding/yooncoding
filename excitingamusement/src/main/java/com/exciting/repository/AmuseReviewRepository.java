@@ -12,21 +12,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.exciting.dto.AmuseReviewDTO;
-import com.exciting.entity.AmuseReview;
+import com.exciting.entity.AmuseReviewEntity;
 
 import lombok.val;
 
 @Repository
-public interface AmuseReviewRepository extends JpaRepository<AmuseReview, Integer>{
+public interface AmuseReviewRepository extends JpaRepository<AmuseReviewEntity, Integer>{
 	@Query(value = "select review_id, amuse_id, member_id,"
 			+ " r_content, r_grade, DATE_FORMAT(r_regidate, '%Y/%m/%d') as r_regidate,"
 			+ " ref, level, seq"
 			+ "	from amuse_review where amuse_id = :amuse_id order by ref DESC, seq asc", nativeQuery = true)
-	public List<AmuseReview> amuseReviewList(@Param(value = "amuse_id") Integer amuse_id);
+	public List<AmuseReviewEntity> amuseReviewList(@Param(value = "amuse_id") Integer amuse_id);
 	
 	//점수 평균 구하기
-	@Query(value = "select format((sum(r_grade) / count(review_id)), 1) as avg"
-			+ " from amuse_review where amuse_id = :amuse_id", nativeQuery = true)
+	@Query(value = "select round((sum(r_grade) / count(review_id)), 1) as avg"
+			+ " from amuse_review where amuse_id = :amuse_id and level = 0", nativeQuery = true)
 	public Float amuseReviewGradeAvg(@Param(value = "amuse_id") Integer amuse_id);
 	
 	//리뷰 개수 구하기
@@ -35,7 +35,7 @@ public interface AmuseReviewRepository extends JpaRepository<AmuseReview, Intege
 	
 	//리뷰 하나 가져오기
 	@Query(value = "select * from amuse_review where review_id = :review_id", nativeQuery = true)
-	AmuseReview getOneReview(@Param(value = "review_id") Integer review_id);
+	AmuseReviewEntity getOneReview(@Param(value = "review_id") Integer review_id);
 	
 	//리뷰 작성
 	@Query(value = "insert into amuse_review (amuse_id, member_id, r_content, r_grade)"

@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.dto.AmuseReviewDTO;
-import com.exciting.entity.AmuseImage;
-import com.exciting.entity.AmuseReview;
-import com.exciting.entity.Amusement;
-import com.exciting.entity.Facility;
-import com.exciting.entity.Rides;
+import com.exciting.entity.AmuseImageEntity;
+import com.exciting.entity.AmuseReviewEntity;
+import com.exciting.entity.AmusementEntity;
+import com.exciting.entity.FacilityEntity;
+import com.exciting.entity.RidesEntity;
 import com.exciting.service.AmuseImageService;
 import com.exciting.service.AmuseReviewService;
 import com.exciting.service.AmusementService;
@@ -42,44 +42,44 @@ public class AmusementApiController {
 	//===================국내 목록===================
 	//1) 전체
 	@GetMapping("/amuseList")
-	public List<Amusement> amuseList(){
-		List<Amusement> amuseList = this.amusementService.inAmusementList();
+	public List<AmusementEntity> amuseList(){
+		List<AmusementEntity> amuseList = this.amusementService.inAmusementList();
 		return amuseList;
 	}
 	//2) 평점
 	@GetMapping("/inAvgGradeList")
-	public List<Amusement> inAmuseListAvg(){
-		List<Amusement> inAvgGradeList = this.amusementService.inAmusementListAvg();
+	public List<AmusementEntity> inAmuseListAvg(){
+		List<AmusementEntity> inAvgGradeList = this.amusementService.inAmusementListAvg();
 		return inAvgGradeList;
 	}
 	//3) 리뷰
 	@GetMapping("/inReviewCntList")
-	public List<Amusement> inAmuseListReview(){
-		List<Amusement> inReviewCntList = this.amusementService.inAmusementListReview();
+	public List<AmusementEntity> inAmuseListReview(){
+		List<AmusementEntity> inReviewCntList = this.amusementService.inAmusementListReview();
 		return inReviewCntList;
 	}
 	
 	//===================해외 목록=====================
 	//평점
 	@GetMapping("/outAvgGradeList")
-	public List<Amusement> outAmuseListAvg(){
+	public List<AmusementEntity> outAmuseListAvg(){
 		return this.amusementService.outAmusementListAvg();
 	}
 	
 	//리뷰
 	@GetMapping("/outReviewCntList")
-	public List<Amusement> outAmuseListReview(){
+	public List<AmusementEntity> outAmuseListReview(){
 		return this.amusementService.outAmusementListReview();
 	}
 	
 	//===================놀이공원 상세===================
 	@GetMapping("amuseDetail/{amuse_id}")
-	public Amusement amuseDetail(@PathVariable Integer amuse_id) {
+	public AmusementEntity amuseDetail(@PathVariable Integer amuse_id) {
 		//1) 점수 평균
 		Float avg = this.amuseReviewService.amuseReviewGradeAvg(amuse_id);
 		
 		//2) 하나 가져오기
-		Amusement dto = this.amusementService.getOneAmusement(amuse_id);
+		AmusementEntity dto = this.amusementService.getOneAmusement(amuse_id);
 		dto.setAvg_grade(avg);
 		
 		//3) 리뷰 개수
@@ -91,31 +91,31 @@ public class AmusementApiController {
 	
 	//===================놀이공원 images=============================
 	@GetMapping("amuseImage/{amuse_id}")
-	public List<AmuseImage> amusementImages(@PathVariable Integer amuse_id){
+	public List<AmuseImageEntity> amusementImages(@PathVariable Integer amuse_id){
 		return this.amuseImageService.amuseImgList(amuse_id);
 	}
 	
 	//===================놀이공원에 대한 rides 목록====================
 	@GetMapping("/ridesList/{amuse_id}")
-	public List<Rides> ridesList(@PathVariable Integer amuse_id){
+	public List<RidesEntity> ridesList(@PathVariable Integer amuse_id){
 		return this.ridesService.ridesListAll(amuse_id);
 	}
 	
 	//===================놀이공원에 대한 facilities 목록====================
 	@GetMapping("/facilityList/{amuse_id}")
-	public List<Facility> facList(@PathVariable Integer amuse_id){
+	public List<FacilityEntity> facList(@PathVariable Integer amuse_id){
 		return this.facilityService.facAllList(amuse_id);
 	}
 	
 	//===================ride 상세====================
 	@GetMapping("/rideDetail/{rides_id}")
-	public Rides rideDetail(@PathVariable Integer rides_id) {
+	public RidesEntity rideDetail(@PathVariable Integer rides_id) {
 		return this.ridesService.getOneRide(rides_id);
 	}
 	
 	//===================review 목록====================
 	@GetMapping("/reviewList/{amuse_id}")
-	public List<AmuseReview> reviewList(@PathVariable Integer amuse_id){
+	public List<AmuseReviewEntity> reviewList(@PathVariable Integer amuse_id){
 		return this.amuseReviewService.amuseReviewList(amuse_id);
 	}
 	
@@ -154,7 +154,7 @@ public class AmusementApiController {
 		Integer ansReviewId = maxReviewId + 1;
 		Integer review_id = arDto.getReview_id();
 		
-		AmuseReview ansDto = this.amuseReviewService.getOneReview(review_id);
+		AmuseReviewEntity ansDto = this.amuseReviewService.getOneReview(review_id);
 		
 		Integer updateRef = ansDto.getRef();
 		Integer updateSeq = ansDto.getSeq();

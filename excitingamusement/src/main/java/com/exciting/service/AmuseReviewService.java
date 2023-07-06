@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.exciting.dto.AmuseReviewDTO;
-import com.exciting.entity.AmuseReview;
+import com.exciting.entity.AmuseReviewEntity;
 import com.exciting.repository.AmuseReviewRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class AmuseReviewService {
 	private final AmuseReviewRepository amuseReviewRepository;
 	
-	public List<AmuseReview> amuseReviewList(Integer amuse_id){
+	public List<AmuseReviewEntity> amuseReviewList(Integer amuse_id){
 		return this.amuseReviewRepository.amuseReviewList(amuse_id);
 	}
 	
@@ -40,7 +40,7 @@ public class AmuseReviewService {
 		this.amuseReviewRepository.updateRef(review_id);
 	}
 	
-	public AmuseReview getOneReview(Integer review_id) {
+	public AmuseReviewEntity getOneReview(Integer review_id) {
 		return this.amuseReviewRepository.getOneReview(review_id);
 	}
 	
