@@ -3,10 +3,13 @@ package com.exciting.login.security;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import com.exciting.entity.MemberEntity;
+import com.exciting.entity.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,10 +22,18 @@ public class TokenProvider {
 	private static final String SECRET_KEY = "hellowmama";
 	
 //	사용자가 HTTP request요청을 보냈을때 사용자의 정보를 바탕으로 TOKEN을 만듦.
-	public String create(MemberEntity memberEntity) {
+	public String create(Member memberEntity) {
 		
 //		기한 지금으로부터 1일로 설정
 		Date expiryDate = Date.from(Instant.now().plus(1,ChronoUnit.DAYS));
+		
+		Claims claims = Jwts.claims().setSubject(memberEntity.getMember_id());
+		claims.put("roles", memberEntity.getRoles());
+		
+//		Map<String,Object> map = new HashMap<>();
+//		
+//		map.put("roles", memberEntity.getRoles());
+//		map.put("subject", memberEntity.getMember_id());
 		
 //		header와 payload를 secret_key로 해시알고리즘을 이용해서 암호화 하고
 //		그값을 header와 payload와 연결해서 인코딩한다 -> TOKEN
@@ -30,15 +41,19 @@ public class TokenProvider {
 //				header에 들어갈 내용 및 서명을 하기 위한 SECRET_KEY
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
 //				payLoad에 들어갈 내용(subject : 유저의 id)
-				.setSubject(memberEntity.getId())
+//				나중에 @AuthenticationPrincipal 을 적용해서 인증을 할때 반환되는 값이된다.
+//				.setSubject(memberEntity.getMember_id())
+				.setClaims(claims)
 				.setIssuer("demo app")
 				.setIssuedAt(new Date())
 				.setExpiration(expiryDate)
 				.compact();
+		
+	
 	}
 	
 //	사용자의 요청할때 보낸 TOKEN과 사용자의 정보를 이용해 만든 TOKEN이 일치하는지 비교. 일치하면 Claims 리턴
-	public String validateAndGetUserId(String token) {
+	public Claims validateAndGetUserId(String token) {
 		
 //		parseClaimsJws 메서드가 Base 64로 디코딩 및 파싱
 //		즉, 헤더와 페이로드를 setSigningKey로 넘어온 시크릿을 이용해 서명 후, token의 서명과 비교
@@ -48,7 +63,14 @@ public class TokenProvider {
 				.setSigningKey(SECRET_KEY)
 				.parseClaimsJws(token)
 				.getBody();
+		
+		System.out.println("claims : "+Jwts.parser()
+		.setSigningKey(SECRET_KEY)
+		.parseClaimsJws(token));
+		System.out.println(claims);
 				
-		return claims.getSubject();
+//		create에서 setClaims로 대입하면서 setSubject()가 안먹혀 get SUbject()도 안됨
+//		return claims.getSubject();
+		return claims;
 	}
 }

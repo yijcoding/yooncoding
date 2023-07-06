@@ -13,37 +13,35 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MemberDTO {
 	
-	String id;
+	
 	
 	String member_id;
+	
 	String m_pass;
+	
 	String m_name;
+	
 	String m_email;
+	
 	String m_birth;
+	
 	String m_address;
+	
 	Date m_regidate;
+
 	String m_phone;
+	
 	String m_gender;
 	
-	String m_email1;
-	String m_email2;
+//	int m_admin;
 	
-	String m_phone1;
-	String m_phone2;
-	String m_phone3;
+	String token;
 	
-	String m_year;
-	String m_month;
-	String m_day;
+	String m_kakao_id;
 	
-	String m_sha256;
-	String m_enc;
+//	int m_point;
 	
 	String m_image;
 	
-	int m_admin;
-	
-	String m_kakaoId;
-	
-	int m_point;
+	String roles;
 }
