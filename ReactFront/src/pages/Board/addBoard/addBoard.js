@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import SelectType from './component/selectType';
 import { useRef, useState } from 'react';
 import axios from 'axios';
-import Ckeditor from '../../components/ckeditor';
+import Ckeditor from '../components/ckeditor';
 import ImageUpload from './component/imageUpload';
 
 function AddBoard() {

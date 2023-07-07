@@ -23,13 +23,16 @@ public class JpaSpecification {
         };
     }
 	
-//	public static Specification<BoardFavoriteEntity> equalFavoriteDataMember(String member_id) {
-//        return new Specification<BoardFavoriteEntity>() {
-//			@Override
-//            public Predicate toPredicate(Root<BoardFavoriteEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-//                // 1) equal
-//                return criteriaBuilder.equal(root.get("member_id"), member_id);
-//            }
-//        };
-//    }
+	
+	public static Specification<?> LikeSearch(String searchValue) {
+        return (root, query, criteriaBuilder) -> {
+            if (searchValue == null || searchValue.isEmpty()) {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            } else {
+                return criteriaBuilder.like(root.get("c_title"), "%" + searchValue + "%");
+            }
+        };
+    }
+	
+//	
 }

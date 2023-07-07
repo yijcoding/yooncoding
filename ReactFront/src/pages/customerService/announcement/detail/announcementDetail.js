@@ -10,6 +10,7 @@ import CustomerMove from '../../customerMove';
 function AnnouncementDetail() {
 
     const [viewData, setViewData] = useState([]);
+    const [imgData, setImgData] = useState([]);
     const location = useLocation()
 
 
@@ -29,7 +30,9 @@ function AnnouncementDetail() {
                     announcement_num: announcement_num
                 }
             });
-            console.log(response.data)
+            console.log(response)
+            console.log(response.data.boardImg[0].boardimg)
+            setImgData(response.data.boardImg)
             setViewData(response.data);
         } catch (error) {
             console.log(error);
@@ -68,53 +71,54 @@ function AnnouncementDetail() {
     //리턴
     return (
         <div>
-            <CustomerMove></CustomerMove>
-            <div className="wrap">
-                {/* <Advertisment_leftSide /> */}
-                <div id="view-wrap">
+            <section className='notice'>
+                <div className="wrap">
+                    {/* <Advertisment_leftSide /> */}
+                    <div className="view-wrap">
 
-                    {/*위의 기본적인 글 정보들*/}
-                    <div className="header">
-                        <div className="header-inner">
-                            <p style={{ marginBottom: '10', fontSize: '20' }}><b>{viewData.c_title}</b></p>
+                        {/*위의 기본적인 글 정보들*/}
+                        <div className="header">
+                            <div className="header-inner" style={{ textAlign: 'left' }}>
+                                <p style={{ marginBottom: '10', fontSize: '20' }}><b>{viewData.c_title}</b></p>
 
-                            <span>
-                                {`${viewData.postdate}`}
-                            </span>
-                        </div>
-                    </div>
-                    <hr></hr>
-                    <br></br>
-
-
-                    { /* 이미지*/}
-                    <div className="main-content" >
-                        {viewData.boardImg && viewData.boardImg.map((imgData, index) => (
-                            <div key={index} className="image-wrap"  >
-                                <img src={imgData.boardImg} alt="Board Image22" style={{ margin: '20', maxWidth: '1000' }} />
+                                <span>
+                                    {`${viewData.postdate}`}
+                                </span>
                             </div>
-                        ))}
-                        <br />
-                        <div style={{ clear: 'both' }}></div>
-                        {/*글 내용*/}
-                        <div className='boardView-content' dangerouslySetInnerHTML={{ __html: viewData.c_content }}></div>
-
-                        <div className='view-btn'>
-                            <input type="button" className='btn btn-blue' id="board_delete" value='삭제' onClick={deleteBoard} />
-                            <input type="button" className='btn btn-blue' id="board_update" value='수정'
-                                onClick={updateBoard} />
-
                         </div>
+                        <hr></hr>
+                        <br></br>
+
+
+                        { /* 이미지*/}
+                        <div className="main-content">
+                            {imgData && imgData.map((imgData, index) => (
+                                <div key={index} className="image-wrap" style={{ marginLeft: 200 }}  >
+                                    <img src={imgData.boardimg} alt="Board Image22" style={{ margin: '20', maxWidth: '1000' }} />
+                                </div>
+                            ))}
+                            <br />
+                            <div style={{ clear: 'both' }}></div>
+                            {/*글 내용*/}
+                            <div className='content' dangerouslySetInnerHTML={{ __html: viewData.c_content }}></div>
+
+                            <div className='view-btn'>
+                                <input type="button" className='btn btn-blue' id="board_delete" value='삭제' onClick={deleteBoard} />
+                                <input type="button" className='btn btn-blue' id="board_update" value='수정'
+                                    onClick={updateBoard} />
+
+                            </div>
+                        </div>
+                        <hr style={{ border: 0 }}></hr>
+
                     </div>
-                    <hr style={{ border: 0 }}></hr>
-
                 </div>
-            </div>
-            <div className="list-wrap">
-                <input type="button" className='' id="listback" onClick={rollbackpage} value='목록' />
-            </div>
+                <div className="list-wrap" style={{ marginLeft: 400 }}>
+                    <input type="button" className='' id="listback" onClick={rollbackpage} value='목록' />
+                </div>
 
-            <hr />
+                <hr />
+            </section>
         </div>
     );
 }

@@ -1,4 +1,4 @@
-function PagingNumberLogic({ pageNumber, totalPages }) {
+function PagingNumberLogic({ searchData, pageNumber, totalPages }) {
     // 페이지 번호를 10 단위로 설정합니다.
     let startPage = Math.floor((pageNumber - 1) / 10) * 10 + 1;
     let endPage = startPage + 9;
@@ -21,7 +21,10 @@ function PagingNumberLogic({ pageNumber, totalPages }) {
     const handlePageClick = (clickedPageNum) => {
         let pageNum = clickedPageNum;
         //if(pageNum === integer)
-        window.location.href = `/announcement?pageNum=${pageNum}`;
+        (searchData !== null) ? window.location.href = `/announcement?pageNum=${pageNum}&search=${searchData}` : window.location.href = `/announcement?pageNum=${pageNum}`
+
+
+
     };
 
     const prevPaging = () => {

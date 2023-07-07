@@ -5,8 +5,9 @@ import { useRef, useState } from 'react';
 import axios from 'axios';
 
 import ImageUpload from './component/imageUpload';
-import Ckeditor from '../../../components/ckeditor';
+import Ckeditor from '../../components/ckeditor';
 import CustomerMove from '../../customerMove';
+
 
 function AddAnnouncement() {
     const titleInputRef = useRef("");
@@ -92,34 +93,40 @@ function AddAnnouncement() {
     }
 
     return (
-        <div className='create-board'>
-            <Container>
-                <CustomerMove></CustomerMove>
-                <SelectType
-                    onValueChange={handleValueChange}
-                    inputRef={titleInputRef}
-                    setTitleValue={handleTitleValueChange}
-                />
-                <hr />
-                <Ckeditor
-                    ckeditorData={ckeditorData}
-                    //onImageUpload={handleImageUpload}
-                    content={content}
-                    setContent={setContent}
-                />
+        <>
+            <section className="notice">
+                <div className='create-Announcement' style={{ left: "200px" }}>
+                    <Container>
+                        <SelectType
+                            onValueChange={handleValueChange}
+                            inputRef={titleInputRef}
+                            setTitleValue={handleTitleValueChange}
+                        />
+                        <hr />
+                        <Ckeditor
+                            ckeditorData={ckeditorData}
+                            //onImageUpload={handleImageUpload}
+                            content={content}
+                            setContent={setContent}
+                        />
 
-                <ImageUpload
-                    selectedFiles={selectedFiles}
-                    setSelectedFiles={setSelectedFiles}
-                />
+                        <div style={{ textAlign: "left", marginLeft: "200" }}>
+                            <ImageUpload
+                                selectedFiles={selectedFiles}
+                                setSelectedFiles={setSelectedFiles}
+                            />
+                        </div>
 
-                <br />
-                <div id="insert-btn-wrap">
-                    <input type="button" id="cancle-btn" className="btn btn-blue" onClick={cancle} value="취소" />
-                    <input type="submit" className="btn btn-blue" id="submit" onClick={fetchData} value="확인" />
+                        <br />
+                        <div id="insert-btn-wrap">
+                            <input type="button" id="cancle-btn" className="btn btn-blue" onClick={cancle} value="취소" />
+                            <input type="submit" className="btn btn-blue" id="submit" onClick={fetchData} value="확인" />
+                        </div>
+                    </Container>
                 </div>
-            </Container>
-        </div>
+            </section >
+        </>
+
     );
 }
 

@@ -5,8 +5,8 @@ import Favorite from './component/favorite';
 import WriteComment from './component/writeCommnet';
 import CommentList from './component/commentList';
 import { useLocation } from 'react-router-dom';
-import Advertisment_leftSide from '../../components/advertisement/advertisement_leftSide';
-import KakaoAPI from '../../components/kakaoAPI';
+import Advertisment_leftSide from '../components/advertisement/advertisement_leftSide';
+import KakaoAPI from '../components/kakaoAPI';
 import ElasticBoard from '../main/ElasticBoard';
 
 function Detail() {

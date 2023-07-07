@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import $ from 'jquery';
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,35 +11,55 @@ function AnnouncementList() {
   const [data, setData] = useState([]);
   const [pageNumber, setPageNumer] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const searchData = useRef("");
+  const [searchData, setSearchData] = useState("")
+  const [searchCheck, setSearchCheck] = useState(0);
   const location = useLocation();
 
 
 
 
 
+
   useEffect(() => {
-    const addressParams = new URLSearchParams(location.search);
-    let PageNum = addressParams.get("pageNum")
-    if (PageNum === null || PageNum === undefined) {
-      PageNum = 1;
-    }
-    setPageNumer(PageNum)
-    getBoardList(PageNum);
+    RenderingData()
 
   }, []);
 
+  useEffect(() => {
+    RenderingData()
+  }, [searchCheck]);
 
-  const getBoardList = (PageNum) => {
+  const RenderingData = () => {
+    const addressParams = new URLSearchParams(location.search);
+
+    let PageNum = addressParams.get("pageNum")
+    let searchParam = addressParams.get("search");
+
+    if (PageNum === null) {
+      PageNum = 1;
+    }
+
+    if (searchParam !== null) {
+      setSearchData(searchParam);
+    } else {
+      searchParam = "";
+      setSearchData(searchParam);
+    }
+
+    if (searchCheck === 1) {
+      PageNum = 1;
+    }
+
+    setPageNumer(PageNum)
+    getBoardList(PageNum, searchParam);
+  }
+
+  const getBoardList = (PageNum, searchParam) => {
 
 
-    console.log(location.search);
-    console.log(PageNum)
-    const pageCount = 10;
 
     if (PageNum === null || PageNum === undefined) {
       PageNum = 1;
-      console.log("11111111111111")
     }
 
 
@@ -49,16 +68,14 @@ function AnnouncementList() {
       await axios.get('http://localhost:8080/customer/announcement', {
         params: {
           pageNum: PageNum,
+          search: searchParam
         }
       }).then((response) => {
         const data = response.data;
-        console.log(response)
-        console.log(data)
         setTotalPages(data.totalPages)
         setData(data.content);
       }).catch(error => {
-        console.log("http error");
-        console.log(error);
+
       });
 
     };
@@ -104,13 +121,17 @@ function AnnouncementList() {
         </tbody>
       </table>
 
-      <PagingSearch
-        data={data}
-        pageNumber={pageNumber}
-        totalPages={totalPages}
-        searchData={searchData}
-      />
+      <div style={{ marginRight: 100 }}>
+        <PagingSearch
+          data={data}
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          searchData={searchData}
+          setSearchData={setSearchData}
+          setSearchCheck={setSearchCheck}
 
+        />
+      </div>
     </div>
   );
 }

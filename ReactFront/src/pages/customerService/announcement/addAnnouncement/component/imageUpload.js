@@ -30,7 +30,8 @@ function ImageUpload({ member_id, setSelectedFiles, selectedFiles }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+
+    <form onSubmit={handleSubmit} >
       <div className="imgs_file">
         <h2>
           <b>이미지 미리보기</b>
@@ -54,7 +55,8 @@ function ImageUpload({ member_id, setSelectedFiles, selectedFiles }) {
       </div>
 
       <input type="hidden" name="member_id" value={member_id} />
-    </form>
+    </form >
+
   );
 }
 

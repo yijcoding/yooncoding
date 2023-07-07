@@ -17,7 +17,7 @@ function SelectType(props) {
     };
 
     return (
-        <div>
+        <>
             <div className='create-window'>
                 <div className="form-floating mb-3">
                     <input
@@ -29,7 +29,7 @@ function SelectType(props) {
                     <label htmlFor="flootingInput">제목</label>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

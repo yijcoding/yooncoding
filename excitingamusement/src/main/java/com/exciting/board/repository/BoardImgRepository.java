@@ -15,7 +15,12 @@ public interface BoardImgRepository extends JpaRepository<BoardImgEntity, Intege
 	@Query("select b from BoardImgEntity b where b.board_id = ?1")
 	List<BoardImgEntity> findByBoardId(int board_id);
 	
+	@Query("select b from BoardImgEntity b where b.announcement_num = ?1")
+	List<BoardImgEntity> findByAnnouncement(int announcement_num);
+	
 	@Modifying
 	@Query(nativeQuery = true, value = "delete from boardimg b where b.board_id = ?1")
 	void deleteByBoardId(int board_id);
+	
+	
 }

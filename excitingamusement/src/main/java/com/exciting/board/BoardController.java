@@ -55,7 +55,7 @@ public class BoardController {
 
 	static {
 		try {
-			BOARD_UPLOAD_PATH = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+			BOARD_UPLOAD_PATH = new ClassPathResource("static/uploads/").getFile().getAbsolutePath();
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to get the upload path", e);
 		}
@@ -80,7 +80,7 @@ public class BoardController {
 
 		// 기존 이미지 데이터를 조회 및 DB에 저장된 이미지 정보 삭제
 		List<BoardImgEntity> OriginData = service.boardImgDelete(boardImgEntity);
-		System.out.println(OriginData);
+		
 		// dto변환
 		List<BoardImgDTO> OriginDataDTO = OriginData.stream().map(BoardImgDTO::new).collect(Collectors.toList());
 
@@ -112,7 +112,7 @@ public class BoardController {
 
 	@PostMapping("/imageUpload/{board_id}")
 	@ResponseBody
-	public String createBoard(@RequestParam(value = "file", required = false) List<MultipartFile> mf,
+	public String imageUpload(@RequestParam(value = "file", required = false) List<MultipartFile> mf,
 			@PathVariable("board_id") int board_id) {
 
 		try {
@@ -211,7 +211,7 @@ public class BoardController {
 			// 이미지 경로 주입
 			List<String> boardimgPathData = boardImgDTO.stream().map(img -> "/uploads/" + img.getBoardimg())
 					.collect(Collectors.toList());
-			;
+			
 
 			int num = 0;
 			for (String i : boardimgPathData) {
@@ -233,7 +233,6 @@ public class BoardController {
 			jsonObj.put("cnt", boardReplyCnt);
 			boardView.add(jsonObj);
 
-			System.out.println(boardView);
 
 			ResponseDTO<BoardDTO> response = ResponseDTO.<BoardDTO>builder().data(boardView).build();
 
@@ -286,7 +285,6 @@ public class BoardController {
 	public int favoriteBoardPost(@RequestBody BoardFavoriteDTO boardFavoriteDTO) {
 		// member_id ,board_id 필요
 		// 추천을 이미 햇는지 검사하는 코드
-		System.out.println();
 		try {
 			BoardFavoriteEntity entity = BoardFavoriteDTO.toEntity(boardFavoriteDTO);
 			// db 작업
@@ -533,13 +531,4 @@ public class BoardController {
 	 * 
 	 */
 
-//	
-//	@PostMapping("/board/test")
-//	@ResponseBody
-//	public void test(@RequestParam Map<String,Object>map, List<MultipartFile> mf) {
-//		System.out.println(map);
-//		System.out.println(mf);
-//		
-//		//return "나는 계속 갱신되는데? ㅋ";
-//	}
 }

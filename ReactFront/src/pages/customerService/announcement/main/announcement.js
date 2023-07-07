@@ -23,20 +23,15 @@ function Announcement() {
 
 
     return (
-        // <div>
-        //     너 왜 아무것도 안뜸
-        // </div>
+
         <div>
-            <CustomerMove></CustomerMove>
             <section className="notice">
                 <div className="board-list">
                     <div className="page-title">
                         <h1>공지사항</h1>
                     </div>
                     <br></br>
-                    <div className="container">
-
-
+                    <div className="container" style={{ marginLeft: 75, margin: "auto" }}>
 
                         <AnnouncementList></AnnouncementList>
 

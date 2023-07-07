@@ -12,6 +12,8 @@ import UploadAnnouncement from './pages/customerService/announcement/updateAnnou
 import InsertInquiry from './pages/customerService/Inquiry/insertInquiry/inserInquiry';
 import Inquiry from './pages/customerService/Inquiry/InquriyList/inquiry';
 import InquiryDetail from './pages/customerService/Inquiry/InquiryDetail/inquiryDetail';
+import CustomerMove from './pages/customerService/customerMove';
+import Layout from './pages/customerService/components/layout';
 
 
 
@@ -19,7 +21,13 @@ import InquiryDetail from './pages/customerService/Inquiry/InquiryDetail/inquiry
 
 
 
-
+const MainLayout = () => {
+  return (
+    <>
+      <CustomerMove />
+    </>
+  );
+};
 
 
 
@@ -34,13 +42,16 @@ function App() {
       <Route exact path="addboard" element={<AddBoard></AddBoard>}></Route>
       <Route exact path="detail" element={<Detail />}></Route>
       <Route exact path="updateBoard" element={<UpdateBoard />}></Route >
-      <Route exact path="announcement" element={<Announcement />}></Route >
-      <Route exact path="addAnnouncement" element={<AddAnnouncement />}></Route >
-      <Route exact path="announcementDetail" element={<AnnouncementDetail />}></Route >
-      <Route exact path="uploadAnnouncement" element={<UploadAnnouncement />}></Route >
-      <Route exact path="announcementInquiry" element={<InsertInquiry />}></Route >
-      <Route exact path="inquiry" element={<Inquiry />}></Route >
-      <Route exact path="inquiryDetail" element={<InquiryDetail />}></Route >
+      <Route element={<Layout />}>
+        <Route exact path="announcement" element={<Announcement />}></Route >
+        <Route exact path="addAnnouncement" element={<AddAnnouncement />}></Route >
+        <Route exact path="announcementDetail" element={<AnnouncementDetail />}></Route >
+        <Route exact path="uploadAnnouncement" element={<UploadAnnouncement />}></Route >
+        <Route exact path="announcementInquiry" element={<InsertInquiry />}></Route >
+        <Route exact path="inquiry" element={<Inquiry />}></Route >
+        <Route exact path="inquiryDetail" element={<InquiryDetail />}></Route >
+      </Route>
+
     </Routes >
 
 

@@ -5,9 +5,9 @@ import axios from 'axios';
 
 import { useLocation } from 'react-router-dom';
 import ImageUpload from './component/imageUpload';
-import Ckeditor from '../../../components/ckeditor';
+import Ckeditor from '../../components/ckeditor';
 import SelectType from './component/selectType';
-import CustomerMove from '../../customerMove';
+
 
 
 function UploadAnnouncement() {
@@ -18,6 +18,7 @@ function UploadAnnouncement() {
     const [originBoardImg, setOriginBoardImg] = useState([]);
     const [useAnnouncement_num, setUseAnnouncement_num] = useState("");
     const [ImageCheck, setImageCheck] = useState("");
+
     //주소에서 값가져오기
     const location = useLocation();
     const urlSearch = new URLSearchParams(location.search)
@@ -40,6 +41,7 @@ function UploadAnnouncement() {
 
         async function ready() {
             const detailData = await getDetailInfo();
+
             setOriginBoardImg(detailData.boardImg)
         }
 
@@ -63,22 +65,13 @@ function UploadAnnouncement() {
 
         console.log(response.data)
         const data = response.data
+
         return data
 
     }
 
     const fetchData = async () => {
         const announcement_num = useAnnouncement_num
-        console.log('---------------------------------')
-        console.log(announcement_num);
-        console.log('---------------------------------')
-        console.log(title.current);
-        console.log(ckeditorData.current);
-        console.log(selectedFiles);
-
-
-        console.log(title)
-        console.log(ckeditorData.current)
 
         if (title.length <= 3)
             window.alert("제목을 3글자 이상 입력해주세요!");
@@ -96,7 +89,6 @@ function UploadAnnouncement() {
 
                 const data = response.data;
                 console.log(response.data);
-                const boardId = data;  // 서버에서 생성된 게시물 ID를 기반으로 함. 적절한 Key로 대체해야 함.
 
                 if (selectedFiles.length > 0) {
                     // 이미지 데이터 전송
@@ -137,7 +129,6 @@ function UploadAnnouncement() {
     return (
         <div className='create-board'>
             <Container>
-                <CustomerMove />
                 <SelectType
                     b_title={title}
                     setTitleValue={setTitle}
@@ -157,6 +148,7 @@ function UploadAnnouncement() {
                     setOriginBoardImg={setOriginBoardImg}
                     announcement_num={useAnnouncement_num}
                     setImageCheck={setImageCheck}
+
                 />
 
 

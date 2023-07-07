@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import "./customerMove.css"
 
-function CustomerMove() {
-    const [menuOpen,setMenuOpen] = useState(0);
-    const Move = () => {
-        let list = document.querySelector('.menu_select .option-list');
+function CustomerMove({ children }) {
+    const [menuOpen, setMenuOpen] = useState(0);
+
+    const move = () => {
+        let list = document.querySelector('.customermove .option-list');
         setMenuOpen(1)
         //이거 상태관리로 값에 따라 보이고 안보이게 하셈
         if (list.style.overflow === 'hidden' || list.style.overflow === '') {
@@ -19,7 +21,7 @@ function CustomerMove() {
     };
 
     return (
-        <div className="menu_select" onClick={Move}>
+        <div className="menu_select customermove" onClick={move} style={{ right: 200 }}>
             <span onClick={() => handleLinkClick('/')} style={{ cursor: 'pointer' }}>
                 <img src="https://cdn-icons-png.flaticon.com/512/20/20176.png" alt="1" />|
             </span>
@@ -28,7 +30,7 @@ function CustomerMove() {
                     <b>공지사항</b>
                 </span>
                 <img src="https://cdn-icons-png.flaticon.com/512/3519/3519316.png" alt="1" />
-                <ul className="option-list" onClick={Move}>
+                <ul className="option-list" onClick={move}>
                     <li>
                         <a href="#" onClick={() => handleLinkClick('/announcement')}>
                             공지사항

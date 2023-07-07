@@ -3,16 +3,19 @@ package com.exciting.customerService.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.http.HttpRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -20,9 +23,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +40,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.exciting.board.service.BoardService;
 import com.exciting.customerService.service.CustomerService;
 import com.exciting.dto.AnnouncementDTO;
+import com.exciting.dto.BoardImgDTO;
+import com.exciting.dto.ResponseDTO;
 import com.exciting.entity.AnnouncementEntity;
+import com.exciting.entity.BoardImgEntity;
+import com.exciting.utils.ChangeJson;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -49,7 +58,7 @@ public class CustomerServiceController {
 
 	static {
 		try {
-			BOARD_UPLOAD_PATH = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+			BOARD_UPLOAD_PATH = new ClassPathResource("static/uploads/").getFile().getAbsolutePath();
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to get the upload path", e);
 		}
@@ -68,9 +77,9 @@ public class CustomerServiceController {
 
 		AnnouncementEntity entity = AnnouncementDTO.toEntity(announcementDTO);
 		int pageNum = Integer.parseInt(String.valueOf(map.get("pageNum")));
-		System.out.println(pageNum);
+		String Search = String.valueOf(map.get("search"));
 
-		Page<AnnouncementDTO> announcementList = service.getAnnouncementList(entity, pageNum);
+		Page<AnnouncementDTO> announcementList = service.getAnnouncementList(entity, pageNum,Search);
 
 		
 
@@ -83,133 +92,156 @@ public class CustomerServiceController {
 
 	}
 
-////	@RequestMapping(value = "/customer/insertAnnouncement", method = RequestMethod.GET)
-////	public ModelAndView announcementGet(@RequestParam Map<String,Object> map) {
-////		ModelAndView mav = new ModelAndView();
-////		mav.setViewName("/customerService/insertannouncement");
-////		return mav;
-////	}
-//	
-//	
-//	@RequestMapping(value = "/customer/imageUpload", method = RequestMethod.POST)
-//	@ResponseBody
-//	public String createBoard(@RequestParam (value="file",required = false) List<MultipartFile> mf
-//			,HttpServletRequest request
-//			,@RequestParam(value="announcement_num", required=false) Integer announcementNum,
-//		    @RequestParam(value="inquiry_num", required=false) Integer inquiry_num
-//			) {
-//		Map<String,Object> fi = new HashMap<>();
-//		
-//		
-//		System.out.println("-----------------------------------------"+mf);
-//		System.out.println("-----------------------------------------"+announcementNum);
-//		System.out.println("-----------------------------------------"+inquiry_num);
-//		
-//		try {
-//			
-//			
-//			
-//			if(mf != null) {
-//				if(mf.get(0).getOriginalFilename()!=null && !(mf.get(0).getOriginalFilename().equals(""))) {
-//					
-//					for(MultipartFile file:mf) {
-//						String originalFileName = System.currentTimeMillis()+file.getOriginalFilename();
-//		
-//						String uploadDir = request.getSession().getServletContext().getRealPath(BOARD_SAVE_PATH);
-//						String safeFile = uploadDir+"/"+originalFileName;
-//						
-//						if(announcementNum!=null) {
-//							fi.put("announcement_num", announcementNum);
-//						}
-//						
-//						if(inquiry_num != null) {
-//							fi.put("inquiry_num", inquiry_num);
-//						}
-//						
-//						fi.put("boardImg", originalFileName);		
-//						service.customerImg(fi);
-//						file.transferTo(new File(safeFile));
-//					}	
-//				}
-//				
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		
-//		return "/board/createBoard";
-//	}
-//	
-//	
-//	//공지사항 글쓰기
-//	@RequestMapping(value = "/customer/insertAnnouncement", method = RequestMethod.POST)
-//	@ResponseBody
-//	public int announcementPost(@RequestBody Map<String,Object> map) {
-//		
-//		map.put("c_type","공지");
-//		service.insertAnnouncement(map);
-//		Map<String,Object> customer = service.selectAnnouncement(map);
-//		
-//		int announcement_num = Integer.parseInt(String.valueOf(map.get("announcement_num")));
-//		
-//		return announcement_num;
-//	}
-//	
-//	
-//	
-//	
-//	//공지사항 세부
-//	@RequestMapping(value = "/customer/view", method = RequestMethod.GET)
-//	@ResponseBody
-//	public Map<String,Object> announcementView(@RequestParam Map<String,Object> map) {
-//		
-//		//view
-//		Map<String,Object> viewOne = service.selectAnnouncement(map);
-//		List<Map<String,Object>> boardImg = service.customerImgSelect(map);
-//		//System.out.println("나는 고객상세++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+boardImg);
-//		
-//		for(Map<String, Object> img : boardImg) {
-//			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
-//		}
-//		
-//		// 특수문자처리
-////		String c_content = ChangeJavanontextarea.change(String.valueOf(viewOne.get("c_content")));
-////		viewOne.put("c_content", c_content);
-////		String c_title = ChangeJavanontextarea.change(String.valueOf(viewOne.get("c_title")));
-////		viewOne.put("c_title", c_title);
-//		
-//		//날짜처리
-//		String date = viewOne.get("postdate").toString();
-//		String ymd=date.substring(0,10);
-//		String ymd2=ymd.replaceAll("-",".");
-//		String hms=date.substring(11);
-//		String postdate=ymd2+" "+hms;
-//		viewOne.put("postdate", postdate);
-//		viewOne.put("boardImg",boardImg);
-//		
-//		
-//		return viewOne;
-//	}
-//	
-//	
-//	@RequestMapping(value = "/customer/updateAnnouncement", method = RequestMethod.GET)
-//	public Map<String, Object> updateAnnouncement(@RequestParam Map<String,Object>map){
-//		
-//		Map<String, Object> customer = service.selectAnnouncement(map); 
-//		List<Map<String,Object>> boardImg = service.customerImgSelect(map);
-////		String c_title = ChangeJava.change(String.valueOf(customer.get("c_title")));
-////		customer.put("c_title", c_title);
-////		String c_content = ChangeJava.change(String.valueOf(customer.get("c_content")));
-////		customer.put("c_content", c_content);
-//		for(Map<String,Object> img : boardImg){
-//			img.put("boardImg", BOARD_LOAD_PATH+img.get("boardImg"));
-//		}
-//		customer.put("boardImg", boardImg);
-//		return customer;
-//	}
-//	
+	/*
+	 * 
+	 * 이미지 Image 업로드 Upload Start
+	 * 
+	 */
+
+	@PostMapping("/imageUpload")
+	@ResponseBody
+	public void imageUpload(@RequestParam(value = "file", required = false) List<MultipartFile> mf,
+			@RequestParam(value="announcement_num", required=false) Integer announcement_num,
+		    @RequestParam(value="inquiry_num", required=false) Integer inquiry_num) {
+
+		try {
+			if (mf != null) {
+				String firstFileName = mf.get(0).getOriginalFilename();
+				boolean isFileNotEmpty = firstFileName != null && !firstFileName.equals("");
+				if (isFileNotEmpty) {
+
+					for (MultipartFile file : mf) {
+						BoardImgEntity boardImgEntity = new BoardImgEntity();
+
+						String originalFileName = System.currentTimeMillis() + file.getOriginalFilename();
+
+						String uploadDir = BOARD_UPLOAD_PATH;
+						String safeFile = uploadDir + "/" + originalFileName;
+
+						//받은값이 있을시 넣음
+						if(announcement_num != null || announcement_num != 0)
+							boardImgEntity.setAnnouncement_num(announcement_num);
+						else if(inquiry_num != null || inquiry_num != 0)
+							boardImgEntity.setInquiry_num(inquiry_num);
+
+						//파일 이름저장
+						boardImgEntity.setBoardimg(originalFileName);
+
+						//DB에 저장
+						service.customerImgInsert(boardImgEntity);
+
+						//폴더에 저장
+						file.transferTo(new File(safeFile));
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("BoardImgInsert Error");
+		}
+
+	}
+
+	/*
+	 * 
+	 * 이미지 Image 업로드 Upload End
+	 * 
+	 */
+	
+	
+	/*
+	 * 
+	 * 공지사항 글쓰기 announcement Write Start
+	 * 
+	 */
+	
+	//공지사항 글쓰기
+	@PostMapping("/insertAnnouncement")
+	@ResponseBody
+	public int announcementPost(@RequestBody AnnouncementDTO announcementDTO) {
+		
+		AnnouncementEntity entity = AnnouncementDTO.toEntity(announcementDTO);
+		
+		
+		
+		entity.setC_type("공지");
+		entity.setPostdate(LocalDateTime.now());
+		
+		int announcement_num =service.insertAnnouncement(entity);
+		
+		
+		return announcement_num;
+	}
+	
+	/*
+	 * 
+	 * 공지사항 글쓰기 announcement Write END
+	 * 
+	 */
+	
+	
+	
+	/*
+	 * 
+	 * 공지사항 세부 announcement Detail Start
+	 * 
+	 */
+	@GetMapping(value ={"/view","/updateAnnouncement"})
+	@ResponseBody
+	public ResponseEntity<?> announcementView(AnnouncementDTO announcementDTO) {
+		
+		
+		try {
+			
+			AnnouncementEntity entity = AnnouncementDTO.toEntity(announcementDTO);
+			
+			AnnouncementEntity announcementData = service.getAnnouncementOne(entity);
+			
+			
+			List<BoardImgEntity> boardImgList = service.getAnnouncementImg(entity);
+			
+			//DTO변환
+			List<BoardImgDTO> boardImgDTO = boardImgList.stream()
+				    .filter(Objects::nonNull) // "null" 값인 요소들을 제외하고 필터링
+				    .map(BoardImgDTO::new)
+				    .collect(Collectors.toList());
+			
+			//이미지 경로 주입
+			int num =0;
+			String boardImg =null;
+			for(BoardImgDTO i : boardImgDTO) {
+				boardImg = i.getBoardimg();
+				boardImg = "/uploads/"+ boardImg;
+				i.setBoardimg(boardImg);
+				num++;
+			}
+			
+			JSONObject jsonData = ChangeJson.ToChangeJson(announcementData);
+			
+			jsonData.put("boardImg", boardImgDTO);
+			System.out.println("/////////////////////////////////////////////////");
+			System.out.println(jsonData);
+			ResponseDTO<JSONObject> response = ResponseDTO.<JSONObject>builder().json(jsonData).build();
+			
+			return ResponseEntity.ok().body(response.getJson());
+			
+		} catch (Exception e) {
+			String error = e.getMessage();
+			ResponseDTO<JSONObject> response = ResponseDTO.<JSONObject>builder().error(error).build();
+			return ResponseEntity.badRequest().body(response.getError());
+		}
+		
+	}
+	/*
+	 * 
+	 * 공지사항 세부 announcement Detail END
+	 * 
+	 */
+
+	
+	
+
 //	@RequestMapping(value = "/customer/updateAnnouncement", method = RequestMethod.POST)
 //	public void updateBoardpost(@RequestBody Map<String,Object> map,@RequestParam(value="file",required = false) List<MultipartFile> mf,HttpServletRequest request){
 //	
