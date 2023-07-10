@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, ListGroup } from 'react-bootstrap';
+import { Container, List } from 'reactstrap';
 import './rideDetail.scss';
 import TabMenu from '../../components/TabMenu';
 import Loading from '../../components/Loading';
@@ -28,7 +28,7 @@ const RideDetail = () => {
         {loading ? <Loading/> : null}
         <div className='ride-detail-wrapper'>
             <img src={rideDetail?.r_img} className='ride-tot-img col-md-7' alt='totImg'/>
-            <ListGroup type='unstyled' className='ride-list-wrapper'>
+            <List type='unstyled' className='ride-list-wrapper'>
                 <li>
                     <img src={rideDetail?.r_img} className='ride-main-img' alt='mainImg'/>   
                 </li>
@@ -38,7 +38,7 @@ const RideDetail = () => {
                     </div>
                     
                 </div>
-            </ListGroup>
+            </List>
         </div>
         <Container>
             <br/>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Card2 } from '../../components/Card2';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container } from 'reactstrap';
 
 const FacList = () => {
     const { amuse_id } = useParams();

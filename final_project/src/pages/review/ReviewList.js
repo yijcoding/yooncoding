@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './reviewList.scss';
-import { Button, Container, Table } from 'react-bootstrap';
+import { Button, Container, Table } from 'reactstrap';
 import StarRating from '../../components/StarRating';
 import Paging from '../../components/Paging';
 import Modal from '../../components/ModalCheck';

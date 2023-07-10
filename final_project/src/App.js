@@ -26,6 +26,7 @@ import { KakaoInter } from './login/views/KaKaoInter.js';
 import Login from './login/views/login';
 import SignUp from './login/views/SignUp';
 import { useRef } from 'react';
+import AmuseList from "./pages/amuse-list/AmuseList";
 
 const App = () => {
   const searchNameRef = useRef();
@@ -41,7 +42,7 @@ const App = () => {
       <Routes>
         {/* 일준 */}
         {/* <Route path="/board" element={<ReviewListPaging/>}/> */}
-        {/* <Route path="/amuseList" element={<AmuseList/>}/> */}
+        <Route path="/" element={<AmuseList/>}/>
         <Route path="/amusement/:amuse_id" element={<AmuseDetail/>}/>
         <Route path="/rideDetail/:rides_id/:amuse_id" element={<RideDetail/>}/>
 
@@ -57,11 +58,11 @@ const App = () => {
         <Route path="/kakaoInter" element={<KakaoInter />} />
 
         {/* 동욱 */}
-        <Route path = "/" element= { <Home />}></Route>
+        {/* <Route path = "/" element= { <Home />}></Route>
         <Route path = "/amuseList" element= { <List />}></Route>
         <Route path = "/mypage/selectedmypage" element= { <SelectedMyPage />}></Route>
         <Route path = "/customer/faq" element= { <FAQ />}></Route>
-        <Route path = "/modal" element= { <HomeModal />}></Route>
+        <Route path = "/modal" element= { <HomeModal />}></Route> */}
 
       </Routes>
     </Router>
