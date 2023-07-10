@@ -259,6 +259,18 @@ const ReviewList = () => {
     return (
         <Container id='review' className="mt-5">
             <header className='header-title' id='ride'>후기</header>
+            <label style={{float:'right'}}>
+                <select
+                    type="number"
+                    style={{height:'30px'}}
+                    onChange={handleChangeSelect}
+                >
+                    <option value="5">5개씩 보기</option>
+                    <option value="10">10개씩 보기</option>
+                    <option value="20">20개씩 보기</option>
+                    <option value="30">30개씩 보기</option>
+                </select>
+            </label>
             <Table className='table-borderless text-center' style={{borderRadius:'20px'}}>
                 <thead className='border-bottom'>
                     <tr>
@@ -266,19 +278,7 @@ const ReviewList = () => {
                         <th>Id</th>
                         <th>Content</th>
                         <th>Regidate</th>
-                        <th>
-                        <label>
-                            <select
-                                type="number"
-                                onChange={handleChangeSelect}
-                            >
-                                <option value="5">5개씩 보기</option>
-                                <option value="10">10개씩 보기</option>
-                                <option value="20">20개씩 보기</option>
-                                <option value="30">30개씩 보기</option>
-                            </select>
-                        </label>
-                        </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -300,7 +300,7 @@ const ReviewList = () => {
                         }
                         &nbsp;
                         {
-                        sessionStorage.getItem("MEMBER_ID") === "hong1" &&
+                        sessionStorage.getItem("MEMBER_ID") === "admin" &&
                         <Button type='button' className='mt-auto'
                             style={{backgroundColor: selectedReviewId === review.review_id && 'lightseagreen'}}
                             onClick={e => {

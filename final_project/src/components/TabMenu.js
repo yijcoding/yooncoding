@@ -8,10 +8,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Slider from 'react-slick';
-import { Card2 } from './Card2';
 import { Card } from './Card';
 
 import './tabMenu.scss';
+import { Card3 } from './Card3';
 
 const TabMenu = () => {
 
@@ -28,7 +28,7 @@ const TabMenu = () => {
 
     const settings = {
         infinite : true,      // 무한 반복 옵션     
-        slidesToShow : 4,     // 한 화면에 보여질 컨텐츠 개수
+        slidesToShow : 3,     // 한 화면에 보여질 컨텐츠 개수
         slidesToScroll : 1,   // 스크롤 한번에 움직일 컨텐츠 개수
         speed : 1000,         // 다음 버튼 누르고 다음 화면 뜨는데까지 걸리는 시간(ms)
         dots : true,          // 스크롤바 아래 점으로 페이지네이션 여부
@@ -60,7 +60,7 @@ const TabMenu = () => {
         },
         {   name: '정보', 
             content: 
-                <ListGroup style={{listStyle:'none', width:'50%', 
+                <ListGroup style={{listStyle:'none', width:'100%', height:'auto',
                                 margin:'auto', backgroundColor:'whitesmoke', borderRadius:'10px', padding:'20px'}}>
                     <li style={{marginBottom:'20px', textAlign:'left', fontSize:'1.7rem', fontWeight:'bold'}}>
                         {rideDetail?.r_info}
@@ -79,8 +79,8 @@ const TabMenu = () => {
             <Container>
                 <Slider {...settings}>
                     {ridesList?.map(rList => (
-                        <Card2 key={rList.rides_id} id={rList.rides_id} path="rideDetail" amuse_id={amuse_id}
-                        name={rList.r_name} img={rList.r_img} location={rList.r_location}/>
+                        <Card3 key={rList.rides_id} id={rList.rides_id} path="rideDetail" amuse_id={amuse_id}
+                        name={rList.r_name} img={rList.r_img} location={rList.r_location} type={rList.r_type}/>
                     ))}
                 </Slider>
             </Container>

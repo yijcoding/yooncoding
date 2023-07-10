@@ -1,10 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card2 } from '../../components/Card2';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container } from 'reactstrap';
+import { Card3 } from '../../components/Card3';
 
 const FacList = () => {
     const { amuse_id } = useParams();
@@ -32,7 +32,7 @@ const FacList = () => {
                     {facList?.map(fac => {
                         if(facId === fac.facility_id){
                             return(
-                                <Card2 key={fac.facility_id} info={fac.f_info} location={fac.f_location}
+                                <Card3 key={fac.facility_id} info={fac.f_info} location={fac.f_location}
                                     name={fac.f_name} img={fac.f_img} btnHandle={facBack}/>
                             );
                         }
@@ -48,15 +48,15 @@ const FacList = () => {
     const [limit, setLimit] = useState(3);
 
     if(limit < facList?.length){
-        content = <Button className='more-btn' style={{marginTop:'30px', 
-                                marginLeft:'40%', 
+        content = <Button className='more-btn' style={{marginTop:'5%', 
+                                marginLeft:'38%', 
                                 width:'200px'}} 
             onClick={() => {
                 setLimit(limit + 3);
             }}>더보기</Button>
     }
     else{
-        content = <Button style={{marginTop:'30px', marginLeft:'40%', width:'200px'}} 
+        content = <Button style={{marginTop:'5%', marginLeft:'38%', width:'200px'}} 
             onClick={() => {
                 setLimit(3);
         }}>접기</Button>
@@ -71,7 +71,7 @@ const FacList = () => {
                 <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 
                             row-cols-xl-4 justify-content-center">
                 {facList?.slice(0, limit).map(fac => (
-                    <Card2 key={fac.facility_id} id={fac.facility_id} 
+                    <Card3 key={fac.facility_id} id={fac.facility_id} 
                         name={fac.f_name} img={fac.f_img} btnDetail={facDetail}/>
                 ))}
                 </div>
@@ -90,7 +90,7 @@ const FacList = () => {
                     {facList?.map(fac => {
                         if(facId === fac.facility_id){
                             return(
-                                <Card2 key={fac.facility_id} info={fac.f_info} location={fac.f_location}
+                                <Card3 key={fac.facility_id} info={fac.f_info} location={fac.f_location}
                                     name={fac.f_name} img={fac.f_img} btnBack={facBack}/>
                             );
                         }

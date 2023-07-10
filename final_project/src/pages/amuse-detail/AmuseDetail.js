@@ -14,14 +14,15 @@ import AmuseList from '../amuse-list/AmuseList';
 import AmuseListOut from '../amuse-list/AmuseListOut';
 import Modal from '../../components/ModalCheck';
 import { Cookies } from 'react-cookie';
+import ModalChat from '../../components/ModalChat';
 
 const AmuseDetail = (props) => {
 
     const {amuse_id} = useParams();
     console.log("MEMBER_ID = ", sessionStorage.getItem("MEMBER_ID"));
 
-    const cookies = new Cookies();
-    let viewCookie = null;
+    // const cookies = new Cookies();
+    // let viewCookie = null;
 
     // cookies.set("cookie" + amuse_id, "value", {path: `/amusement/${amuse_id}`});
 
@@ -48,8 +49,6 @@ const AmuseDetail = (props) => {
     //         // }
     //     }
     // },[]);
-
-    // key : cookie + amuse_id, value : 
 
     const [amuseDetail, setAmuseDatail] = useState();
     const [amuseImage, setAmuseImage] = useState();
@@ -154,7 +153,7 @@ const AmuseDetail = (props) => {
                             return array;
                         })()}
                         <span style={{fontWeight:'bold'}}>&nbsp;({amuseDetail?.avg_grade}점 / {amuseDetail?.review_cnt}개)</span><br/></a>
-                        <span style={{fontWeight:'bold'}}>조회수: {amuseDetail?.a_view}</span>
+                        {/* <span style={{fontWeight:'bold'}}>조회수: {amuseDetail?.a_view}</span> */}
                         <article>
                             <br/>
                             {/* main image */}
@@ -227,9 +226,9 @@ const AmuseDetail = (props) => {
                                 {/* <li>{scrollY}</li> */}
                             </ul>
                             <React.Fragment>
-                                <Modal open={modalOpen} close={closeModal} header="Modal">
+                                <ModalChat open={modalOpen} close={closeModal} header="Modal">
                                     <main>내용</main>
-                                </Modal>
+                                </ModalChat>
                             </React.Fragment>
                         </ListGroup>
                     </section>
