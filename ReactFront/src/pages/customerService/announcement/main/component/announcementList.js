@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,8 +9,8 @@ import PagingSearch from "./pagingSearch";
 
 function AnnouncementList() {
   const [data, setData] = useState([]);
-  const [pageNumber, setPageNumer] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const pageNumber = useRef(1);
+  const totalPages = useRef(0);
   const [searchData, setSearchData] = useState("")
   const [searchCheck, setSearchCheck] = useState(0);
   const location = useLocation();
@@ -50,7 +50,7 @@ function AnnouncementList() {
       PageNum = 1;
     }
 
-    setPageNumer(PageNum)
+    pageNumber.current = PageNum;
     getBoardList(PageNum, searchParam);
   }
 
@@ -72,10 +72,11 @@ function AnnouncementList() {
         }
       }).then((response) => {
         const data = response.data;
-        setTotalPages(data.totalPages)
+        totalPages.current = data.totalPages;
         setData(data.content);
       }).catch(error => {
-
+        // window.alert("정보 불러오기 실패!");
+        // window.location.href = "/";
       });
 
     };

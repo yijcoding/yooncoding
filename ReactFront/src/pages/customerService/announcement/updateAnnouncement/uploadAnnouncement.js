@@ -70,7 +70,7 @@ function UploadAnnouncement() {
 
     }
 
-    const fetchData = async () => {
+    const fetchData = () => {
         const announcement_num = useAnnouncement_num
 
         if (title.length <= 3)
@@ -81,7 +81,7 @@ function UploadAnnouncement() {
 
             try {
                 // 텍스트 데이터 전송
-                const response = await axios.post("http://localhost:8080/customer/updateAnnouncement", {
+                const response = axios.put("http://localhost:8080/customer/updateAnnouncement", {
                     c_title: title,
                     c_content: ckeditorData.current,
                     announcement_num: announcement_num
@@ -93,27 +93,28 @@ function UploadAnnouncement() {
                 if (selectedFiles.length > 0) {
                     // 이미지 데이터 전송
                     const formData = new FormData();
-
                     // 이미지 파일 추가
                     selectedFiles.forEach((file) => {
                         formData.append("file", file);
                     });
 
-                    // boardId와 함께 이미지 업로드 API에 전송
-                    const imageResponse = await axios.post(`http://localhost:8080/customer/imageUpload/${announcement_num}`, formData, {
+                    // 이미지 업로드 API에 전송
+                    axios.post(`http://localhost:8080/customer/imageUpload?announcement_num=${announcement_num}`, formData, {
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
+                    }).catch(error => {
+                        console.log(error);
                     });
-
-                    console.log(imageResponse);
                 }
-
                 window.location.href = `/announcementDetail?announcement_num=${announcement_num}`;
+
             } catch (error) {
                 console.log("HTTP error");
                 console.log(error);
             }
+
+
         }
     };
 
@@ -127,40 +128,45 @@ function UploadAnnouncement() {
     }
 
     return (
-        <div className='create-board'>
-            <Container>
-                <SelectType
-                    b_title={title}
-                    setTitleValue={setTitle}
-                />
-                <hr />
-                <Ckeditor
-                    ckeditorData={ckeditorData}
-                    //onImageUpload={handleImageUpload}
-                    setContent={setContent}
-                    content={content}
-                />
+        <>
+            <section className='notice'>
+                <div className='create-board' style={{ marginLeft: 200 }}>
+                    <Container>
+                        <SelectType
+                            b_title={title}
+                            setTitleValue={setTitle}
+                        />
+                        <hr />
+                        <Ckeditor
+                            ckeditorData={ckeditorData}
+                            //onImageUpload={handleImageUpload}
+                            setContent={setContent}
+                            content={content}
+                        />
 
-                <ImageUpload
-                    selectedFiles={selectedFiles}
-                    setSelectedFiles={setSelectedFiles}
-                    originBoardImg={originBoardImg}
-                    setOriginBoardImg={setOriginBoardImg}
-                    announcement_num={useAnnouncement_num}
-                    setImageCheck={setImageCheck}
+                        <div style={{ textAlign: 'left' }}>
+                            <ImageUpload
+                                selectedFiles={selectedFiles}
+                                setSelectedFiles={setSelectedFiles}
+                                originBoardImg={originBoardImg}
+                                setOriginBoardImg={setOriginBoardImg}
+                                announcement_num={useAnnouncement_num}
+                                setImageCheck={setImageCheck}
 
-                />
+                            />
+                        </div>
+
+                        <br />
 
 
-                <br />
-
-
-                <div id="insert-btn-wrap">
-                    <input type="button" id="cancle-btn" className="btn btn-blue" onClick={cancle} value="취소" />
-                    <input type="submit" className="btn btn-blue" id="submit" onClick={fetchData} value="확인" />
+                        <div id="insert-btn-wrap">
+                            <input type="button" id="cancle-btn" className="btn btn-blue" onClick={cancle} value="취소" />
+                            <input type="submit" className="btn btn-blue" id="submit" onClick={fetchData} value="확인" />
+                        </div>
+                    </Container>
                 </div>
-            </Container>
-        </div>
+            </section>
+        </>
     );
 }
 

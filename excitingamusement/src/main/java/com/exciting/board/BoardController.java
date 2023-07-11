@@ -35,6 +35,7 @@ import com.exciting.entity.BoardImgEntity;
 import com.exciting.entity.BoardReplyEntity;
 import com.exciting.utils.ChangeJson;
 import com.exciting.utils.ChangeTEXT;
+import com.exciting.utils.FileUtils;
 
 import lombok.extern.log4j.Log4j2;
 //import utils.BoardPage;
@@ -50,37 +51,44 @@ public class BoardController {
 	@Autowired
 	BoardService service;
 
+    private static final String BOARD_UPLOAD_PATH;
 
-	private static final String BOARD_UPLOAD_PATH;
-
-	static {
+    static {
+        
 		try {
-			BOARD_UPLOAD_PATH = new ClassPathResource("static/uploads/").getFile().getAbsolutePath();
-		} catch (IOException e) {
+			String dirPath = "C:\\static\\uploads";;
+		    System.out.println(dirPath);
+		    BOARD_UPLOAD_PATH = dirPath;
+		    FileUtils.createDirectory(BOARD_UPLOAD_PATH);
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("Failed to get the upload path", e);
 		}
-	}
+
+    }
+
 	/*
 	 * 
 	 * 이미지 Image 삭제 Delete Start
+	 * 
 	 * 
 	 */
 
 	@DeleteMapping("/deleteBoardImg")
 	@ResponseBody
-	public void deleteBoardImg(@RequestParam(value = "boardimg_num", required = false) int boardimg_num,
-			@RequestParam(value = "boardimg_num", required = false) int board_id) {
-
+	public void deleteBoardImg(@RequestParam(value = "boardimg_num", required = false) Integer  boardimg_num,
+			@RequestParam(value = "board_id", required = false) Integer  board_id) {
+System.out.println("asdasdasdasdasdasdasd"+board_id);
 		BoardImgEntity boardImgEntity = new BoardImgEntity();
 
-		if (boardimg_num != 0)
+		if (boardimg_num != null)
 			boardImgEntity.setBoardimg_num(boardimg_num);
-		else if (board_id != 0)
+		else if (board_id != null)
 			boardImgEntity.setBoard_id(board_id);
 
 		// 기존 이미지 데이터를 조회 및 DB에 저장된 이미지 정보 삭제
 		List<BoardImgEntity> OriginData = service.boardImgDelete(boardImgEntity);
-		
+
 		// dto변환
 		List<BoardImgDTO> OriginDataDTO = OriginData.stream().map(BoardImgDTO::new).collect(Collectors.toList());
 
@@ -162,16 +170,15 @@ public class BoardController {
 
 	@PostMapping("/createBoard")
 	public int createBoardPost(@RequestBody BoardDTO boardDTO) {
-		
+
 		BoardEntity boardEntity = BoardDTO.toEntity(boardDTO);
-		
+
 		int board_id = service.createBoard(boardEntity);
-		
+
 		return board_id;
 	}
-	
-	
-	
+
+
 	/*
 	 * 
 	 * 게시글쓰기 Writeboard createboard insertboard END
@@ -212,7 +219,6 @@ public class BoardController {
 			// 이미지 경로 주입
 			List<String> boardimgPathData = boardImgDTO.stream().map(img -> "/uploads/" + img.getBoardimg())
 					.collect(Collectors.toList());
-			
 
 			int num = 0;
 			for (String i : boardimgPathData) {
@@ -503,12 +509,12 @@ public class BoardController {
 
 	@DeleteMapping("/deleteBoard")
 	public void deleteBoard(BoardDTO boardDTO) {
-		
+
 		BoardEntity entity = BoardDTO.toEntity(boardDTO);
-		
+
 		List<BoardImgEntity> deleteImgs = service.deleteBoard(entity);
-		
-//		BoardImgEntity boardImgEntity = new BoardImgEntity();
+
+		//		BoardImgEntity boardImgEntity = new BoardImgEntity();
 
 
 		// dto변환

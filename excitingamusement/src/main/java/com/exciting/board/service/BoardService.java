@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.exciting.dto.BoardDTO;
 import com.exciting.dto.BoardFavoriteDTO;
 import com.exciting.dto.BoardReplyDTO;
+import com.exciting.dto.InquiryDTO;
 import com.exciting.entity.BoardEntity;
 import com.exciting.entity.BoardFavoriteEntity;
 import com.exciting.entity.BoardImgEntity;

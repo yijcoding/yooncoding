@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 
 function ImageUpload(
   { member_id, setSelectedFiles, selectedFiles, originBoardImg, setOriginBoardImg, setImageCheck }
@@ -37,13 +37,16 @@ function ImageUpload(
 
 
   const renderOriginBoardImg = () => {
-    console.log(originBoardImg.boardimg)
-    return originBoardImg.map((image) => (
+
+    console.log(originBoardImg[0])
+    return originBoardImg.map((image, index) => (
+
 
       < a
         onClick={() => deleteBoardImg(image.boardimg_num)
         }
         id={`img_id_${image.board_id}`}
+        key={index}
       >
         <img
           src={image.boardimg}
@@ -57,10 +60,14 @@ function ImageUpload(
 
   const deleteBoardImg = async (boardimg_num) => {
     const result = window.confirm('사진을 삭제하시겠습니까?');
-
+    console.log(boardimg_num)
     if (result) {
       try {
-        await axios.post('http://localhost:8080/customer/deleteBoardImg', { boardimg_num: boardimg_num });
+
+        await axios.delete('http://localhost:8080/customer/deleteBoardImg', {
+          params: { boardimg_num: boardimg_num }
+        });
+
         // 통신이 성공하면 여기에서 이미지 갱신 로직을 구현하세요.
         // 임시 이미지 배열에서 해당 이미지를 제거하거나 다른 로직을 사용할 수 있습니다.
         setOriginBoardImg(originBoardImg.filter((img) => img.boardimg_num !== boardimg_num));

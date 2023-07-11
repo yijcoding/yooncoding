@@ -1,6 +1,6 @@
 import React from "react";
-import PagingNumberLogic from "./PagingNumberLogic";
 import AnnouncementSearch from "./AnnouncementSearch";
+import PagingNumberLogic from "./PagingNumberLogic";
 
 function PagingSearch({ setSearchCheck, searchData, setSearchData, pageNumber, totalPages }) {
     // 글쓰기 이동
@@ -23,7 +23,7 @@ function PagingSearch({ setSearchCheck, searchData, setSearchData, pageNumber, t
                     <PagingNumberLogic
                         pageNumber={pageNumber}
                         totalPages={totalPages}
-                        searchData={searchData} />
+                        searchValue={searchData} />
                 </span>
 
                 {/* 글쓰기 버튼 */}

@@ -11,12 +11,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Repository;
 
 import com.exciting.board.repository.BoardFavoriteRepasitory;
 import com.exciting.board.repository.BoardImgRepository;
@@ -24,6 +21,9 @@ import com.exciting.board.repository.BoardReplyRepository;
 import com.exciting.board.repository.BoardRepository;
 import com.exciting.board.service.BoardServiceImpl;
 import com.exciting.customerService.repository.AnnouncementRepository;
+import com.exciting.entity.AnnouncementEntity;
+import com.exciting.entity.BoardImgEntity;
+import com.exciting.utils.ChangeJson;
 import com.exciting.dto.BoardDTO;
 import com.exciting.dto.BoardFavoriteDTO;
 import com.exciting.dto.BoardImgDTO;

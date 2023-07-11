@@ -57,6 +57,7 @@ function ImageUpload(
   const deleteBoardImg = async (boardimgNum) => {
     const result = window.confirm('사진을 삭제하시겠습니까?');
     const boardimg_num = boardimgNum;
+
     if (result) {
       try {
         await axios.delete(`/board/deleteBoardImg`, {

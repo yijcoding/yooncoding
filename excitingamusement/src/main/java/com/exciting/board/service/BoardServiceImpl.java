@@ -432,13 +432,13 @@ public class BoardServiceImpl implements BoardService {
 
 			// 삭제전 정보 가져오기
 
-			if (boardImgEntity.getBoardimg_num() != 0) {
+			if ( boardImgEntity.getBoardimg_num() != null && boardImgEntity.getBoardimg_num() != 0) {
 				Optional<BoardImgEntity> deleteImgDataOne = boardImgRepository
 						.findById(boardImgEntity.getBoardimg_num());
 				BoardImgEntity entity = new BoardImgEntity();
 				entity.setBoardimg(deleteImgDataOne.get().getBoardimg());
 				deleteImgData.add(entity);
-			} else if (boardImgEntity.getBoard_id() != 0) {
+			} else if ( boardImgEntity.getBoard_id() != null && boardImgEntity.getBoard_id() != 0) {
 				List<BoardImgEntity> deleteImgDataList = boardImgRepository.findByBoardId(boardImgEntity.getBoard_id());
 
 				deleteImgData = deleteImgDataList;

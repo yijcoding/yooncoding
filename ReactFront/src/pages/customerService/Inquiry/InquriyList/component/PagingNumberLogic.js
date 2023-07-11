@@ -22,7 +22,7 @@ function PagingNumberLogic({ searchValue, pageNumber, totalPages }) {
     const handlePageClick = (clickedPageNum) => {
         let pageNum = clickedPageNum;
         //if(pageNum === integer)
-        (searchValue !== null) ? window.location.href = `/announcement?pageNum=${pageNum}&search=${searchValue}` : window.location.href = `/inquiry?pageNum=${pageNum}`
+        (searchValue !== null) ? window.location.href = `/inquiry?pageNum=${pageNum}&search=${searchValue}` : window.location.href = `/inquiry?pageNum=${pageNum}`
 
 
 

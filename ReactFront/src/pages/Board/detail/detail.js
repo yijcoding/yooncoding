@@ -176,7 +176,7 @@ function Detail() {
 
 
                     {/*댓글 쓰기*/}
-                    <div className="comment-wrap">
+                    <div className="comment-wrap" style={{ right: 250 }}>
                         <WriteComment
                             board_id={viewData.board_id}
                             onAddComment={addComment}

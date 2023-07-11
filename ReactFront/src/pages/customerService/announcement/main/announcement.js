@@ -3,24 +3,8 @@ import React from 'react';
 
 import './announcement.css'
 import AnnouncementList from "./component/announcementList";
-import CustomerMove from "../../customerMove";
 
 function Announcement() {
-
-
-
-
-    useEffect(() => {
-        const requestOptions = {
-            method: "GET",
-            headers: { "Content-Type": "application.json" },
-        };
-
-
-    }, []);
-
-
-
 
     return (
 

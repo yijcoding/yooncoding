@@ -42,7 +42,7 @@ function CustomerMove({ children }) {
                         </a>
                     </li>
                     <li>
-                        <a href="#" onClick={() => handleLinkClick('/announcementInquiry')}>
+                        <a href="#" onClick={() => handleLinkClick('/insertInquiry')}>
                             문의하기
                         </a>
                     </li>

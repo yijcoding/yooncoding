@@ -17,10 +17,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				.allowCredentials(true).maxAge(MAX_AGE_SECS);
 	}
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/uploads/**").addResourceLocations("classpath:/static/uploads/");
-	}
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		registry.addResourceHandler("/uploads/**").addResourceLocations("classpath:/static/uploads/");
+//	}
 
 	public void destroy() {
 	}
