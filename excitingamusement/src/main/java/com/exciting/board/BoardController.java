@@ -171,6 +171,7 @@ public class BoardController {
 	}
 	
 	
+	
 	/*
 	 * 
 	 * 게시글쓰기 Writeboard createboard insertboard END

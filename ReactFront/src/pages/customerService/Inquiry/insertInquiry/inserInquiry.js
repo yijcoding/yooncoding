@@ -24,7 +24,7 @@ function InsertInquiry() {
     // 임시로그인데이터
     const member_id = "hong1"
     axios
-      .post("http://localhost:8080/customer/announcementInquiry", {
+      .post("http://localhost:8080/customer/insertInquiry", {
         b_title: titleInputRef,
         b_type: typeSelect.current,
         b_content: b_content,
@@ -87,7 +87,7 @@ function InsertInquiry() {
   return (
     <>
       <div style={{ margin: '0 150px' }}>
-        <CustomerMove />
+
       </div>
       <div id="create-board">
         <div className="container">
