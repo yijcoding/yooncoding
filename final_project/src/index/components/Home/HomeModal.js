@@ -21,11 +21,11 @@ const HomeModal = () => {
   }
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={handleClose} centered style={{zIndex:'99999'}}>
       <Modal.Header closeButton>
         <Modal.Title>이벤트 공지사항</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="text-center" style={{height:'450px'}}>
+      <Modal.Body className="text-center" style={{height:'auto'}}>
         <a href="/promotion">
           <img
             className="img-responsive"

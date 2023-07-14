@@ -1,7 +1,7 @@
 import React from 'react';
 import './modal.scss';
 
-const Modal = (props) => {
+const ModalCheck = (props) => {
     const { open, close, header, content, check } = props;
     return (
         <div className={open ? 'openModal modal' : 'modal'}>
@@ -30,4 +30,4 @@ const Modal = (props) => {
     );
 };
 
-export default Modal;
+export default ModalCheck;

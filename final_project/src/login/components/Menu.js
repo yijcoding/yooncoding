@@ -46,7 +46,7 @@ function Menu({ onChangeSearchName, searchNameRef }) {
   }, []);
 
   return (
-    <header className=" header">
+    <header className="header" style={{position:'fixed'}}>
       {["sm"].map((expand) => (
         <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3">
           <Container fluid>

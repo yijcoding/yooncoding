@@ -1,6 +1,3 @@
-// import 'slick-carousel/slick/slick.css';
-// import 'slick-carousel/slick/slick-theme.css';
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import AmuseDetail from './pages/amuse-detail/AmuseDetail';
@@ -32,7 +29,6 @@ const App = () => {
   const searchNameRef = useRef();
   const onChangeSearchName = (e) => {
     searchNameRef.current = e.target.value;
-    // console.log(searchNameRef.current);
   };
 
   return (
@@ -47,7 +43,7 @@ const App = () => {
         <Route path="/rideDetail/:rides_id/:amuse_id" element={<RideDetail/>}/>
 
         {/* 시진형 */}
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/writeList/:id" element={<FullWriteList />} />
         <Route path="/searchPw" element={<SearchPw />} />
@@ -55,7 +51,7 @@ const App = () => {
         <Route path="/pwComplete" element={<PwComplete />} />
         <Route path="/editMember" element={<FullEditMember />} />
         <Route path="/kakaoLogin" element={<KakaoLogin />} />
-        <Route path="/kakaoInter" element={<KakaoInter />} />
+        <Route path="/kakaoInter" element={<KakaoInter />} /> */}
 
         {/* 동욱 */}
         {/* <Route path = "/" element= { <Home />}></Route>

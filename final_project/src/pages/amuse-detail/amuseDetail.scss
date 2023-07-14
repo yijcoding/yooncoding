@@ -1,4 +1,7 @@
 .tot-wrapper{
+    position: relative;
+    top: 50px;
+
     height: 5000px;
 
     .main-wrapper{
@@ -46,7 +49,9 @@
         height: 4500px;
 
         .side-box{
-            top: 0px;
+            //sticky => 어디서부터 고정될건지 설정
+            top: 50px;
+
             width: 270px;
             border-radius: 15px;
             position: sticky;

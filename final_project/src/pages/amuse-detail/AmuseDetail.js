@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, ListGroup } from 'react-bootstrap';
+import { Container, List } from 'reactstrap';
 import './amuseDetail.scss';
 
 import RidesList from '../rides-list/RidesList';
@@ -14,12 +14,18 @@ import AmuseList from '../amuse-list/AmuseList';
 import AmuseListOut from '../amuse-list/AmuseListOut';
 import Modal from '../../components/ModalCheck';
 import { Cookies } from 'react-cookie';
-import ModalChat from '../../components/ModalChat';
+import ModalChatTest from '../../components/ModalChatTest';
+import { Table } from 'react-bootstrap';
 
 const AmuseDetail = (props) => {
 
     const {amuse_id} = useParams();
-    console.log("MEMBER_ID = ", sessionStorage.getItem("MEMBER_ID"));
+
+    const [member_id, setMember_id] = useState();
+
+    useEffect(() => {
+        setMember_id(sessionStorage.getItem("MEMBER_ID"));
+    },[]);
 
     // const cookies = new Cookies();
     // let viewCookie = null;
@@ -189,6 +195,47 @@ const AmuseDetail = (props) => {
                     <FacList/>
                 </div>
                 <div ref={reviewRef}>
+                    <Container style={{display:'flex', marginLeft:'2.5%'}}>
+                        {/* 평균 점수 & 별점 */}
+                        <div style={{width:'35%', height:'200px', backgroundColor:'white', margin:'10px'}}>
+                            <div style={{textAlign:'center', marginTop:'19%', fontSize:'2rem'}}>
+                                <div>{amuseDetail?.avg_grade}</div>
+                                <div>
+                                {(() => {
+                                    const array = [];
+                                    for(let i = 0; i < Math.round(amuseDetail?.avg_grade); i++) {
+                                        array.push(<span key={i}>⭐</span>);
+                                    }
+                                    return array;
+                                })()}
+                                </div>
+                            </div>
+                        </div>
+                        {/* 별점 별 인원수 */}
+                        <div style={{width:'55%', height:'200px', backgroundColor:'white', margin:'10px', display:'flex'}}>
+                            <div style={{width:'28%', textAlign:'right', marginTop:'10%'}}>
+                                <div>⭐⭐⭐⭐⭐</div>
+                                <div>⭐⭐⭐⭐</div>
+                                <div>⭐⭐⭐</div>
+                                <div>⭐⭐</div>
+                                <div>⭐</div>
+                            </div>
+                            <div style={{width:'60%', marginTop:'10%', marginLeft:'5%'}}>
+                                <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                                <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                                <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                                <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                                <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                            </div>
+                            <div style={{width:'10%', marginTop:'10%'}}>
+                                <div>20</div>
+                                <div>10</div>
+                                <div>1</div>
+                                <div>2</div>
+                                <div>3</div>
+                            </div>
+                        </div>
+                    </Container>
                     <ReviewList/>
                 </div>
                 <div ref={amuseListRef}>
@@ -207,7 +254,7 @@ const AmuseDetail = (props) => {
                     <section className="py-3">
                         <header className='header-title' 
                             style={{fontSize:'2rem', textAlign:'center'}}>Category</header>
-                        <ListGroup style={{textDecoration:'none'}}>
+                        <List style={{textDecoration:'none'}}>
                             <ul className='side-ul'>
                                 {/* 0 ~ 953 */}
                                 <li style={{backgroundColor: scrollY < 930 ? 'lightblue' : null}}><a href='#top'>Main</a></li>
@@ -222,15 +269,19 @@ const AmuseDetail = (props) => {
                                 <li style={{backgroundColor: locaY <= 200 ? 'lightblue' : null}}><a href='#location'>Location</a></li>
                                 <li><button onClick={openModal} onMouseOver={mouseOver} onMouseLeave={mouseLeave} 
                                         style={{borderRadius:'10px', border:'1px solid black', height:'40px', backgroundColor: isChk && 'lightblue'}}>
-                                    Popup</button></li>
+                                    Chat</button></li>
                                 {/* <li>{scrollY}</li> */}
                             </ul>
                             <React.Fragment>
-                                <ModalChat open={modalOpen} close={closeModal} header="Modal">
-                                    <main>내용</main>
-                                </ModalChat>
+                                <ModalChatTest
+                                    roomId="room1"
+                                    open={modalOpen} 
+                                    close={closeModal} 
+                                    member_id={member_id} 
+                                    header="Chat"
+                                ></ModalChatTest>
                             </React.Fragment>
-                        </ListGroup>
+                        </List>
                     </section>
                 </Container>
             </div>
