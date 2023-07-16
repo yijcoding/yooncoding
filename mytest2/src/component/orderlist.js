@@ -97,7 +97,7 @@ function Orderlist() {
                     <>
                       <div className="w-100"></div>
                       <h4 className="mb-3">
-                        주문번호: {orders[0].order_id}
+                        주문번호: {orders[0].order_id}{" "}
                         {orders[0].checkorder ? (
                           <button
                             className="btn btn-success"
@@ -184,7 +184,7 @@ function Orderlist() {
                                     )}
                                   </p>
                                   <p className="text-danger">
-                                    포인트 사용 : {toKRWString(d.use_point)}
+                                    포인트 사용 : {d.use_point}
                                   </p>
                                 </>
                               )}
@@ -200,40 +200,38 @@ function Orderlist() {
                                   </p>
                                 )}
                               {d.checkrefund && (
-                                <del>
-                                  <p className="card-text">
-                                    결제금액 :{" "}
-                                    {toKRWString(
-                                      d.ticket_price *
-                                        (1 - d.discount) *
-                                        d.quantity
-                                    )}
-                                  </p>
-                                </del>
+                                <p
+                                  className="card-text"
+                                  style={{ textDecoration: "line-through" }}
+                                >
+                                  결제금액 :{" "}
+                                  {toKRWString(
+                                    d.ticket_price *
+                                      (1 - d.discount) *
+                                      d.quantity
+                                  )}
+                                </p>
                               )}
                               {d.checkorder && (
                                 <p className="text-danger">
                                   포인트 적립 :{" "}
-                                  {toKRWString(
-                                    d.ticket_price *
-                                      (1 - d.discount) *
-                                      d.quantity *
-                                      0.05
-                                  )}
+                                  {d.ticket_price *
+                                    (1 - d.discount) *
+                                    d.quantity *
+                                    0.05}
                                 </p>
                               )}
                               {d.checkrefund && (
-                                <del>
-                                  <p className="text-danger">
-                                    포인트 적립 :{" "}
-                                    {toKRWString(
-                                      d.ticket_price *
-                                        (1 - d.discount) *
-                                        d.quantity *
-                                        0.05
-                                    )}
-                                  </p>
-                                </del>
+                                <p
+                                  className="text-danger"
+                                  style={{ textDecoration: "line-through" }}
+                                >
+                                  포인트 적립 :{" "}
+                                  {d.ticket_price *
+                                    (1 - d.discount) *
+                                    d.quantity *
+                                    0.05}
+                                </p>
                               )}
                               <p className="card-text">
                                 구매 날짜 : {d.order_date}

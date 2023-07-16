@@ -120,7 +120,10 @@ const Order = () => {
   };
 
   const handleBuyClick = () => {
-    if (window.confirm("구매 하시겠습니까?")) {
+    if (member_id === null) {
+      alert("로그인 해주세요");
+      navigate("/login");
+    } else if (window.confirm("구매 하시겠습니까?")) {
       const myArray = [];
       const usePoint = mypoint;
       const member_id = sessionStorage.getItem("MEMBER_ID");
@@ -157,7 +160,7 @@ const Order = () => {
           console.log(response.data);
           alert("구매해 주셔서 감사합니다!");
 
-          navigate("/promotion");
+          navigate("/");
         })
         .catch((error) => {
           console.error("Error occurred during request:", error);

@@ -142,7 +142,7 @@ export function Profile({ member_id, kakao_id, m_image, kakao_name, git_id }) {
           </span>
           님 환영합니다!
         </div>
-        <NavDropdown.Divider />
+        <NavDropdown.Divider style={{ width: "310px" }} />
 
         {login ? (
           <div>

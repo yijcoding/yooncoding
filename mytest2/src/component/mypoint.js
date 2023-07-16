@@ -44,8 +44,8 @@ function Mypoint() {
         <Col xs={9} className="my-5">
           <div className="container custom-main-padding border-bottom mt-5">
             <h2 className="mb-5">
-              사용 가능한 포인트는{" "}
-              {toKRWString(data.mypoint[0]?.sum_point ?? 0)} 포인트 입니다.
+              사용 가능한 포인트는 {data.mypoint[0]?.sum_point.toLocaleString()}{" "}
+              포인트 입니다.
             </h2>
             <hr />
             <h4 className="mb-3">포인트 적립 내역</h4>
@@ -67,7 +67,7 @@ function Mypoint() {
                     <>
                       <div className="w-100"></div>
                       <h4 className="mb-3">
-                        주문번호: {orders[0].order_id}
+                        주문번호: {orders[0].order_id}{" "}
                         {orders[0].checkorder ? (
                           <button
                             className="btn btn-success"
@@ -87,7 +87,14 @@ function Mypoint() {
                             환불 처리 완료
                           </button>
                         ) : (
-                          <></>
+                          <button
+                            className="btn btn-danger"
+                            disabled={
+                              !(orders[0].checkorder || orders[0].checkrefund)
+                            }
+                          >
+                            포인트 적립 미정
+                          </button>
                         )}
                       </h4>
                       {orders.map((d, idx) => (
@@ -130,7 +137,7 @@ function Mypoint() {
                                     )}
                                   </p>
                                   <p className="text-danger">
-                                    포인트 사용 : {toKRWString(d.use_point)}
+                                    포인트 사용 : {d.use_point}
                                   </p>
                                 </>
                               )}
@@ -146,40 +153,38 @@ function Mypoint() {
                                   </p>
                                 )}
                               {d.checkrefund && (
-                                <del>
-                                  <p className="card-text">
-                                    결제금액 :{" "}
-                                    {toKRWString(
-                                      d.ticket_price *
-                                        (1 - d.discount) *
-                                        d.quantity
-                                    )}
-                                  </p>
-                                </del>
+                                <p
+                                  className="card-text"
+                                  style={{ textDecoration: "line-through" }}
+                                >
+                                  결제금액 :{" "}
+                                  {toKRWString(
+                                    d.ticket_price *
+                                      (1 - d.discount) *
+                                      d.quantity
+                                  )}
+                                </p>
                               )}
                               {d.checkorder && (
                                 <p className="text-danger">
                                   포인트 적립 :{" "}
-                                  {toKRWString(
-                                    d.ticket_price *
-                                      (1 - d.discount) *
-                                      d.quantity *
-                                      0.05
-                                  )}
+                                  {d.ticket_price *
+                                    (1 - d.discount) *
+                                    d.quantity *
+                                    0.05}
                                 </p>
                               )}
                               {d.checkrefund && (
-                                <del>
-                                  <p className="text-danger">
-                                    포인트 적립 :{" "}
-                                    {toKRWString(
-                                      d.ticket_price *
-                                        (1 - d.discount) *
-                                        d.quantity *
-                                        0.05
-                                    )}
-                                  </p>
-                                </del>
+                                <p
+                                  className="text-danger"
+                                  style={{ textDecoration: "line-through" }}
+                                >
+                                  포인트 적립 :{" "}
+                                  {d.ticket_price *
+                                    (1 - d.discount) *
+                                    d.quantity *
+                                    0.05}
+                                </p>
                               )}
                               <p className="card-text">
                                 구매 날짜 : {d.order_date}

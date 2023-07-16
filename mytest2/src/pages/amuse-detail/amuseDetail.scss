@@ -9,15 +9,7 @@
         background-color: whitesmoke;
         margin-bottom: 10px;
         margin-right: 10px;
-
-        .main-img-wrapper{
-    
-            .mainImg{
-                width: 100%;
-                height: 500px;
-                margin-bottom: 5px;
-            }
-        }
+        
     }
     .header-title{
         font-size: 2.2rem;
@@ -79,6 +71,16 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 1.3rem;
     font-weight: 500;
+}
+
+.main-img-wrapper{
+    
+    .main-image{
+        object-fit: cover;
+        width: 100%;
+        height: 540px;
+        margin-bottom: 10px;
+    }
 }
 
 

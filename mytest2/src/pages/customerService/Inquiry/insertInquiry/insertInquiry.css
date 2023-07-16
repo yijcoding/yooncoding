@@ -130,7 +130,7 @@ input[type=file] {
 }
 
 
-table,
+/* table,
 td,
 th {
 	border-top: 1px solid #666666;
@@ -144,4 +144,4 @@ td,
 th {
 	text-align: center;
 	vertical-align: middle;
-}
+} */

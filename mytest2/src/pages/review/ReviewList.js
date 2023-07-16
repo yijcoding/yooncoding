@@ -9,6 +9,8 @@ import StarRating from '../../components_detail/StarRating';
 import Paging from '../../components_detail/Paging';
 import Modal from '../../components_detail/ModalCheck';
 
+import cn from 'classnames';
+
 //글 작성
 function Write(props){
     const [memberId, setMemberId] = useState("");
@@ -169,6 +171,7 @@ const ReviewList = () => {
     // const member_id = sessionStorage.getItem("MEMBER_ID");
 
     const {amuse_id} = useParams();
+    const [amuseDetail, setAmuseDatail] = useState();
     
     //paging에서 post
     const [review, setReview] = useState([]);
@@ -206,6 +209,11 @@ const ReviewList = () => {
         axios.get(`http://localhost:8080/amusement/reviewList/${amuse_id}`)
             .then(response => setReview(response.data))
     },[mode, review_id, amuse_id, review.length]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/amusement/amuseDetail/${amuse_id}`)
+            .then(response => setAmuseDatail(response.data))
+    }, [amuse_id]);
 
     // console.log("isChk", isChk);
 
@@ -259,65 +267,119 @@ const ReviewList = () => {
     return (
         <Container id='review' className="mt-5">
             <header className='header-title' id='ride'>후기</header>
-            <label style={{float:'right'}}>
-                <select
-                    type="number"
-                    style={{height:'30px'}}
-                    onChange={handleChangeSelect}
-                >
-                    <option value="5">5개씩 보기</option>
-                    <option value="10">10개씩 보기</option>
-                    <option value="20">20개씩 보기</option>
-                    <option value="30">30개씩 보기</option>
-                </select>
-            </label>
-            <Table className='table-borderless text-center' style={{borderRadius:'20px'}}>
-                <thead className='border-bottom'>
-                    <tr>
-                        <th>No</th>
-                        <th>Id</th>
-                        <th>Content</th>
-                        <th>Regidate</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {review?.slice(offset, offset + limit).map((review, index) => (
-                    <tr key={review.review_id} className='text-center'>
-                        <td>{index + 1}</td>
-                        {/* <td>{review.member_id.replace(/\d{3}$/, '***')}</td> */}
-                        <td>{review.member_id.replace(review.member_id.slice(-2), "**")}</td>
-                        <td>{review.r_content}</td>
-                        <td>{review.r_regidate}</td>    
-                        <td>
-                        {
-                        sessionStorage.getItem("MEMBER_ID") === review.member_id &&
-                        <Button type='button' className='mt-auto'
-                            onClick={e => {
-                                // e.preventDefault();
-                                reviewDelete(review.review_id);
-                        }}>Delete</Button>
-                        }
-                        &nbsp;
-                        {
-                        sessionStorage.getItem("MEMBER_ID") === "admin" &&
-                        <Button type='button' className='mt-auto'
-                            style={{backgroundColor: selectedReviewId === review.review_id && 'lightseagreen'}}
-                            onClick={e => {
-                                e.preventDefault();
-                                handleAnswerClick(review.review_id);
-                                //첫번째 버튼과 두번째 버튼 비교
-                                //왜 첫번째 버튼에서는 이렇게 하면 review_id 받을 수 있고
-                                //왜 두번째 버튼에서는 이렇게 하면 못 받는지!!
-                                //alert(review.review_id);
-                                //setMode("ANSWER");
-                        }}>Answer</Button>
-                        }
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>
+
+            <Container style={{display:'flex', marginLeft:'2.5%'}}>
+                {/* 평균 점수 & 별점 */}
+                <div style={{width:'35%', height:'200px', backgroundColor:'white', margin:'10px'}}>
+                    <div style={{textAlign:'center', marginTop:'19%', fontSize:'2rem'}}>
+                        <div>{amuseDetail?.avg_grade}</div>
+                        <div>
+                        {(() => {
+                            const array = [];
+                            for(let i = 0; i < Math.round(amuseDetail?.avg_grade); i++) {
+                                array.push(<span key={i}>⭐</span>);
+                            }
+                            return array;
+                        })()}
+                        </div>
+                    </div>
+                </div>
+                {/* 별점 별 인원수 */}
+                <div style={{width:'55%', height:'200px', backgroundColor:'white', margin:'10px', display:'flex'}}>
+                    <div style={{width:'28%', textAlign:'right', marginTop:'10%'}}>
+                        <div>⭐⭐⭐⭐⭐</div>
+                        <div>⭐⭐⭐⭐</div>
+                        <div>⭐⭐⭐</div>
+                        <div>⭐⭐</div>
+                        <div>⭐</div>
+                    </div>
+                    <div style={{width:'60%', marginTop:'10%', marginLeft:'5%'}}>
+                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                    </div>
+                    <div style={{width:'10%', marginTop:'10%'}}>
+                        <div>20</div>
+                        <div>10</div>
+                        <div>1</div>
+                        <div>2</div>
+                        <div>3</div>
+                    </div>
+                </div>
+            </Container>
+            <Container>
+                <label style={{float:'right'}}>
+                    <select
+                        type="number"
+                        style={{height:'30px'}}
+                        onChange={handleChangeSelect}
+                    >
+                        <option value="5">5개씩 보기</option>
+                        <option value="10">10개씩 보기</option>
+                        <option value="20">20개씩 보기</option>
+                        <option value="30">30개씩 보기</option>
+                    </select>
+                </label>
+                <Table className='table-borderless reviewTable' style={{borderRadius:'20px', tableLayout:'fixed'}}>
+                    <thead id='table-thead'>
+                        <tr>
+                            <th style={{width:'100px'}}>No</th>
+                            <th>Id</th>
+                            <th>Content</th>
+                            <th>Regidate</th>
+                            {sessionStorage.getItem("MEMBER_ID") && <th></th>}
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {review?.slice(offset, offset + limit).map((review, index) => (
+                        <tr key={review.review_id} className='text-center'>
+                            <td>{index + 1}</td>
+                            {/* <td>{review.member_id.replace(/\d{3}$/, '***')}</td> */}
+                            <td>{review.member_id.replace(review.member_id.slice(-2), "**")}</td>
+                            <td>{review.r_content}</td>
+                            <td>{review.r_regidate}</td>    
+                            {
+                            sessionStorage.getItem("MEMBER_ID") 
+                            ?
+                            (
+                                
+                                sessionStorage.getItem("MEMBER_ID") === review.member_id 
+                                ?
+                                <td>
+                                <Button type='button' className='mt-auto'
+                                    onClick={e => {
+                                        // e.preventDefault();
+                                        reviewDelete(review.review_id);
+                                }}>Delete</Button>
+                                </td>
+                                :
+                                sessionStorage.getItem("MEMBER_ID") === "admin" &&
+                                <td>
+                                <Button type='button' className='mt-auto'
+                                    style={{backgroundColor: selectedReviewId === review.review_id && 'lightseagreen'}}
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        handleAnswerClick(review.review_id);
+                                        //첫번째 버튼과 두번째 버튼 비교
+                                        //왜 첫번째 버튼에서는 이렇게 하면 review_id 받을 수 있고
+                                        //왜 두번째 버튼에서는 이렇게 하면 못 받는지!!
+                                        //alert(review.review_id);
+                                        //setMode("ANSWER");
+                                }}>Answer</Button>
+                                </td>
+                            )
+                            :
+                            null
+                            }
+                            
+                        </tr>
+                    ))}
+                    </tbody>
+                </Table>
+            </Container>
             <Paging limit={limit} total={totalPageCnt} page={page} setPage={setPage}/>
             {write}
             {content}

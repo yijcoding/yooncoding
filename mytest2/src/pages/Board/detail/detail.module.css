@@ -167,15 +167,15 @@ body {
     padding: 10px 5px;
 }
 
-.image_wrap,
+/* .image_wrap,
 img {
     max-width: 700px;
-}
+} */
 
-td {
+/* td {
     border-bottom: 1px solid Gainsboro;
     padding: 10px 0;
-}
+} */
 
 .advertisement1 {
     width: 680px;
@@ -269,7 +269,7 @@ ul.tabs li a {
 }
 
 textarea {
-    resize: none;
+    resize: none;   
 }
 
 .boardView_content {

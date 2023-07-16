@@ -153,10 +153,10 @@ const AmuseDetail = (props) => {
 
     return (
         <Container className='d-flex tot-wrapper'>
-            <div className='main-wrapper col-sm-8'> 
+            <div className='main-wrapper col-8'> 
                 <Container id='top'>
-                    <section className="py-3">
-                        <header className='header-title' style={{textAlign:'center', fontWeight:'bold', fontSize: '3rem'}}>{amuseDetail?.a_name}</header><br/>
+                    <div className="py-3">
+                        <div className='header-title' style={{textAlign:'center', fontWeight:'bold', fontSize: '3rem'}}>{amuseDetail?.a_name}</div><br/>
                         <div style={{fontWeight:'bold', fontSize: '1.3rem', 
                                     backgroundColor:'lightblue', width:'90px', 
                                     textAlign:'center', borderRadius:'10px'}}>{amuseDetail?.a_country}</div>
@@ -170,14 +170,19 @@ const AmuseDetail = (props) => {
                         })()}
                         <span style={{fontWeight:'bold'}}>&nbsp;({amuseDetail?.avg_grade}점 / {amuseDetail?.review_cnt}개)</span><br/></a>
                         <span style={{fontWeight:'bold'}}>조회수: {amuseDetail?.a_view}</span>
-                        <article style={{width:'100%'}}>
+                        <div>
                             <br/>
                             {/* main image */}
-                            <div className='main-img-wrapper' style={{width:'100%'}}>
+                            <div className='main-img-wrapper'>
                                 <img src={imgUrl === "" ? amuseDetail?.a_img : imgUrl} 
-                                    className='mainImg rounded' 
+                                    className='main-image rounded' 
                                     alt='main'/>
                             </div>
+                            {/* main image */}
+                            {/* <div className='main-image-wrapper'>
+                                <img src={imgUrl === "" ? amuseDetail?.a_img : imgUrl} 
+                                    className='main-image rounded' alt='main'/>
+                            </div> */}
                             <div className='side-image-wrapper d-flex'>
                                 {/* side image */}
                                 {amuseImage?.map(img => (
@@ -190,12 +195,12 @@ const AmuseDetail = (props) => {
                                     </div>
                                 ))}
                             </div>
-                        </article>
-                        <article className='info-text' id='info'>
+                        </div>
+                        <div className='info-text' id='info'>
                             <br/><br/>
                             {amuseDetail?.a_info}
-                        </article>
-                    </section>
+                        </div>
+                    </div>
                 </Container>
                 <div>
                     <RidesList/>
@@ -217,7 +222,7 @@ const AmuseDetail = (props) => {
                     <KakaoMap lat={amuseDetail?.a_lat} lng={amuseDetail?.a_lng}/>
                 </div>
             </div>
-            <div className='side-wrapper-cate col-sm-4'>
+            <div className='side-wrapper-cate col-4'>
                 <Container className="side-box">
                     <section className="py-3">
                         <header className='header-title' 

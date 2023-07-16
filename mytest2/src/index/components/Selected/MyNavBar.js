@@ -11,7 +11,6 @@ import {
 import { Link } from 'react-router-dom';
 
 const MyNavbar = () => {
-  sessionStorage.setItem('member_id','hong1');
   const member_id = sessionStorage.getItem('member_id'); 
 
   return (
