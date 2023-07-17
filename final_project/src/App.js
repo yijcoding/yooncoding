@@ -62,9 +62,7 @@ const App = () => {
         <Route path = "/mypage/selectedmypage" element= { <SelectedMyPage />}></Route>
         <Route path = "/customer/faq" element= { <FAQ />}></Route>
         <Route path = "/modal" element= { <HomeModal />}></Route>
-      
       </Routes>
-      
       <Footer/>
     </Router>
   );

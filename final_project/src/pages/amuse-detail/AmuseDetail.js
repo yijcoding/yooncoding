@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, ListGroup } from 'react-bootstrap';
+import { Container, List } from 'reactstrap';
 import './amuseDetail.scss';
 
 import RidesList from '../rides-list/RidesList';
@@ -14,25 +14,10 @@ import AmuseList from '../amuse-list/AmuseList';
 import AmuseListOut from '../amuse-list/AmuseListOut';
 import Modal from '../../components/ModalCheck';
 import { Cookies } from 'react-cookie';
-import ModalChat from '../../components/ModalChat';
-import { List } from 'reactstrap';
+import { Table } from 'react-bootstrap';
+import ModalChatTest from '../../components/ModalChatTest';
 
 const AmuseDetail = (props) => {
-    // const arrayData = park.map((item, index) => {
-    //     return (
-    //         <li key={index}>
-    //             {item.lotte}
-    //         </li>
-    //     )
-    // })
-
-    // axios.get('http://localhost:5001/pdData')
-    // .then(response => {
-    //     console.log("data = ", response.data);
-    // })
-    // .catch(error => {
-    //     console.log(error);
-    // })
 
     const {amuse_id} = useParams();
 
@@ -40,7 +25,8 @@ const AmuseDetail = (props) => {
 
     useEffect(() => {
         setMember_id(sessionStorage.getItem("MEMBER_ID"));
-    },[])
+    },[]);
+
 
     // const cookies = new Cookies();
     // let viewCookie = null;
@@ -55,14 +41,14 @@ const AmuseDetail = (props) => {
     // let COOKIE_VALUE = sessionStorage.getItem("MEMBER_ID") + "COOKIE" + amuse_id;
 
     // useLayoutEffect(() => {
-    //     //로그?�� ?�� ?��?��
+    //     //로그인 한 상태
     //     if(sessionStorage.getItem("MEMBER_ID") !== null){
-    //         //쿠키 값이 ?��?�� ?��
+    //         //쿠키 값이 없을 때
     //         if(COOKIE_CHECK.length === 0){
     //             cookies.set(COOKIE_KEY, COOKIE_VALUE, {path:`/amusement/${amuse_id}`});
     //             axios.get(`http://localhost:8080/amusement/updateCnt/${amuse_id}`);
     //         }
-    //         // else{ //쿠키 key 값이 ?���?? 존재?��?��?�� value 값�?? ?��?�� ?��
+    //         // else{ //쿠키 key 값이 이미 존재하는데 value 값은 없을 때
     //         //     if(COOKIE_VALUE !== viewCookie){
     //         //         cookies.set(COOKIE_KEY, COOKIE_VALUE, {path:`/amusement/${amuse_id}`});
     //         //         // axios.get(`http://localhost:8080/amusement/updateCnt/${amuse_id}`);
@@ -88,16 +74,20 @@ const AmuseDetail = (props) => {
         setImgUrl(url);
     }
 
-    //반올�?? => Math.round
+    //반올림 => Math.round
 
-    //scroll �???��
-    //브라?��??? ?��?�� ?��?��: window.innerHeight
-    //document�?? ?��직으�?? ?��마나 ?��?���?? ?��?���?? ?��??? ?��?���?? 반환: window.scrollY(window.pageYOffset)
+    //scroll 관련
+    //브라우저 현재 높이: window.innerHeight
+    //document가 수직으로 얼마나 스크롤 됐는지 픽셀 단위로 반환: window.scrollY(window.pageYOffset)
 
     const [modalOpen, setModalOpen] = useState(false);
 
     const openModal = () => {
-        setModalOpen(true);
+        member_id 
+        ? 
+        setModalOpen(true)
+        :
+        alert("로그인 후 이용해주세요");
     };
     const closeModal = () => {
         setModalOpen(false);
@@ -112,7 +102,7 @@ const AmuseDetail = (props) => {
         setIsChk(false);
     }
 
-    //==============?��?�� ?��?���?? ?���?? ?��?�� & ?��?�� ?��?�� ?���?? ?��?��==============
+    //==============현재 스크롤 위치 파악 & 특정 영역 위치 파악==============
     const [scrollY, setScrollY] = useState(0);
 
     const facRef = useRef(null);
@@ -130,10 +120,10 @@ const AmuseDetail = (props) => {
         setScrollY(window.scrollY);
       };
 
-      // ?��?���?? ?��벤트 리스?�� ?���??
+      // 스크롤 이벤트 리스너 등록
       window.addEventListener('scroll', handleScroll);
   
-      // 컴포?��?�� ?��마운?�� ?�� ?��벤트 리스?�� ?���??
+      // 컴포넌트 언마운트 시 이벤트 리스너 제거
       return () => {
         window.removeEventListener('scroll', handleScroll);
       };
@@ -161,14 +151,11 @@ const AmuseDetail = (props) => {
 
     return (
         <Container className='d-flex tot-wrapper'>
-            <div className='main-wrapper col-md-8'> 
+            <div className='main-wrapper col-8'> 
                 <Container id='top'>
-                    <section className="py-3">
-                        <header className='header-title' style={{textAlign:'center', fontWeight:'bold', fontSize: '3rem'}}>{amuseDetail?.a_name}</header><br/>
-                        <div style={{fontWeight:'bold', fontSize: '1.3rem', 
-                                    backgroundColor:'lightblue', width:'90px', 
-                                    textAlign:'center', borderRadius:'10px'}}>{amuseDetail?.a_country}</div>
-                        <div style={{fontWeight: 'bold', fontSize: '1.3rem'}}>운영시간: {amuseDetail?.a_time}</div>
+                    <section className="py-3" style={{marginTop:'20px'}}>
+                        <header className='header-title' style={{fontSize: '3.5rem', fontWeight:'bold', marginBottom:'5px'}}>{amuseDetail?.a_name}</header>
+                        <div style={{fontWeight: 'bold', fontSize: '1.3rem', marginBottom:'5px'}}>운영시간: {amuseDetail?.a_time}</div>
                         <a href='#review' style={{textDecoration:'none', color:'black'}}>{(() => {
                             const array = [];
                             for(let i = 0; i < Math.round(amuseDetail?.avg_grade); i++) {
@@ -176,15 +163,17 @@ const AmuseDetail = (props) => {
                             }
                             return array;
                         })()}
-                        <span style={{fontWeight:'bold'}}>&nbsp;({amuseDetail?.avg_grade}점 / {amuseDetail?.review_cnt}개)</span><br/></a>
-                        <span style={{fontWeight:'bold'}}>조회수: {amuseDetail?.a_view}</span>
+                        <span style={{fontWeight:'bold', fontSize:'1.1rem'}}>&nbsp;({amuseDetail?.avg_grade}점 / {amuseDetail?.review_cnt}개)</span>
+                        </a>
+                        <div style={{fontWeight:'bold', fontSize:'1.1rem', marginTop:'5px', marginBottom:'5px'}}>조회수: {amuseDetail?.a_view}</div>
                         <article>
-                            <br/>
                             {/* main image */}
                             <div className='main-image-wrapper'>
                                 <img src={imgUrl === "" ? amuseDetail?.a_img : imgUrl} 
                                     className='main-image rounded' alt='main'/>
                             </div>
+                            {/* ===여기는 왜 col-8 영역 적용이 안되는걸까요!?!?=== */}
+                            {/* width: 100%를 하면 두번째 사진만 크기가 달라짐.. */}
                             <div className='side-image-wrapper d-flex'>
                                 {/* side image */}
                                 {amuseImage?.map(img => (
@@ -224,7 +213,7 @@ const AmuseDetail = (props) => {
                     <KakaoMap lat={amuseDetail?.a_lat} lng={amuseDetail?.a_lng}/>
                 </div>
             </div>
-            <div className='side-wrapper-cate col-md-4'>
+            <div className='side-wrapper-cate col-4'>
                 <Container className="side-box">
                     <section className="py-3">
                         <header className='header-title' 
@@ -240,25 +229,27 @@ const AmuseDetail = (props) => {
                                 {/* 1900 ~  */}
                                 <li style={{backgroundColor: facY <= 20 && reY > 50 ? 'lightblue' : null}}><a href='#facility'>Facilities</a></li>
                                 <li style={{backgroundColor: reY <= 50 && amuseY > 5 ? 'lightblue' : null}}><a href='#review'>Reviews</a></li>
-                                <li style={{backgroundColor: amuseY <= 5 && locaY > 200 ? 'lightblue' : null}}><a href='#list'>List</a></li>
-                                <li style={{backgroundColor: locaY <= 200 ? 'lightblue' : null}}><a href='#location'>Location</a></li>
-                                {/* <li><button onClick={openModal} onMouseOver={mouseOver} onMouseLeave={mouseLeave} 
+                                <li style={{backgroundColor: amuseY <= 5 && locaY > 300 ? 'lightblue' : null}}><a href='#list'>List</a></li>
+                                <li style={{backgroundColor: locaY <= 300 ? 'lightblue' : null}}><a href='#location'>Location</a></li>
+                                <li><button onClick={openModal} onMouseOver={mouseOver} onMouseLeave={mouseLeave} 
                                         style={{borderRadius:'10px', border:'1px solid black', height:'40px', backgroundColor: isChk && 'lightblue'}}>
-                                    Chat</button></li> */}
+                                    Chat</button></li>
                                 {/* <li>{scrollY}</li> */}
                             </ul>
-                            {/* <React.Fragment>
-                                <ModalChat 
-                                    open={modalOpen} 
-                                    close={closeModal} 
-                                    member_id={member_id} 
-                                    header="Chat"
-                                />
-                            </React.Fragment> */}
                         </List>
                     </section>
                 </Container>
             </div>
+            {/* chat modal */}
+            <React.Fragment>
+                <ModalChatTest
+                    roomId="room1"
+                    open={modalOpen} 
+                    close={closeModal} 
+                    member_id={member_id} 
+                    header="Chat"
+                ></ModalChatTest>
+            </React.Fragment>
         </Container>
     );
 };

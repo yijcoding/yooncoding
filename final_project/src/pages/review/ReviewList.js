@@ -122,7 +122,7 @@ function Answer(props){
     return <form 
         onSubmit={e => {
         e.preventDefault();
-        const memberId = "hong1";
+        const memberId = "yoon1234";
         const content = e.target.content.value;
         const amuse_id = Number(props.amuse_id);
         const review_id = Number(props.review_id);
@@ -131,7 +131,7 @@ function Answer(props){
             axios.post("http://localhost:8080/amusement/answer", {
                 amuse_id: amuse_id,
                 member_id: memberId,
-                r_content: " ㄴ " + content,
+                r_content: "ㄴ re: " + content,
                 review_id: review_id
             },[]).then(result => props.onAnswer());
         }
@@ -299,24 +299,40 @@ const ReviewList = () => {
                         <div>⭐⭐</div>
                         <div>⭐</div>
                     </div>
-                    <div style={{width:'60%', marginTop:'10%', marginLeft:'5%'}}>
-                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
-                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
-                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
-                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
-                        <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+                    <div style={{width:'60%', marginTop:'13%', marginLeft:'5%'}}>
+                        <div style={{display:'flex'}}>
+                            <div style={{width:'20%', height:'5px', backgroundColor:'lightskyblue'}}></div>
+                            <div style={{width:'75%', height:'5px', backgroundColor:'lightgray'}}></div>
+                        </div>
+                        <div style={{display:'flex'}}>
+                            <div style={{width:'80%', height:'5px', backgroundColor:'lightskyblue', marginTop:'7%'}}></div>
+                            <div style={{width:'15%', height:'5px', backgroundColor:'lightgray', marginTop:'7%'}}></div>
+                        </div>
+                        <div style={{display:'flex'}}>
+                            <div style={{width:'50%', height:'5px', backgroundColor:'lightskyblue', marginTop:'7%'}}></div>
+                            <div style={{width:'45%', height:'5px', backgroundColor:'lightgray', marginTop:'7%'}}></div>
+                        </div>
+                        <div style={{display:'flex'}}>
+                            <div style={{width:'20%', height:'5px', backgroundColor:'lightskyblue', marginTop:'7%'}}></div>
+                            <div style={{width:'75%', height:'5px', backgroundColor:'lightgray', marginTop:'7%'}}></div>
+                        </div>
+                        <div style={{display:'flex'}}>
+                            <div style={{width:'10%', height:'5px', backgroundColor:'lightskyblue', marginTop:'7%'}}></div>
+                            <div style={{width:'85%', height:'5px', backgroundColor:'lightgray', marginTop:'7%'}}></div>
+                        </div>
+                        
                     </div>
                     <div style={{width:'10%', marginTop:'10%'}}>
-                        <div>20</div>
-                        <div>10</div>
-                        <div>1</div>
                         <div>2</div>
+                        <div>6</div>
                         <div>3</div>
+                        <div>1</div>
+                        <div>1</div>
                     </div>
                 </div>
             </Container>
-
-            <label style={{float:'right'}}>
+            
+            <label style={{float:'right', marginBottom:'10px', marginTop:'5px', marginRight:'11%'}}>
                 <select
                     type="number"
                     style={{height:'30px'}}
@@ -328,16 +344,16 @@ const ReviewList = () => {
                     <option value="30">30개씩 보기</option>
                 </select>
             </label>
+
             <Container>
                 <Table className='table-borderless text-center' style={{borderRadius:'20px', tableLayout:'fixed'}}>
                     <thead className='border-bottom' style={{textAlign:'center'}}>
                         <tr>
                             <th style={{width:'100px'}}>No</th>
-                            <th>Id</th>
+                            <th style={{width:'150px'}}>Id</th>
                             <th>Content</th>
                             <th>Regidate</th>
-                            {sessionStorage.getItem("MEMBER_ID") && <th style={{backgroundColor:'whitesmoke'}}></th>}
-                            
+                            {sessionStorage.getItem("MEMBER_ID") && <th style={{backgroundColor:'whitesmoke', width:'80px'}}></th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -345,14 +361,19 @@ const ReviewList = () => {
                         <tr key={review.review_id} className='text-center'>
                             <td>{index + 1}</td>
                             {/* <td>{review.member_id.replace(/\d{3}$/, '***')}</td> */}
-                            <td>{review.member_id.replace(review.member_id.slice(-2), "**")}</td>
+                            {
+                                review.member_id === 'yoon1234'
+                                ?
+                                <td>관리자</td>
+                                :
+                                <td>{review.member_id.replace(review.member_id.slice(-2), "**")}</td>
+                            }
                             <td>{review.r_content}</td>
                             <td>{review.r_regidate}</td>    
                             {
                             sessionStorage.getItem("MEMBER_ID") 
                             &&
                             (
-                                
                                 sessionStorage.getItem("MEMBER_ID") === review.member_id 
                                 ?
                                 <td style={{backgroundColor:'whitesmoke'}}>
@@ -363,7 +384,7 @@ const ReviewList = () => {
                                 }}>Delete</Button>
                                 </td>
                                 :
-                                sessionStorage.getItem("MEMBER_ID") === "admin" &&
+                                sessionStorage.getItem("MEMBER_ID") === "yoon1234" &&
                                 <td style={{backgroundColor:'whitesmoke'}}>
                                 <Button type='button' className='mt-auto'
                                     style={{backgroundColor: selectedReviewId === review.review_id && 'lightseagreen'}}
